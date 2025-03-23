@@ -35,11 +35,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-jacoco {
-    toolVersion = "0.8.12"
-    reportsDirectory = layout.buildDirectory.dir('reports/jacoco')
-}
-
 sonar {
     properties {
         property "sonar.projectKey", "SE2-Gruppe-5_game-project-backend"
@@ -49,6 +44,7 @@ sonar {
 }
 
 test {
+    useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
 
@@ -59,10 +55,5 @@ jacocoTestReport {
         xml.required = true
         csv.required = false
         html.required = false
-        //html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
 }
