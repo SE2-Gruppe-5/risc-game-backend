@@ -10,4 +10,10 @@ class GameProjectBackendApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void applicationStarts() {
+        String[] args = {};
+        GameProjectBackendApplication.main(args);
+    }
+
 }

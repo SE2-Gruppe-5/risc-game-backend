@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.4'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
+    id "org.sonarqube" version "6.0.1.5171"
 }
 
 group = 'com.se2gruppe5.RisikoBackend'
@@ -31,6 +33,34 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory = layout.buildDirectory.dir('reports/jacoco')
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "SE2-Gruppe-5_game-project-backend"
+        property "sonar.organization", "se2-gruppe-5"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = false
+        //html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }
 
 tasks.named('test') {

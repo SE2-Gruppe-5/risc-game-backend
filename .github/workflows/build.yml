@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -30,8 +32,20 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
       - name: Run tests
         run: ./gradlew test
+
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build sonar --info
