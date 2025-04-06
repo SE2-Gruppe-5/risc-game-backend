@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import reactor.core.publisher.Flux;
 
+import java.util.UUID;
+
 @Controller
 public class SseController {
     private final SseBroadcastService sseBroadcaster;
@@ -18,6 +20,9 @@ public class SseController {
 
     @GetMapping(path = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> stream() {
-        return Flux.create(sseBroadcaster::addSink);
+        return Flux.create(sink -> {
+            UUID uuid = sseBroadcaster.addSink(sink);
+            sink.next(uuid.toString()); // Send the UUID to the client, so they can use it to send requests
+        });
     }
 }
