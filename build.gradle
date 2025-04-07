@@ -26,12 +26,15 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -45,6 +48,8 @@ sonar {
 
 test {
     useJUnitPlatform()
+    jvmArgs += "-javaagent:${classpath.find {it.name.contains('mockito-core')}}"
+    jvmArgs += "-Xshare:off"
     finalizedBy jacocoTestReport
 }
 
@@ -54,6 +59,6 @@ jacocoTestReport {
     reports {
         xml.required = true
         csv.required = false
-        html.required = false
+        html.required = true // may be disabled, if not needed for local testing
     }
 }
