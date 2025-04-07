@@ -3,6 +3,8 @@ package com.se2gruppe5.risikobackend.sse.services;
 import com.se2gruppe5.risikobackend.sse.repositories.SseSinkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import reactor.core.publisher.FluxSink;
 
@@ -64,33 +66,36 @@ class SseBroadcastServiceUnitTest {
         Mockito.verify(mockSinkRepository).removeSink(Mockito.any(UUID.class));
     }
 
-    @Test
-    void testSend() {
+    @ParameterizedTest
+    @ValueSource(strings = {"Message to be sent", "Hello world!", "Another Example"})
+    void testSend(String s) {
         @SuppressWarnings("unchecked")
         FluxSink<String> sink = Mockito.mock(FluxSink.class);
 
         UUID uuid = UUID.randomUUID();
         Mockito.when(mockSinkRepository.getSink(uuid)).thenReturn(sink);
-        sseBroadcaster.send(uuid, "Message to be sent");
+        sseBroadcaster.send(uuid, s);
 
-        Mockito.verify(sink).next("Message to be sent");
+        Mockito.verify(sink, Mockito.times(1)).next(s);
     }
 
-    @Test
-    void testSendToInvalidSink() {
+    @ParameterizedTest
+    @ValueSource(strings = {"Message to invalid sink", "Another invalid message", "Another example"})
+    void testSendToInvalidSink(String s) {
         @SuppressWarnings("unchecked")
         FluxSink<String> sink = Mockito.mock(FluxSink.class);
         sseBroadcaster.addSink(sink);
 
         UUID uuid = UUID.randomUUID();
         Mockito.when(mockSinkRepository.getSink(uuid)).thenReturn(null);
-        sseBroadcaster.send(uuid, "Message to invalid sink");
+        sseBroadcaster.send(uuid, s);
 
-        Mockito.verify(sink, Mockito.times(0)).next("Message to invalid sink");
+        Mockito.verify(sink, Mockito.times(0)).next(s);
     }
 
-    @Test
-    void testBroadcastWithoutUUIDs() {
+    @ParameterizedTest
+    @ValueSource(strings = {"Message to be sent", "Hello world!", "Another Example"})
+    void testBroadcastWithoutUUIDs(String s) {
         @SuppressWarnings("unchecked")
         List<FluxSink<String>> sinks = List.of(
                 Mockito.mock(FluxSink.class),
@@ -99,15 +104,16 @@ class SseBroadcastServiceUnitTest {
         );
 
         Mockito.when(mockSinkRepository.getSinks()).thenReturn(sinks);
-        sseBroadcaster.broadcast("Message to be sent");
+        sseBroadcaster.broadcast(s);
 
         for(FluxSink<String> sink : sinks) {
-            Mockito.verify(sink).next("Message to be sent");
+            Mockito.verify(sink, Mockito.times(1)).next(s);
         }
     }
 
-    @Test
-    void testBroadcastWithUUIDs() {
+    @ParameterizedTest
+    @ValueSource(strings = {"Message to be sent", "Hello world!", "Another Example"})
+    void testBroadcastWithUUIDs(String s) {
         List<UUID> uuids = List.of(
                 UUID.randomUUID(),
                 UUID.randomUUID(),
@@ -122,10 +128,10 @@ class SseBroadcastServiceUnitTest {
         );
 
         Mockito.when(mockSinkRepository.getSinks(uuids)).thenReturn(sinks);
-        sseBroadcaster.broadcast(uuids, "Message to be sent");
+        sseBroadcaster.broadcast(uuids, s);
 
         for(FluxSink<String> sink : sinks) {
-            Mockito.verify(sink).next("Message to be sent");
+            Mockito.verify(sink, Mockito.times(1)).next(s);
         }
     }
 }

@@ -75,6 +75,8 @@ class SseSinkRepositoryImplUnitTest {
         }
 
         List<FluxSink<String>> returnedSinks = sinkRepository.getSinks();
+
+        assertNotSame(sinks, returnedSinks);
         assertTrue(listsHaveSameElements(sinks, returnedSinks));
     }
 
@@ -99,11 +101,15 @@ class SseSinkRepositoryImplUnitTest {
 
         // Check if getSinks() with all UUIDs returns all sinks
         List<FluxSink<String>> returnedSinks = sinkRepository.getSinks(uuids);
+
+        assertNotSame(sinks, returnedSinks);
         assertTrue(listsHaveSameElements(sinks, returnedSinks));
 
         // Check if getSinks() with a few UUIDs returns the corresponding sinks
         List<FluxSink<String>> returnedSubsetSinks = sinkRepository.getSinks(uuids.subList(0, 2));
         List<FluxSink<String>> subsetSinks = sinks.subList(0, 2);
+
+        assertNotSame(subsetSinks, returnedSubsetSinks);
         assertTrue(listsHaveSameElements(subsetSinks, returnedSubsetSinks));
     }
 

@@ -2,7 +2,8 @@ package com.se2gruppe5.risikobackend.chat.controllers;
 
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 class ChatControllerUnitTest {
@@ -15,9 +16,10 @@ class ChatControllerUnitTest {
         chatController = new ChatController(sseBroadcaster);
     }
 
-    @Test
-    void testSendMessage() {
-        chatController.chat("Hello world!");
-        Mockito.verify(sseBroadcaster).broadcast("Hello world!");
+    @ParameterizedTest
+    @ValueSource(strings = {"Message to be sent", "Hello world!", "Another Example"})
+    void testSendMessage(String s) {
+        chatController.chat(s);
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(s);
     }
 }
