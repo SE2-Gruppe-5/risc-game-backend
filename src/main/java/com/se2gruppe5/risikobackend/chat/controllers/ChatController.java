@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.chat.controllers;
 
+import com.se2gruppe5.risikobackend.chat.messages.ChatMessage;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,6 @@ public class ChatController {
     @PostMapping("/chat/send")
     public void chat(@RequestParam String message) {
         System.out.println("Received message: " + message);
-        sseBroadcaster.broadcast(message);
+        sseBroadcaster.broadcast(new ChatMessage(message));
     }
 }

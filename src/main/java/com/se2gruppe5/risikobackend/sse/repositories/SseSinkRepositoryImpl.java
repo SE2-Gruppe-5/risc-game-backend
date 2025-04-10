@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.sse.repositories;
 
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.FluxSink;
 
@@ -9,10 +10,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Repository
 public class SseSinkRepositoryImpl implements SseSinkRepository {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final HashMap<UUID, FluxSink<String>> sinks = new HashMap<>();
+    private final HashMap<UUID, FluxSink<ServerSentEvent<String>>> sinks = new HashMap<>();
 
     @Override
-    public void addSink(UUID uuid, FluxSink<String> sink) {
+    public void addSink(UUID uuid, FluxSink<ServerSentEvent<String>> sink) {
         try {
             lock.writeLock().lock();
             sinks.put(uuid, sink);
@@ -42,10 +43,10 @@ public class SseSinkRepositoryImpl implements SseSinkRepository {
     }
 
     @Override
-    public FluxSink<String> getSink(UUID uuid) {
+    public FluxSink<ServerSentEvent<String>> getSink(UUID uuid) {
         try {
             lock.readLock().lock();
-            FluxSink<String> sink = sinks.get(uuid);
+            FluxSink<ServerSentEvent<String>> sink = sinks.get(uuid);
             if (sink != null) {
                 return sink;
             }
@@ -56,7 +57,7 @@ public class SseSinkRepositoryImpl implements SseSinkRepository {
     }
 
     @Override
-    public List<FluxSink<String>> getSinks() {
+    public List<FluxSink<ServerSentEvent<String>>> getSinks() {
         try {
             lock.readLock().lock();
             return sinks.values().stream().toList();
@@ -67,7 +68,7 @@ public class SseSinkRepositoryImpl implements SseSinkRepository {
 
 
     @Override
-    public List<FluxSink<String>> getSinks(Collection<UUID> uuids) {
+    public List<FluxSink<ServerSentEvent<String>>> getSinks(Collection<UUID> uuids) {
         try {
             lock.readLock().lock();
             return sinks.entrySet().stream()
