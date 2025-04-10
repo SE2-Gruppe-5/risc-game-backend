@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.sse.repositories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.FluxSink;
 
 import java.util.List;
@@ -21,7 +22,7 @@ class SseSinkRepositoryImplUnitTest {
     @Test
     void testHasSinkAfterAdd() {
         @SuppressWarnings("unchecked")
-        FluxSink<String> sink = Mockito.mock(FluxSink.class);
+        FluxSink<ServerSentEvent<String>> sink = Mockito.mock(FluxSink.class);
 
         UUID uuid = UUID.randomUUID();
         sinkRepository.addSink(uuid, sink);
@@ -32,7 +33,7 @@ class SseSinkRepositoryImplUnitTest {
     @Test
     void testRemoveSink() {
         @SuppressWarnings("unchecked")
-        FluxSink<String> sink = Mockito.mock(FluxSink.class);
+        FluxSink<ServerSentEvent<String>> sink = Mockito.mock(FluxSink.class);
 
         UUID uuid = UUID.randomUUID();
         sinkRepository.addSink(uuid, sink);
@@ -44,12 +45,12 @@ class SseSinkRepositoryImplUnitTest {
     @Test
     void testGetSink() {
         @SuppressWarnings("unchecked")
-        FluxSink<String> sink = Mockito.mock(FluxSink.class);
+        FluxSink<ServerSentEvent<String>> sink = Mockito.mock(FluxSink.class);
 
         UUID uuid = UUID.randomUUID();
         sinkRepository.addSink(uuid, sink);
 
-        FluxSink<String> returnedSink = sinkRepository.getSink(uuid);
+        FluxSink<ServerSentEvent<String>> returnedSink = sinkRepository.getSink(uuid);
         assertNotNull(returnedSink);
         assertSame(sink, sinkRepository.getSink(uuid));
     }
@@ -57,24 +58,24 @@ class SseSinkRepositoryImplUnitTest {
     @Test
     void testGetInvalidSink() {
         UUID uuid = UUID.randomUUID();
-        FluxSink<String> returnedSink = sinkRepository.getSink(uuid);
+        FluxSink<ServerSentEvent<String>> returnedSink = sinkRepository.getSink(uuid);
         assertNull(returnedSink);
     }
 
     @Test
     void testGetSinksWithoutUUIDs() {
         @SuppressWarnings("unchecked")
-        List<FluxSink<String>> sinks = List.of(
+        List<FluxSink<ServerSentEvent<String>>> sinks = List.of(
                 Mockito.mock(FluxSink.class),
                 Mockito.mock(FluxSink.class),
                 Mockito.mock(FluxSink.class)
         );
 
-        for (FluxSink<String> sink : sinks) {
+        for (FluxSink<ServerSentEvent<String>> sink : sinks) {
             sinkRepository.addSink(UUID.randomUUID(), sink);
         }
 
-        List<FluxSink<String>> returnedSinks = sinkRepository.getSinks();
+        List<FluxSink<ServerSentEvent<String>>> returnedSinks = sinkRepository.getSinks();
 
         assertNotSame(sinks, returnedSinks);
         assertTrue(listsHaveSameElements(sinks, returnedSinks));
@@ -83,7 +84,7 @@ class SseSinkRepositoryImplUnitTest {
     @Test
     void testGetSinksWithUUIDs() {
         @SuppressWarnings("unchecked")
-        List<FluxSink<String>> sinks = List.of(
+        List<FluxSink<ServerSentEvent<String>>> sinks = List.of(
                 Mockito.mock(FluxSink.class),
                 Mockito.mock(FluxSink.class),
                 Mockito.mock(FluxSink.class)
@@ -100,14 +101,14 @@ class SseSinkRepositoryImplUnitTest {
         }
 
         // Check if getSinks() with all UUIDs returns all sinks
-        List<FluxSink<String>> returnedSinks = sinkRepository.getSinks(uuids);
+        List<FluxSink<ServerSentEvent<String>>> returnedSinks = sinkRepository.getSinks(uuids);
 
         assertNotSame(sinks, returnedSinks);
         assertTrue(listsHaveSameElements(sinks, returnedSinks));
 
         // Check if getSinks() with a few UUIDs returns the corresponding sinks
-        List<FluxSink<String>> returnedSubsetSinks = sinkRepository.getSinks(uuids.subList(0, 2));
-        List<FluxSink<String>> subsetSinks = sinks.subList(0, 2);
+        List<FluxSink<ServerSentEvent<String>>> returnedSubsetSinks = sinkRepository.getSinks(uuids.subList(0, 2));
+        List<FluxSink<ServerSentEvent<String>>> subsetSinks = sinks.subList(0, 2);
 
         assertNotSame(subsetSinks, returnedSubsetSinks);
         assertTrue(listsHaveSameElements(subsetSinks, returnedSubsetSinks));

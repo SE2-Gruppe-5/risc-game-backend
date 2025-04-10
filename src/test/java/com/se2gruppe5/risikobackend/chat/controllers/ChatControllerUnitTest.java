@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.chat.controllers;
 
+import com.se2gruppe5.risikobackend.chat.messages.ChatMessage;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,6 +21,6 @@ class ChatControllerUnitTest {
     @ValueSource(strings = {"Message to be sent", "Hello world!", "Another Example"})
     void testSendMessage(String s) {
         chatController.chat(s);
-        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(s);
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(new ChatMessage(s));
     }
 }
