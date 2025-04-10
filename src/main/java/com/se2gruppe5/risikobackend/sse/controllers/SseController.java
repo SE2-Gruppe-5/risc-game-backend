@@ -29,10 +29,13 @@ public class SseController {
     }
 
     @GetMapping(path = "/sse", params = {"id"}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> streamRejoining(UUID uuid) {
+    public Flux<ServerSentEvent<String>> streamRejoining(UUID uuid) {
         if (sseBroadcaster.hasSink(uuid)) {
             throw new IllegalStateException("UUID already exists");
         }
-        return Flux.create(sink -> sseBroadcaster.send(uuid, new SetUuidMessage(uuid)));
+        return Flux.create(sink -> {
+            sseBroadcaster.addSink(uuid, sink);
+            sseBroadcaster.send(uuid, new SetUuidMessage(uuid));
+        });
     }
 }
