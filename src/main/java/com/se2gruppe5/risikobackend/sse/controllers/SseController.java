@@ -24,7 +24,7 @@ public class SseController {
     public Flux<ServerSentEvent<String>> stream() {
         return Flux.create(sink -> {
             UUID uuid = sseBroadcaster.addSink(sink);
-            sseBroadcaster.send(uuid, new SetUuidMessage(uuid));
+            sseBroadcaster.send(sink, new SetUuidMessage(uuid));
         });
     }
 
@@ -35,7 +35,7 @@ public class SseController {
         }
         return Flux.create(sink -> {
             sseBroadcaster.addSink(uuid, sink);
-            sseBroadcaster.send(uuid, new SetUuidMessage(uuid));
+            sseBroadcaster.send(sink, new SetUuidMessage(uuid));
         });
     }
 }

@@ -49,10 +49,7 @@ public class SseBroadcastService {
     }
 
     public void send(UUID uuid, Message message) {
-        FluxSink<ServerSentEvent<String>> sink = sinkRepository.getSink(uuid);
-        if (sink != null) {
-            send(sink, message);
-        }
+        send(sinkRepository.getSink(uuid), message);
     }
 
     public void broadcast(Message message) {
@@ -67,7 +64,7 @@ public class SseBroadcastService {
         }
     }
 
-    private void send(FluxSink<ServerSentEvent<String>> sink, Message message) {
+    public void send(FluxSink<ServerSentEvent<String>> sink, Message message) {
         if (sink != null) {
             String data = Base64.getEncoder().encodeToString(gson.toJson(message).getBytes(StandardCharsets.UTF_8));
             sink.next(ServerSentEvent.builder(data)
