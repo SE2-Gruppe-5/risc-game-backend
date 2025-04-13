@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.sse.services;
 import com.google.gson.Gson;
 import com.se2gruppe5.risikobackend.sse.Message;
 import com.se2gruppe5.risikobackend.sse.repositories.SseSinkRepository;
+import com.se2gruppe5.risikobackend.util.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
@@ -23,16 +24,8 @@ public class SseBroadcastService {
         this.sinkRepository = sinkRepository;
     }
 
-    private UUID generateUUID() {
-        UUID uuid;
-        do {
-            uuid = UUID.randomUUID();
-        } while (sinkRepository.hasSink(uuid));
-        return uuid;
-    }
-
     public UUID addSink(FluxSink<ServerSentEvent<String>> sink) {
-        return addSink(generateUUID(), sink);
+        return addSink(IdUtil.generateUuid(sinkRepository::hasSink), sink);
     }
 
     public UUID addSink(UUID uuid, FluxSink<ServerSentEvent<String>> sink) {
