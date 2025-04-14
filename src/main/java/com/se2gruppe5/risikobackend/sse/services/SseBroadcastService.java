@@ -1,9 +1,10 @@
 package com.se2gruppe5.risikobackend.sse.services;
 
 import com.google.gson.Gson;
+import com.se2gruppe5.risikobackend.common.util.IdUtil;
+import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.sse.Message;
 import com.se2gruppe5.risikobackend.sse.repositories.SseSinkRepository;
-import com.se2gruppe5.risikobackend.util.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,10 @@ public class SseBroadcastService {
         for (FluxSink<ServerSentEvent<String>> sink : sinkRepository.getSinks(uuids)) {
             send(sink, message);
         }
+    }
+
+    public void broadcast(Lobby lobby, Message message) {
+        this.broadcast(lobby.players().keySet(), message);
     }
 
     public void send(FluxSink<ServerSentEvent<String>> sink, Message message) {
