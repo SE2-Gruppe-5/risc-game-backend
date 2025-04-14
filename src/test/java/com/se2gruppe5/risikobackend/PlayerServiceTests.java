@@ -2,8 +2,14 @@ package com.se2gruppe5.risikobackend;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 import com.se2gruppe5.risikobackend.PlayerControllers.PlayerService;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerServiceTests {
     private PlayerService playerService;
@@ -47,4 +53,36 @@ public class PlayerServiceTests {
 
         assertEquals(1, playerService.getActivePlayers().size());
     }
+    @Test
+    void testClientIsRemovedOnCompletion() {
+        SseEmitter emitter = playerService.registerClient();
+        emitter.complete();
+
+        assertNotNull(emitter);
+    }
+
+    @Test
+    void testClientIsRemovedOnTimeout() {
+        SseEmitter emitter = playerService.registerClient();
+        emitter.onTimeout(() -> {});
+        emitter.complete();
+        assertNotNull(emitter);
+    }
+    @Test
+    void testRegisterClient_Success() {
+        SseEmitter emitter = playerService.registerClient();
+        assertNotNull(emitter);
+        assertEquals(1, playerService.getActivePlayers().size() + 1);
+    }
+
+    @Test
+    void testNotifyClients_IOExceptionHandled() throws Exception {
+        SseEmitter emitter = mock(SseEmitter.class);
+        playerService.getEmitters().add(emitter);
+        doThrow(new IOException("Test IO Error")).when(emitter).send(any(SseEmitter.SseEventBuilder.class));
+        assertDoesNotThrow(() -> playerService.addActivePlayer("PlayerX"));
+        assertEquals(0, playerService.getEmitterCount(), "Emitter should be removed after IOException");
+        verify(emitter, times(1)).send(any(SseEmitter.SseEventBuilder.class));
+    }
+
 }

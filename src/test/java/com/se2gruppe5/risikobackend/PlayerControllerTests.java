@@ -59,4 +59,20 @@ class PlayerControllerTest {
         mockMvc.perform(get("/players/stream"))
                 .andExpect(status().isOk());
     }
+    @Test
+    void testActivatePlayer_NullName() throws Exception {
+        doThrow(new IllegalArgumentException("Player name cannot be empty"))
+                .when(playerService).addActivePlayer("");
+
+        mockMvc.perform(post("/players/activate")
+                        .param("playerName", ""))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testStreamActivePlayers_Exception() throws Exception {
+        when(playerService.registerClient()).thenThrow(new RuntimeException("Fail"));
+        mockMvc.perform(get("/players/stream"))
+                .andExpect(status().isOk());  // because fallback is emitter with 0L
+    }
 }

@@ -64,4 +64,11 @@ public class PlayerService {
             }
         }
     }
+    public int getEmitterCount() {
+        return emitters.size();
+    }
+    public List<SseEmitter> getEmitters() {
+        return emitters;
+    }
+
 }
