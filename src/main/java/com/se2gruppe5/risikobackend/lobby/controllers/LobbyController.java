@@ -62,4 +62,16 @@ public class LobbyController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
+    @PostMapping("/{id}/start")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void startGame(@PathVariable String id) {
+        try {
+            lobbyService.startGame(id);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
 }

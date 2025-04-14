@@ -1,5 +1,8 @@
 package com.se2gruppe5.risikobackend.lobby.services;
 
+import com.se2gruppe5.risikobackend.game.objects.Game;
+import com.se2gruppe5.risikobackend.game.services.GameService;
+import com.se2gruppe5.risikobackend.lobby.messages.GameStartMessage;
 import com.se2gruppe5.risikobackend.lobby.messages.JoinLobbyMessage;
 import com.se2gruppe5.risikobackend.lobby.messages.LeaveLobbyMessage;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
@@ -15,13 +18,17 @@ import java.util.UUID;
 
 @Service
 public class LobbyService {
-    private final SseBroadcastService sseBroadcastService;
     private final LobbyRepository lobbyRepository;
+    private final SseBroadcastService sseBroadcastService;
+    private final GameService gameService;
 
     @Autowired
-    public LobbyService(SseBroadcastService sseBroadcastService, LobbyRepository lobbyRepository) {
-        this.sseBroadcastService = sseBroadcastService;
+    public LobbyService(LobbyRepository lobbyRepository,
+                        SseBroadcastService sseBroadcastService,
+                        GameService gameService) {
         this.lobbyRepository = lobbyRepository;
+        this.sseBroadcastService = sseBroadcastService;
+        this.gameService = gameService;
     }
 
     /**
@@ -88,5 +95,19 @@ public class LobbyService {
         }
         lobby.players().remove(playerId);
         sseBroadcastService.broadcast(lobby, new LeaveLobbyMessage(playerId));
+    }
+
+    public void startGame(String id) {
+        Lobby lobby = lobbyRepository.getLobby(id);
+        if (lobby == null) {
+            throw new IllegalArgumentException("Lobby not found");
+        }
+        if (lobby.players().size() < 2) {
+            throw new IllegalStateException("Not enough players to start the game");
+        }
+
+        Game game = gameService.createGame(lobby);
+        lobbyRepository.removeLobby(id);
+        sseBroadcastService.broadcast(lobby, new GameStartMessage(game.uuid()));
     }
 }
