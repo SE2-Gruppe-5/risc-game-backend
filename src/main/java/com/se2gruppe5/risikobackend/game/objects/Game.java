@@ -6,6 +6,10 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public record Game(UUID uuid, ConcurrentHashMap<UUID, Player> players) {
+    public Game(UUID uuid) {
+        this(uuid, new ConcurrentHashMap<>());
+    }
+
     public void start() {
 
     }
