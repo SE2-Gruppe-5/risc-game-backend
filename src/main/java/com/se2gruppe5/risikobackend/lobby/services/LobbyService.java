@@ -10,6 +10,7 @@ import com.se2gruppe5.risikobackend.common.util.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -67,6 +68,11 @@ public class LobbyService {
         }
         lobby.players().put(player.uuid(), player);
         sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.uuid(), player.name(), id));
+        for (Map.Entry<UUID, Player> entry : lobby.players().entrySet()) {
+            if (entry.getKey().equals(player.uuid())) continue;
+            Player lobbyPlayer = entry.getValue();
+            sseBroadcastService.send(player.uuid(), new JoinLobbyMessage(lobbyPlayer.uuid(), lobbyPlayer.name(), id));
+        }
     }
 
     /**
