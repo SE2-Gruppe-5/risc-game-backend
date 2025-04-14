@@ -6,15 +6,13 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/lobby")
 public class LobbyController {
     private final LobbyService lobbyService;
 
@@ -23,13 +21,15 @@ public class LobbyController {
         this.lobbyService = lobbyService;
     }
 
-    @PutMapping("/lobby")
+    @PutMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public String createLobby() {
         Lobby lobby = lobbyService.createLobby();
         return lobby.code();
     }
 
-    @DeleteMapping("/lobby/{id}")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLobby(@PathVariable String id) {
         try {
             lobbyService.deleteLobby(id);
@@ -38,7 +38,8 @@ public class LobbyController {
         }
     }
 
-    @PutMapping("/lobby/{id}/player")
+    @PutMapping("/{id}/player")
+    @ResponseStatus(HttpStatus.CREATED)
     public void joinLobby(@PathVariable String id,
                           @RequestParam UUID uuid,
                           @RequestParam String name) {
@@ -51,7 +52,8 @@ public class LobbyController {
         }
     }
 
-    @DeleteMapping("/lobby/{id}/player")
+    @DeleteMapping("/{id}/player")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void leaveLobby(@PathVariable String id,
                            @RequestParam UUID uuid) {
         try {

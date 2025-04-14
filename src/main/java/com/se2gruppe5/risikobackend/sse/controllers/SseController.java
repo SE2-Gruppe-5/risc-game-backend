@@ -7,11 +7,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import reactor.core.publisher.Flux;
 
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/sse")
 public class SseController {
     private final SseBroadcastService sseBroadcaster;
 
@@ -20,7 +23,7 @@ public class SseController {
         this.sseBroadcaster = sseBroadcaster;
     }
 
-    @GetMapping(path = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<String>> stream() {
         return Flux.create(sink -> {
             UUID uuid = sseBroadcaster.addSink(sink);
@@ -28,14 +31,14 @@ public class SseController {
         });
     }
 
-    @GetMapping(path = "/sse", params = {"id"}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<String>> streamRejoining(UUID uuid) {
-        if (sseBroadcaster.hasSink(uuid)) {
+    @GetMapping(path = "/{id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<String>> streamRejoining(@PathVariable UUID id) {
+        if (sseBroadcaster.hasSink(id)) {
             throw new IllegalStateException("UUID already exists");
         }
         return Flux.create(sink -> {
-            sseBroadcaster.addSink(uuid, sink);
-            sseBroadcaster.send(sink, new SetUuidMessage(uuid));
+            sseBroadcaster.addSink(id, sink);
+            sseBroadcaster.send(sink, new SetUuidMessage(id));
         });
     }
 }
