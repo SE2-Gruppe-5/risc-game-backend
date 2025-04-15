@@ -21,7 +21,7 @@ public class LobbyController {
         this.lobbyService = lobbyService;
     }
 
-    @PutMapping
+    @GetMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public String createLobby() {
         Lobby lobby = lobbyService.createLobby();
@@ -63,7 +63,7 @@ public class LobbyController {
         }
     }
 
-    @PostMapping("/{id}/start")
+    @GetMapping("/{id}/start")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable String id) {
         try {
