@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikobackend.lobby.services;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
+import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 import com.se2gruppe5.risikobackend.lobby.messages.GameStartMessage;
 import com.se2gruppe5.risikobackend.lobby.messages.JoinLobbyMessage;
@@ -144,6 +145,7 @@ class LobbyServiceUnitTest {
         lobby.players().put(uuid2, player2);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
+        Mockito.when(gameService.createGame(lobby)).thenReturn(new Game(UUID.randomUUID(), lobby.players()));
         assertDoesNotThrow(() -> lobbyService.startGame(lobbyId));
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
         Mockito.verify(gameService, Mockito.times(1)).createGame(lobby);

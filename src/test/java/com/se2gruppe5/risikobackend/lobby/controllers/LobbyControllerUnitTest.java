@@ -1,6 +1,7 @@
 package com.se2gruppe5.risikobackend.lobby.controllers;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
+import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.lobby.services.LobbyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ class LobbyControllerUnitTest {
 
     @Test
     void testCreateLobby() {
+        Mockito.when(lobbyService.createLobby()).thenReturn(new Lobby("testLobbyId"));
         lobbyController.createLobby();
         Mockito.verify(lobbyService, Mockito.times(1)).createLobby();
     }
