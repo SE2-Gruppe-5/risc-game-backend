@@ -150,7 +150,7 @@ class LobbyServiceUnitTest {
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
         Mockito.verify(gameService, Mockito.times(1)).createGame(lobby);
         Mockito.verify(lobbyRepository, Mockito.times(1)).removeLobby(lobbyId);
-        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(lobby, Mockito.any(GameStartMessage.class));
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(Mockito.eq(lobby), Mockito.any(GameStartMessage.class));
     }
 
     @Test
