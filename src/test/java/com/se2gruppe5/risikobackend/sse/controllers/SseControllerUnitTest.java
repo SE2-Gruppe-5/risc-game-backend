@@ -66,6 +66,6 @@ class SseControllerUnitTest {
                 .thenCancel()
                 .verify();
 
-        Mockito.verify(sseBroadcaster).addSink(Mockito.any());
+        Mockito.verify(sseBroadcaster).addSink(Mockito.eq(testUuid), Mockito.any());
     }
 }
