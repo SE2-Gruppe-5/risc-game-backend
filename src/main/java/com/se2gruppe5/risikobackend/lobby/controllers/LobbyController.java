@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.lobby.controllers;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.lobby.services.LobbyService;
 import com.se2gruppe5.risikobackend.common.objects.Player;
+import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import java.util.UUID;
 @RequestMapping("/lobby")
 public class LobbyController {
     private final LobbyService lobbyService;
+    private final SseBroadcastService sseBroadcastService;
 
     @Autowired
-    public LobbyController(LobbyService lobbyService) {
+    public LobbyController(LobbyService lobbyService, SseBroadcastService sseBroadcastService) {
         this.lobbyService = lobbyService;
+        this.sseBroadcastService = sseBroadcastService;
     }
 
     @GetMapping("/create")
@@ -43,6 +46,9 @@ public class LobbyController {
     public void joinLobby(@PathVariable String id,
                           @RequestParam UUID uuid,
                           @RequestParam String name) {
+        if (!sseBroadcastService.hasSink(uuid)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Player not found");
+        }
         try {
             lobbyService.joinLobby(id, new Player(uuid, name));
         } catch (IllegalArgumentException e) {
