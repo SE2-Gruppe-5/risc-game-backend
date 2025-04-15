@@ -48,4 +48,24 @@ class SseControllerUnitTest {
 
         Mockito.verify(sseBroadcaster).addSink(Mockito.any());
     }
+
+    @Test
+    void testStreamRejoining() {
+        UUID testUuid = UUID.randomUUID();
+        Mockito.when(sseBroadcaster.addSink(Mockito.any())).thenReturn(testUuid);
+        Mockito.when(sseBroadcaster.hasSink(testUuid)).thenReturn(false);
+        Mockito.doCallRealMethod().when(sseBroadcaster).send(Mockito.<FluxSink<ServerSentEvent<String>>>any(), Mockito.any());
+
+        Flux<ServerSentEvent<String>> stream = sseController.streamRejoining(testUuid);
+
+        StepVerifier.create(stream)
+                .expectNext(ServerSentEvent.<String>builder()
+                        .event(MessageType.SET_UUID.name())
+                        .data(Base64.getEncoder().encodeToString(("{\"uuid\":\"" + testUuid + "\"}").getBytes(StandardCharsets.UTF_8)))
+                        .build())
+                .thenCancel()
+                .verify();
+
+        Mockito.verify(sseBroadcaster).addSink(Mockito.any());
+    }
 }
