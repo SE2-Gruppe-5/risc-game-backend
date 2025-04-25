@@ -53,6 +53,7 @@ public class PlayerServiceTests {
 
         assertEquals(1, playerService.getActivePlayers().size());
     }
+
     @Test
     void testClientIsRemovedOnCompletion() {
         SseEmitter emitter = playerService.registerClient();
@@ -64,10 +65,12 @@ public class PlayerServiceTests {
     @Test
     void testClientIsRemovedOnTimeout() {
         SseEmitter emitter = playerService.registerClient();
-        emitter.onTimeout(() -> {});
+        emitter.onTimeout(() -> {
+        });
         emitter.complete();
         assertNotNull(emitter);
     }
+
     @Test
     void testRegisterClient_Success() {
         SseEmitter emitter = playerService.registerClient();
@@ -83,6 +86,32 @@ public class PlayerServiceTests {
         assertDoesNotThrow(() -> playerService.addActivePlayer("PlayerX"));
         assertEquals(0, playerService.getEmitterCount(), "Emitter should be removed after IOException");
         verify(emitter, times(1)).send(any(SseEmitter.SseEventBuilder.class));
+    }
+
+    @Test
+    void testRegisterClient_IOExceptionHandled() throws Exception {
+        PlayerService spyService = spy(playerService);
+
+        SseEmitter faultyEmitter = mock(SseEmitter.class);
+        doThrow(new IOException("Initial send failure")).when(faultyEmitter).send(any(SseEmitter.SseEventBuilder.class));
+
+        spyService.getEmitters().add(faultyEmitter);
+
+        assertDoesNotThrow(() -> spyService.addActivePlayer("PlayerIOException"));
+        assertEquals(0, spyService.getEmitterCount(), "Emitter sollte nach IOException entfernt werden");
+    }
+
+    @Test
+    void testRegisterClient_InitialSendFails() throws Exception {
+        PlayerService spyService = spy(playerService);
+
+        SseEmitter faultyEmitter = mock(SseEmitter.class);
+        doThrow(new IOException("Initial send failure")).when(faultyEmitter).send(any(SseEmitter.SseEventBuilder.class));
+
+        spyService.getEmitters().add(faultyEmitter);
+
+        assertDoesNotThrow(() -> spyService.addActivePlayer("SomePlayer"));
+        assertEquals(0, spyService.getEmitterCount(), "Emitter sollte entfernt werden wenn initiales Senden fehlschlägt");
     }
 
 }
