@@ -11,6 +11,6 @@ public record Game(UUID uuid, ConcurrentHashMap<UUID, Player> players) {
     }
 
     public void start() {
-
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

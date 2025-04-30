@@ -5,6 +5,9 @@ import java.util.UUID;
 import java.util.function.Predicate;
 
 public class IdUtil {
+
+    private IdUtil() {}
+
     private static final char[] ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
     private static final SecureRandom RANDOM = new SecureRandom();
 

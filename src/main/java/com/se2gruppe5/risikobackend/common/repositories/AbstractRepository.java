@@ -3,12 +3,12 @@ package com.se2gruppe5.risikobackend.common.repositories;
 import java.util.HashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public abstract class AbstractRepository<Key, Value> implements Repository<Key, Value> {
+public abstract class AbstractRepository<K, V> implements Repository<K, V> {
     protected final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    protected final HashMap<Key, Value> map = new HashMap<>();
+    protected final HashMap<K, V> map = new HashMap<>();
 
     @Override
-    public void add(Key key, Value value) {
+    public void add(K key, V value) {
         try {
             lock.writeLock().lock();
             map.put(key, value);
@@ -18,7 +18,7 @@ public abstract class AbstractRepository<Key, Value> implements Repository<Key, 
     }
 
     @Override
-    public void remove(Key key) {
+    public void remove(K key) {
         try {
             lock.writeLock().lock();
             map.remove(key);
@@ -28,7 +28,7 @@ public abstract class AbstractRepository<Key, Value> implements Repository<Key, 
     }
 
     @Override
-    public boolean has(Key key) {
+    public boolean has(K key) {
         try {
             lock.readLock().lock();
             return map.containsKey(key);
@@ -38,10 +38,10 @@ public abstract class AbstractRepository<Key, Value> implements Repository<Key, 
     }
 
     @Override
-    public Value get(Key key) {
+    public V get(K key) {
         try {
             lock.readLock().lock();
-            Value sink = map.get(key);
+            V sink = map.get(key);
             if (sink != null) {
                 return sink;
             }
