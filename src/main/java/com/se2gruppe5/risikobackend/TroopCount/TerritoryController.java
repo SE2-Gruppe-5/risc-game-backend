@@ -27,6 +27,16 @@ public class TerritoryController {
         return territoryManager.getTerritoriesOwnedByPlayer(playerId);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TerritoryRecord> getTerritoryById(@PathVariable int id) {
+        TerritoryRecord territory = territoryManager.getTerritory(id);
+        if (territory != null) {
+            return ResponseEntity.ok(territory);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/update")
     public ResponseEntity<Void> updateTroops(@RequestBody TerritoryRecord update) {
         if (territoryManager.getTerritory(update.getId()) != null) {
