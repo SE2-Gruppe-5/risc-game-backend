@@ -26,7 +26,7 @@ public class TerritoryManager {
 
     public List<TerritoryRecord> getTerritoriesOwnedByPlayer(String playerId) {
         return territories.values().stream()
-                .filter(t -> t.getOwnerId().equals(playerId))
+                .filter(t -> t.getOwner().equals(playerId))
                 .collect(Collectors.toList());
     }
 
