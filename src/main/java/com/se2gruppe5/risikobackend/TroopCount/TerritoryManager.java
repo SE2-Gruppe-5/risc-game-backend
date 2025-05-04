@@ -15,9 +15,9 @@ public class TerritoryManager {
 
     public TerritoryManager() {
         // Beispielinitialisierung
-        territories.put("Germany", new TerritoryRecord("Germany", "player1", 10));
-        territories.put("France", new TerritoryRecord("France", "player2", 5));
-        territories.put("Spain", new TerritoryRecord("Spain", "player1", 8));
+        territories.put("Germany", new TerritoryRecord(1, "player1", 10));
+        territories.put("France", new TerritoryRecord(2, "player2", 5));
+        territories.put("Spain", new TerritoryRecord(3, "player1", 8));
     }
 
     public List<TerritoryRecord> getAllTerritories() {
@@ -30,12 +30,12 @@ public class TerritoryManager {
                 .collect(Collectors.toList());
     }
 
-    public TerritoryRecord getTerritory(String name) {
-        return territories.get(name);
+    public TerritoryRecord getTerritory(int id) {
+        return territories.get(id);
     }
 
-    public void updateTroops(String name, int newTroopCount) {
-        TerritoryRecord record = territories.get(name);
+    public void updateTroops(int id, int newTroopCount) {
+        TerritoryRecord record = territories.get(id);
         if (record != null) {
             record.setTroops(newTroopCount);
         }

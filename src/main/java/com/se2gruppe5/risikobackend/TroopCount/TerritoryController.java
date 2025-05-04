@@ -29,8 +29,8 @@ public class TerritoryController {
 
     @PostMapping("/update")
     public ResponseEntity<Void> updateTroops(@RequestBody TerritoryRecord update) {
-        if (territoryManager.getTerritory(update.getName()) != null) {
-            territoryManager.updateTroops(update.getName(), update.getTroops());
+        if (territoryManager.getTerritory(update.getId()) != null) {
+            territoryManager.updateTroops(update.getId(), update.getTroops());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
