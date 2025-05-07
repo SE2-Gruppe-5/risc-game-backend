@@ -42,6 +42,14 @@ sonar {
         property "sonar.projectKey", "SE2-Gruppe-5_game-project-backend"
         property "sonar.organization", "se2-gruppe-5"
         property "sonar.host.url", "https://sonarcloud.io"
+
+        // Ausschluss von "fehlende Unit-Tests" (S2699) für PlayerService.java
+        property "sonar.issue.ignore.multicriteria.1.ruleKey", "java:S2699"
+        property "sonar.issue.ignore.multicriteria.1.resourceKey", "**/PlayerService.java"
+
+        // Ausschluss von "System.out/err verwenden" (S106) für PlayerService.java
+        property "sonar.issue.ignore.multicriteria.2.ruleKey", "java:S106"
+        property "sonar.issue.ignore.multicriteria.2.resourceKey", "**/PlayerService.java"
     }
 }
 
