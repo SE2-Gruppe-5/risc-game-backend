@@ -8,6 +8,5 @@ public enum MessageType {
     START_GAME,
     NEXT_PHASE,
     UPDATE_PLAYERS,
-    UPDATE_TERRITORIES,
-    CARD_ACTION,
+    UPDATE_TERRITORIES
 }
