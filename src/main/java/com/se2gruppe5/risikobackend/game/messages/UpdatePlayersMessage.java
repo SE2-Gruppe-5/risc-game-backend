@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikobackend.game.messages;
 
-
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.sse.Message;
 import com.se2gruppe5.risikobackend.sse.MessageType;

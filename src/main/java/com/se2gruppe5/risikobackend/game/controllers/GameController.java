@@ -36,13 +36,13 @@ public class GameController {
     @PutMapping("/{id}/update-player")
     @ResponseStatus(HttpStatus.CREATED)
     public void updatePlayer(@PathVariable String id,
-                            @RequestParam UUID gameUUID,
+                             @RequestParam UUID gameUUID,
                              @RequestParam Player player) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
         try {
-            gameService.updatePlayer(gameUUID,player);
+            gameService.updatePlayer(gameUUID, player);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new UpdatePlayersMessage(gameUUID, gameService.getGameById(gameUUID).getPlayers()));
         } catch (IllegalArgumentException e) {
@@ -78,8 +78,8 @@ public class GameController {
     @PutMapping("/{id}/get-info")
     @ResponseStatus(HttpStatus.CREATED)
     public void getInfo(@PathVariable String id,
-                                @RequestParam UUID gameUUID,
-                                @RequestParam UUID playerUUID) {
+                        @RequestParam UUID gameUUID,
+                        @RequestParam UUID playerUUID) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
@@ -96,7 +96,6 @@ public class GameController {
     }
 
 
-
     @PutMapping("/{id}/change-territory")
     @ResponseStatus(HttpStatus.CREATED)
     public void changeTerritory(@PathVariable String id,
@@ -106,7 +105,7 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
         try {
-            gameService.changeTerritory(gameUUID,territory);
+            gameService.changeTerritory(gameUUID, territory);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new ChangeTerritoryMessage(gameUUID, gameService.getTerritoryList(gameUUID)));
 

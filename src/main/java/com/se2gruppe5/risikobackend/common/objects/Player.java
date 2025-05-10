@@ -17,7 +17,11 @@ public class Player {
     public void setIsCurrentTurn(boolean b){
         isCurrentTurn = b;
     }
-    
+
+    public String getName() {
+        return name;
+    }
+
     public Player(UUID uuid, String name, List<Card> cards){
         this.uuid = uuid;
         this.name = name;
@@ -29,5 +33,4 @@ public class Player {
     private List<Card> cards;
 
     private boolean isCurrentTurn = false;
-
 }

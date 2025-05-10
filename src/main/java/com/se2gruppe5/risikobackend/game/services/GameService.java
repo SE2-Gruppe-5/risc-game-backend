@@ -35,31 +35,32 @@ public class GameService {
     public boolean checkRequiresPlayerChange(UUID gameId) {
         return getGameById(gameId).getRequiresPlayerChange();
     }
+
     public void changeTerritory(UUID gameId, Territory territory) {
         getGameById(gameId).changeTerritory(territory);
     }
+
     public ArrayList<Territory> getTerritoryList(UUID gameId) {
         return getGameById(gameId).getTerritories();
     }
+
     public void updatePlayer(UUID gameId, Player player) {
         getGameById(gameId).updatePlayer(player);
     }
 
-    public void nextPhase(UUID gameId){
+    public void nextPhase(UUID gameId) {
         getGame(gameId).nextPhase();
     }
-    public void nextPlayer(UUID gameId){
+
+    public void nextPlayer(UUID gameId) {
         getGame(gameId).nextPlayer();
     }
 
-    private Game getGame(UUID gameId){
+    private Game getGame(UUID gameId) {
         Game g = gameRepository.getGame(gameId);
         if (g == null) {
             throw new IllegalArgumentException("Game not found");
         }
         return g;
     }
-
-
-
 }

@@ -98,7 +98,8 @@ public class Game {
         territories.remove(getListedTerritoryById(t.id()));
         territories.add(t);
     }
-    public void updatePlayer(Player p){
+
+    public void updatePlayer(Player p) {
         checkPlayerValid(p);
         players.put(p.getUuid(), p);
         playerTurnOrder.remove(getListedPlayerById(p.getUuid()));
@@ -113,6 +114,7 @@ public class Game {
             throw new IllegalArgumentException("Territory with ID" + t.id() + "does not exist. [what?] [how?]");
         }
     }
+
     private void checkPlayerValid(Player p) {
         if (!players.containsKey(p.getUuid())) {
             throw new IllegalArgumentException("Territory with ID" + p.getUuid() + "does not exist. [what?] [how?]");
@@ -127,8 +129,9 @@ public class Game {
         }
         return null;
     }
+
     private Player getListedPlayerById(UUID id) {
-        for (Player p: players.values()) {
+        for (Player p : players.values()) {
             if (p.getUuid() == id) {
                 return p;
             }
