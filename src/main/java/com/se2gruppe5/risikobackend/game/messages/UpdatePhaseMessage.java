@@ -5,9 +5,9 @@ import com.se2gruppe5.risikobackend.sse.MessageType;
 
 import java.util.UUID;
 
-public record NextPhaseMessage(UUID gameId) implements Message {
+public record UpdatePhaseMessage(UUID gameId, int phase) implements Message {
     @Override
     public MessageType getType() {
-        return MessageType.NEXT_PHASE;
+        return MessageType.UPDATE_PHASE;
     }
 }

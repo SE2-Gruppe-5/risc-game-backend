@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class GameService {
@@ -48,12 +49,24 @@ public class GameService {
         getGameById(gameId).updatePlayer(player);
     }
 
+    public ConcurrentHashMap<UUID, Player> getPlayers(UUID gameId) {
+        return getGameById(gameId).getPlayers();
+    }
+
+    public ArrayList<Territory> getTerritories(UUID gameId) {
+        return getGameById(gameId).getTerritories();
+    }
+
     public void nextPhase(UUID gameId) {
         getGame(gameId).nextPhase();
     }
 
     public void nextPlayer(UUID gameId) {
         getGame(gameId).nextPlayer();
+    }
+
+    public int getPhase(UUID gameId) {
+        return getGame(gameId).getPhase();
     }
 
     private Game getGame(UUID gameId) {

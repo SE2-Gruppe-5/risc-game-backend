@@ -75,6 +75,10 @@ public class Game {
     private boolean requiresPlayerChangeFlag = false;
 
 
+    public int getPhase() {
+        return Math.max(phaseIndex, 0);
+    }
+
     //Phases are: ATTACK, REINFORCE, TRADE
     // (this semantic meaning is in no way conveyed here,
     // as the backend only needs to know about there being three phases ;)
@@ -83,7 +87,7 @@ public class Game {
 
     public void nextPhase() {
         phaseIndex++;
-        if (phaseIndex >= phaseIndexLength) {
+        if (phaseIndex > phaseIndexLength) {
             phaseIndex = 0;
             requiresPlayerChangeFlag = true;
         }
