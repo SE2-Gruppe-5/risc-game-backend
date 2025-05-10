@@ -9,6 +9,13 @@ public record Player(UUID uuid, String name, List<Card> cards) {
     public Player(UUID uuid, String name){
         this(uuid, name, new ArrayList<Card>());
     }
-
+    public int addCard(Card card){
+        cards.add(card);
+        return cards.size();
+    }
+    public int removeCard(Card card){
+        cards.remove(card);
+        return cards.size();
+    }
 
 }

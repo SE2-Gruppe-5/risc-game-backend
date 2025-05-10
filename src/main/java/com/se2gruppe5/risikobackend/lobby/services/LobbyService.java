@@ -108,7 +108,7 @@ public class LobbyService {
 
         Game game = gameService.createGame(lobby);
         lobbyRepository.removeLobby(id);
-        sseBroadcastService.broadcast(lobby, new GameStartMessage(game.uuid()));
+        sseBroadcastService.broadcast(lobby, new GameStartMessage(game.getUuid()));
         game.start();
     }
 }

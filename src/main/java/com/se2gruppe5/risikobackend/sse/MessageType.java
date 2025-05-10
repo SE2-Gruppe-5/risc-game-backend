@@ -5,5 +5,9 @@ public enum MessageType {
     CHAT,
     JOIN_LOBBY,
     LEAVE_LOBBY,
-    START_GAME
+    START_GAME,
+    CHANGE_TERRITORY,
+    CHANGE_PHASE,
+    UPDATE_PLAYERS,
+    CARD_ACTION,
 }
