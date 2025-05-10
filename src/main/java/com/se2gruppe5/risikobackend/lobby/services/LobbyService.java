@@ -73,9 +73,8 @@ public class LobbyService {
         if (lobby.players().contains(player)) {
             throw new IllegalStateException("Player already in lobby");
         }
-        lobby.players().put(player.uuid(), player);
-        //todo analyze if for loop is redundant
-      sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.uuid(), player.name(), id));
+        lobby.players().put(player.getUuid(), player);
+        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.getUuid(), player.getName(), id));
         for (Map.Entry<UUID, Player> entry : lobby.players().entrySet()) {
             if (entry.getKey().equals(player.uuid())) continue;
             Player lobbyPlayer = entry.getValue();

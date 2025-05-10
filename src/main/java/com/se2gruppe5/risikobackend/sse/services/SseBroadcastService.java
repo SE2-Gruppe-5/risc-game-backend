@@ -2,6 +2,7 @@ package com.se2gruppe5.risikobackend.sse.services;
 
 import com.google.gson.Gson;
 import com.se2gruppe5.risikobackend.common.util.IdUtil;
+import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.sse.Message;
 import com.se2gruppe5.risikobackend.sse.repositories.SseSinkRepository;
@@ -13,6 +14,7 @@ import reactor.core.publisher.FluxSink;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
@@ -60,6 +62,12 @@ public class SseBroadcastService {
 
     public void broadcast(Lobby lobby, Message message) {
         this.broadcast(lobby.players().keySet(), message);
+    }
+    public void broadcast(Game game, Message message) {
+        this.broadcast(game.getPlayers().keySet(), message);
+    }
+    public void broadcast(UUID uuid, Message message) {
+        this.broadcast(Collections.singleton(uuid),message);
     }
 
     public void send(FluxSink<ServerSentEvent<String>> sink, Message message) {

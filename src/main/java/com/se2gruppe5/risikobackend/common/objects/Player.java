@@ -5,17 +5,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public record Player(UUID uuid, String name, List<Card> cards) {
+public class Player {
     public Player(UUID uuid, String name){
-        this(uuid, name, new ArrayList<Card>());
-    }
-    public int addCard(Card card){
-        cards.add(card);
-        return cards.size();
-    }
-    public int removeCard(Card card){
-        cards.remove(card);
-        return cards.size();
+        this(uuid, name, new ArrayList<>());
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setIsCurrentTurn(boolean b){
+        isCurrentTurn = b;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Player(UUID uuid, String name, List<Card> cards){
+        this.uuid = uuid;
+        this.name = name;
+        this.cards = cards;
+    }
+    private final UUID uuid;
+    private final String name;
+
+    private List<Card> cards;
+
+    private boolean isCurrentTurn = false;
 }
