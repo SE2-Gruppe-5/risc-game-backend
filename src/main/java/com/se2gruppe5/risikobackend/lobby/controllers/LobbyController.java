@@ -4,6 +4,7 @@ import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.lobby.services.LobbyService;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/lobby")
 public class LobbyController {
     private final LobbyService lobbyService;
@@ -46,6 +47,7 @@ public class LobbyController {
     public void joinLobby(@PathVariable String id,
                           @RequestParam UUID uuid,
                           @RequestParam String name) {
+        System.out.printf("%s %s %s",id,name,uuid);
         if (!sseBroadcastService.hasSink(uuid)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Player not found");
         }
