@@ -1,6 +1,5 @@
 package com.se2gruppe5.risikobackend.game.objects;
 
-import com.se2gruppe5.risikobackend.common.objects.Card;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 
@@ -10,24 +9,30 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Game {
-    private Player currentPlayer;
-    private UUID uuid;
+    private final UUID uuid;
     private ArrayList<Territory> territories;
 
     public ConcurrentHashMap<UUID, Player> getPlayers() {
         return players;
     }
 
+    public ArrayList<Territory> getTerritories() {
+        return territories;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
     private final ConcurrentHashMap<UUID, Player> players;
     private final List<Player> playerTurnOrder = new ArrayList<>();
-    private final int MAX_CARDS = 4;
 
     public Game(UUID uuid) {
-        this(uuid, new ConcurrentHashMap<UUID, Player>(), new ArrayList<Territory>());
+        this(uuid, new ConcurrentHashMap<>(), new ArrayList<>());
     }
 
     public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players) {
-        this(uuid, players, new ArrayList<Territory>());
+        this(uuid, players, new ArrayList<>());
     }
 
     public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, ArrayList<Territory> territories) {
@@ -52,17 +57,7 @@ public class Game {
     }
 
     private ArrayList<Territory> initializeTerritories() {
-        return null;
-    }
-
-    public void addCardToPlayer(Player player, Card card) {
-        if (player.addCard(card) > MAX_CARDS) {
-            //send signal to remove card
-        }
-    }
-
-    public void removeCardFromPlayer(Player player, Card card) {
-        player.removeCard(card);
+        return null; //todo
     }
 
     private int playerIndex = -1;
@@ -81,6 +76,8 @@ public class Game {
 
 
     //Phases are: ATTACK, REINFORCE, TRADE
+    // (this semantic meaning is in no way conveyed here,
+    // as the backend only needs to know about there being three phases ;)
     private int phaseIndex = -1;
     private final int phaseIndexLength = 3;
 
@@ -96,18 +93,16 @@ public class Game {
         return requiresPlayerChangeFlag;
     }
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
     public void changeTerritory(Territory t) {
         checkTerritoryValid(t);
         territories.remove(getListedTerritoryById(t.id()));
         territories.add(t);
     }
-
-    public ArrayList<Territory> getTerritories() {
-        return territories;
+    public void updatePlayer(Player p){
+        checkPlayerValid(p);
+        players.put(p.getUuid(), p);
+        playerTurnOrder.remove(getListedPlayerById(p.getUuid()));
+        playerTurnOrder.add(p);
     }
 
     private void checkTerritoryValid(Territory t) {
@@ -116,6 +111,11 @@ public class Game {
         }
         if (getListedTerritoryById(t.id()) == null) {
             throw new IllegalArgumentException("Territory with ID" + t.id() + "does not exist. [what?] [how?]");
+        }
+    }
+    private void checkPlayerValid(Player p) {
+        if (!players.containsKey(p.getUuid())) {
+            throw new IllegalArgumentException("Territory with ID" + p.getUuid() + "does not exist. [what?] [how?]");
         }
     }
 
@@ -127,44 +127,13 @@ public class Game {
         }
         return null;
     }
-    /*
-    public Player getCurrentPlayer() {
-        return currentPlayer;
+    private Player getListedPlayerById(UUID id) {
+        for (Player p: players.values()) {
+            if (p.getUuid() == id) {
+                return p;
+            }
+        }
+        return null;
     }
 
-    public void setCurrentPlayer(Player currentPlayer) {
-        this.currentPlayer = currentPlayer;
-    }
-
-
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public ArrayList<Territory> getTerritories() {
-        return territories;
-    }
-
-    public void setTerritories(ArrayList<Territory> territories) {
-        this.territories = territories;
-    }
-
-    public ConcurrentHashMap<UUID, Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(ConcurrentHashMap<UUID, Player> players) {
-        this.players = players;
-    }
-
-    public List<UUID> getTurnorder() {
-        return turnorder;
-    }
-
-    public void setTurnorder(List<UUID> turnorder) {
-        this.turnorder = turnorder;
-    }
-
-     */
 }

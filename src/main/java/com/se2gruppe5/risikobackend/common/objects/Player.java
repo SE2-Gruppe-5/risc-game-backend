@@ -7,8 +7,17 @@ import java.util.UUID;
 
 public class Player {
     public Player(UUID uuid, String name){
-        this(uuid, name, new ArrayList<Card>());
+        this(uuid, name, new ArrayList<>());
     }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setIsCurrentTurn(boolean b){
+        isCurrentTurn = b;
+    }
+    
     public Player(UUID uuid, String name, List<Card> cards){
         this.uuid = uuid;
         this.name = name;
@@ -16,23 +25,9 @@ public class Player {
     }
     private final UUID uuid;
     private final String name;
+
     private List<Card> cards;
 
     private boolean isCurrentTurn = false;
 
-    public void setIsCurrentTurn(boolean b){
-        isCurrentTurn = b;
-    }
-    public boolean getIsCurrentTurn(){
-        return isCurrentTurn;
-    }
-
-    public int addCard(Card card){
-        cards.add(card);
-        return cards.size();
-    }
-    public int removeCard(Card card){
-        cards.remove(card);
-        return cards.size();
-    }
 }

@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.game.services;
 
+import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.util.IdUtil;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -39,6 +40,9 @@ public class GameService {
     }
     public ArrayList<Territory> getTerritoryList(UUID gameId) {
         return getGameById(gameId).getTerritories();
+    }
+    public void updatePlayer(UUID gameId, Player player) {
+        getGameById(gameId).updatePlayer(player);
     }
 
     public void nextPhase(UUID gameId){
