@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 class GameControllerUnitTest {
     GameController gameController;
 
-    @BeforeEach
-    void setup() {
-        gameController = new GameController();
-    }
+   // @BeforeEach
+   // void setup() {
+   //     gameController = new GameController();
+   // }
 }

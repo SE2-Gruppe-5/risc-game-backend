@@ -18,7 +18,6 @@ public class Game {
     private ArrayList<Territory> territories;
     private ConcurrentHashMap<UUID, Player> players;
     private List<UUID> turnorder = new ArrayList<>();
-    private Phases phase = Phases.Reinforce;
     private final int MAX_CARDS = 4;
     public Game(UUID uuid) {
         this(uuid, new ConcurrentHashMap<UUID, Player>(), new ArrayList<Territory>());
@@ -64,25 +63,24 @@ public class Game {
             currentPlayer = players.get(turnorder.getFirst());
         }else currentPlayer = players.get(turnorder.get(i));
     }
-    public void nextPhase(){
-        switch(phase){
-            case Reinforce:{
-                phase = Phases.ATTACK;
-            }
-                break;
-            case ATTACK:{
-                phase = Phases.TRADE;
-            }
-                break;
-            case TRADE:{
-                phase = Phases.Reinforce;
-                nextPlayer();
-            }
-                break;
+
+    private final Phases[] phaseArray = {
+            Phases.ATTACK,
+            Phases.REINFORCE,
+            Phases.TRADE
+    };
+    private int phaseIndex = 0;
+
+    public boolean nextPhase(){
+        phaseIndex++;
+        if(phaseIndex >= phaseArray.length){
+            phaseIndex = 0;
+            return true;
         }
+        return false;
     }
 
-
+    /*
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
@@ -122,4 +120,6 @@ public class Game {
     public void setTurnorder(List<UUID> turnorder) {
         this.turnorder = turnorder;
     }
+    
+     */
 }

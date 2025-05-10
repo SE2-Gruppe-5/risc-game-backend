@@ -25,6 +25,25 @@ public class GameService {
         return game;
     }
 
+    public Game getGameById(UUID gameId) {
+        return gameRepository.getGame(gameId);
+    }
+
+    public boolean nextPhase(UUID gameId){
+        return getGame(gameId).nextPhase();
+    }
+    public void nextPlayer(UUID gameId){
+        getGame(gameId).nextPlayer();
+    }
+
+    private Game getGame(UUID gameId){
+        Game g = gameRepository.getGame(gameId);
+        if (g == null) {
+            throw new IllegalArgumentException("Game not found");
+        }
+        return g;
+    }
+
 
 
 }
