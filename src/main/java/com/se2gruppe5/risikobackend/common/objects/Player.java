@@ -29,8 +29,7 @@ public class Player {
     }
     private final UUID uuid;
     private final String name;
-
-    private List<Card> cards;
+    private final List<Card> cards;
 
     private boolean isCurrentTurn = false;
 }

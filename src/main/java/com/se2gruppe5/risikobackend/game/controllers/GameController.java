@@ -4,7 +4,7 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
-import com.se2gruppe5.risikobackend.game.messages.NextPhaseMessage;
+import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.services.GameService;
@@ -46,7 +46,7 @@ public class GameController {
         try {
             gameService.updatePlayer(gameUUID, player);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePlayersMessage(gameUUID, gameService.getGameById(gameUUID).getPlayers()));
+                    new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
@@ -64,11 +64,11 @@ public class GameController {
         try {
             gameService.nextPhase(gameUUID);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new NextPhaseMessage(gameUUID));
+                    new UpdatePhaseMessage(gameUUID, gameService.getPhase(gameUUID)));
             if (gameService.checkRequiresPlayerChange(gameUUID)) {
                 gameService.nextPlayer(gameUUID);
                 sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                        new UpdatePlayersMessage(gameUUID, gameService.getGameById(gameUUID).getPlayers()));
+                        new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
             }
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -87,9 +87,11 @@ public class GameController {
         }
         try {
             sseBroadcastService.broadcast(playerUUID,
-                    new ChangeTerritoryMessage(gameUUID, gameService.getGameById(gameUUID).getTerritories()));
+                    new ChangeTerritoryMessage(gameUUID, gameService.getTerritories(gameUUID)));
             sseBroadcastService.broadcast(playerUUID,
-                    new UpdatePlayersMessage(gameUUID, gameService.getGameById(gameUUID).getPlayers()));
+                    new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
+            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+                    new UpdatePhaseMessage(gameUUID, gameService.getPhase(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
