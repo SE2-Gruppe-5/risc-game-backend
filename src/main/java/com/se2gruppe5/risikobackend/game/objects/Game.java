@@ -1,11 +1,8 @@
 package com.se2gruppe5.risikobackend.game.objects;
 
 import com.se2gruppe5.risikobackend.common.objects.Card;
-import com.se2gruppe5.risikobackend.common.objects.Phases;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +18,14 @@ public class Game {
         return players;
     }
 
-    private ConcurrentHashMap<UUID, Player> players;
-    private List<UUID> turnorder = new ArrayList<>();
+    private final ConcurrentHashMap<UUID, Player> players;
+    private final List<Player> playerTurnOrder = new ArrayList<>();
     private final int MAX_CARDS = 4;
+
     public Game(UUID uuid) {
         this(uuid, new ConcurrentHashMap<UUID, Player>(), new ArrayList<Territory>());
     }
-    
+
     public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players) {
         this(uuid, players, new ArrayList<Territory>());
     }
@@ -39,11 +37,17 @@ public class Game {
         start();
     }
 
-    public void start() {
-        for(Player player : players.values()) {
-            turnorder.add(player.uuid());
+    private void setAllPlayersCurrentTurnFalse() {
+        for (Player player : players.values()) {
+            player.setIsCurrentTurn(false);
         }
-        currentPlayer = players.get(turnorder.getFirst());
+    }
+
+    public void start() {
+        playerTurnOrder.addAll(players.values());
+        nextPhase(); //hardcoded at -1, gets +=1 'ed
+        nextPlayer(); //hardcoded at -1, gets +=1 'ed
+
         this.territories = initializeTerritories();
     }
 
@@ -52,41 +56,43 @@ public class Game {
     }
 
     public void addCardToPlayer(Player player, Card card) {
-        if(player.addCard(card) >MAX_CARDS){
+        if (player.addCard(card) > MAX_CARDS) {
             //send signal to remove card
         }
     }
+
     public void removeCardFromPlayer(Player player, Card card) {
         player.removeCard(card);
     }
-    public void nextPlayer(){
-        int i = 0;
-        while(currentPlayer != players.get(turnorder.get(i))) {
-            i++;
+
+    private int playerIndex = -1;
+
+    public void nextPlayer() {
+        setAllPlayersCurrentTurnFalse();
+        playerIndex++;
+        if (playerIndex >= playerTurnOrder.size()) {
+            playerIndex = 0;
         }
-        if(i == turnorder.size()-1){
-            currentPlayer = players.get(turnorder.getFirst());
-        }else currentPlayer = players.get(turnorder.get(i));
+        playerTurnOrder.get(playerIndex).setIsCurrentTurn(true);
         requiresPlayerChangeFlag = false;
     }
+
     private boolean requiresPlayerChangeFlag = false;
 
-    private final Phases[] phaseArray = {
-            Phases.ATTACK,
-            Phases.REINFORCE,
-            Phases.TRADE
-    };
-    private int phaseIndex = 0;
 
-    public void nextPhase(){
+    //Phases are: ATTACK, REINFORCE, TRADE
+    private int phaseIndex = -1;
+    private final int phaseIndexLength = 3;
+
+    public void nextPhase() {
         phaseIndex++;
-        if(phaseIndex >= phaseArray.length){
+        if (phaseIndex >= phaseIndexLength) {
             phaseIndex = 0;
             requiresPlayerChangeFlag = true;
         }
     }
 
-    public boolean getRequiresPlayerChange(){
+    public boolean getRequiresPlayerChange() {
         return requiresPlayerChangeFlag;
     }
 
@@ -94,6 +100,33 @@ public class Game {
         return uuid;
     }
 
+    public void changeTerritory(Territory t) {
+        checkTerritoryValid(t);
+        territories.remove(getListedTerritoryById(t.id()));
+        territories.add(t);
+    }
+
+    public ArrayList<Territory> getTerritories() {
+        return territories;
+    }
+
+    private void checkTerritoryValid(Territory t) {
+        if (t.id() <= 0) {
+            throw new IllegalArgumentException("Territory ID invalid.");
+        }
+        if (getListedTerritoryById(t.id()) == null) {
+            throw new IllegalArgumentException("Territory with ID" + t.id() + "does not exist. [what?] [how?]");
+        }
+    }
+
+    private Territory getListedTerritoryById(int id) {
+        for (Territory terrs : territories) {
+            if (terrs.id() == id) {
+                return terrs;
+            }
+        }
+        return null;
+    }
     /*
     public Player getCurrentPlayer() {
         return currentPlayer;

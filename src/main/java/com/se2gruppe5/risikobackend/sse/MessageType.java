@@ -6,8 +6,8 @@ public enum MessageType {
     JOIN_LOBBY,
     LEAVE_LOBBY,
     START_GAME,
-    CHANGE_TERRITORY,
     NEXT_PHASE,
     UPDATE_PLAYERS,
+    UPDATE_TERRITORIES,
     CARD_ACTION,
 }

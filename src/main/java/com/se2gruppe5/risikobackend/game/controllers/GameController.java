@@ -1,6 +1,8 @@
 package com.se2gruppe5.risikobackend.game.controllers;
 
 
+import com.se2gruppe5.risikobackend.common.objects.Territory;
+import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.NextPhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
@@ -31,8 +33,7 @@ public class GameController {
     @PutMapping("/{id}/change-phase")
     @ResponseStatus(HttpStatus.CREATED)
     public void changePhase(@PathVariable String id,
-                            @RequestParam UUID uuid,
-                            @RequestParam String name) {
+                            @RequestParam UUID uuid) {
         if (!sseBroadcastService.hasSink(uuid)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
@@ -40,11 +41,30 @@ public class GameController {
             gameService.nextPhase(uuid);
             sseBroadcastService.broadcast(gameService.getGameById(uuid),
                     new NextPhaseMessage(uuid));
-            if (gameService.requiresPlayerChange(uuid)) {
+            if (gameService.checkRequiresPlayerChange(uuid)) {
                 gameService.nextPlayer(uuid);
                 sseBroadcastService.broadcast(gameService.getGameById(uuid),
                         new UpdatePlayersMessage(uuid,gameService.getGameById(uuid).getPlayers()));
             }
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    @PutMapping("/{id}/change-territory")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void changeTerritory(@PathVariable String id,
+                            @RequestParam UUID uuid,
+                            @RequestParam Territory territory) {
+        if (!sseBroadcastService.hasSink(uuid)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
+        }
+        try {
+            gameService.getGameById(uuid).changeTerritory(territory);
+            sseBroadcastService.broadcast(gameService.getGameById(uuid),
+                    new ChangeTerritoryMessage(uuid,gameService.getGameById(uuid).getTerritories()));
+
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
