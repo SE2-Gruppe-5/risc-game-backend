@@ -29,8 +29,12 @@ public class GameService {
         return gameRepository.getGame(gameId);
     }
 
-    public boolean nextPhase(UUID gameId){
-        return getGame(gameId).nextPhase();
+    public boolean requiresPlayerChange(UUID gameId) {
+        return getGameById(gameId).getRequiresPlayerChange();
+    }
+
+    public void nextPhase(UUID gameId){
+        getGame(gameId).nextPhase();
     }
     public void nextPlayer(UUID gameId){
         getGame(gameId).nextPlayer();
