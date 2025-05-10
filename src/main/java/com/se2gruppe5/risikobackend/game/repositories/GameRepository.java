@@ -21,4 +21,6 @@ public interface GameRepository extends Repository<UUID, Game> {
     default Game getGame(UUID id) {
         return get(id);
     }
+
+
 }
