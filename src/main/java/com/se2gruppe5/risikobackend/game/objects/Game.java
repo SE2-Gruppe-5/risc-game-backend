@@ -57,7 +57,10 @@ public class Game {
     }
 
     private ArrayList<Territory> initializeTerritories() {
-        return null; //todo
+        ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
+        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11,1));
+        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22,2));
+        return t;
     }
 
     private int playerIndex = -1;
