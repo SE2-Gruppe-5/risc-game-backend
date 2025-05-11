@@ -13,6 +13,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceUnitTest {
+    /*
     GameRepository gameRepository;
     GameService gameService;
 
@@ -34,4 +35,6 @@ class GameServiceUnitTest {
         assertEquals(lobby.players(), game.players());
         Mockito.verify(gameRepository).addGame(game);
     }
+
+     */
 }

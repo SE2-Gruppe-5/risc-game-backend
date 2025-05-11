@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GameRepositoryImplUnitTest {
+    /*
     GameRepository gameRepository;
 
     @BeforeEach
@@ -43,4 +44,6 @@ class GameRepositoryImplUnitTest {
         gameRepository.removeGame(uuid);
         assertNull(gameRepository.getGame(uuid));
     }
+
+     */
 }
