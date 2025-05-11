@@ -34,14 +34,17 @@ public class GameController {
         this.sseBroadcastService = sseBroadcastService;
     }
 
-    @PatchMapping("/update-player")
+    @PatchMapping("/{id}/player/{playerId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void updatePlayer(@RequestParam UUID gameUUID,
-                             @RequestParam Player player) {
+    public void updatePlayer(@PathVariable("id") UUID gameUUID,
+                             @PathVariable("playerId") UUID playerUUID,
+                             @RequestParam String name,
+                             @RequestParam int color) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
         try {
+            Player player = new Player(playerUUID, name, color);
             gameService.updatePlayer(gameUUID, player);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
@@ -52,9 +55,9 @@ public class GameController {
         }
     }
 
-    @PatchMapping("/change-phase")
+    @PatchMapping("/{id}/phase")
     @ResponseStatus(HttpStatus.CREATED)
-    public void changePhase(@RequestParam UUID gameUUID) {
+    public void changePhase(@PathVariable("id") UUID gameUUID) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
@@ -74,10 +77,10 @@ public class GameController {
         }
     }
 
-    @PostMapping("/get-info")
+    @GetMapping("/{gameId}/player/{playerId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void getInfo(@RequestParam UUID gameUUID,
-                        @RequestParam UUID playerUUID) {
+    public void getPlayer(@PathVariable("gameId") UUID gameUUID,
+                        @PathVariable("playerId") UUID playerUUID) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
@@ -96,14 +99,17 @@ public class GameController {
     }
 
 
-    @PatchMapping("/change-territory")
+    @PatchMapping("/{id}/territory")
     @ResponseStatus(HttpStatus.CREATED)
-    public void changeTerritory(@RequestParam UUID gameUUID,
-                                @RequestParam Territory territory) {
+    public void changeTerritory(@PathVariable("id") UUID gameUUID,
+                                @RequestParam UUID owner,
+                                @RequestParam int id,
+                                @RequestParam int stat) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
         try {
+            Territory territory = new Territory(owner, stat, id);
             gameService.changeTerritory(gameUUID, territory);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new ChangeTerritoryMessage(gameUUID, gameService.getTerritoryList(gameUUID)));
