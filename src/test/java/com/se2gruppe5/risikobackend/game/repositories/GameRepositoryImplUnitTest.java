@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GameRepositoryImplUnitTest {
-    /*
     GameRepository gameRepository;
 
     @BeforeEach
@@ -33,6 +31,7 @@ class GameRepositoryImplUnitTest {
         assertFalse(gameRepository.hasGame(uuid));
     }
 
+    /*
     @Test
     void testGetGame() {
         UUID uuid = UUID.randomUUID();
@@ -44,6 +43,5 @@ class GameRepositoryImplUnitTest {
         gameRepository.removeGame(uuid);
         assertNull(gameRepository.getGame(uuid));
     }
-
      */
 }

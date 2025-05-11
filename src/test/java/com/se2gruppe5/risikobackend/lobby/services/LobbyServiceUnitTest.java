@@ -18,7 +18,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LobbyServiceUnitTest {
-    /*
     LobbyRepository lobbyRepository;
     SseBroadcastService sseBroadcaster;
     GameService gameService;
@@ -44,7 +43,7 @@ class LobbyServiceUnitTest {
         Lobby lobby = new Lobby(lobbyId);
 
         UUID uuid = UUID.randomUUID();
-        lobby.players().put(uuid, new Player(uuid, "testPlayerName"));
+        lobby.players().put(uuid, new Player(uuid, "testPlayerName", 0));
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
         assertDoesNotThrow(() -> lobbyService.deleteLobby(lobbyId));
@@ -68,24 +67,24 @@ class LobbyServiceUnitTest {
         Lobby lobby = new Lobby(lobbyId);
 
         UUID uuid = UUID.randomUUID();
-        Player player = new Player(uuid, "testPlayerName");
+        Player player = new Player(uuid, "testPlayerName", 0);
         lobby.players().put(uuid, player);
 
         UUID newUuid = UUID.randomUUID();
-        Player newPlayer = new Player(newUuid, "testNewPlayerName");
+        Player newPlayer = new Player(newUuid, "testNewPlayerName", 0);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
         assertDoesNotThrow(() -> lobbyService.joinLobby(lobbyId, newPlayer));
         assertEquals(2, lobby.players().size());
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
-        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(lobby, new JoinLobbyMessage(newUuid, newPlayer.name(), lobbyId));
-        Mockito.verify(sseBroadcaster, Mockito.times(1)).send(newUuid, new JoinLobbyMessage(uuid, player.name(), lobbyId));
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(lobby, new JoinLobbyMessage(newUuid, newPlayer.getName(), lobbyId));
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).send(newUuid, new JoinLobbyMessage(uuid, player.getName(), lobbyId));
     }
 
     @Test
     void testJoinInvalidLobby() {
         String lobbyId = "testLobbyId";
-        Player player = new Player(UUID.randomUUID(), "testPlayerName");
+        Player player = new Player(UUID.randomUUID(), "testPlayerName", 0);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(null);
         assertThrows(IllegalArgumentException.class, () -> lobbyService.joinLobby(lobbyId, player));
@@ -98,7 +97,7 @@ class LobbyServiceUnitTest {
         Lobby lobby = new Lobby(lobbyId);
 
         UUID uuid = UUID.randomUUID();
-        Player player = new Player(uuid, "testPlayerName");
+        Player player = new Player(uuid, "testPlayerName", 0);
         lobby.players().put(uuid, player);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
@@ -112,7 +111,7 @@ class LobbyServiceUnitTest {
         Lobby lobby = new Lobby(lobbyId);
 
         UUID uuid = UUID.randomUUID();
-        Player player = new Player(uuid, "testPlayerName");
+        Player player = new Player(uuid, "testPlayerName", 0);
         lobby.players().put(uuid, player);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
@@ -138,10 +137,10 @@ class LobbyServiceUnitTest {
         Lobby lobby = new Lobby(lobbyId);
 
         UUID uuid1 = UUID.randomUUID();
-        Player player1 = new Player(uuid1, "testPlayer1Name");
+        Player player1 = new Player(uuid1, "testPlayer1Name", 0);
 
         UUID uuid2 = UUID.randomUUID();
-        Player player2 = new Player(uuid2, "testPlayer2Name");
+        Player player2 = new Player(uuid2, "testPlayer2Name", 0);
         lobby.players().put(uuid1, player1);
         lobby.players().put(uuid2, player2);
 
@@ -172,6 +171,4 @@ class LobbyServiceUnitTest {
         assertThrows(IllegalStateException.class, () -> lobbyService.startGame(lobbyId));
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
     }
-
-     */
 }
