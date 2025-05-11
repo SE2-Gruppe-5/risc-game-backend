@@ -2,10 +2,14 @@ package com.se2gruppe5.risikobackend.game.objects;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import com.se2gruppe5.risikobackend.troopterritoryDistribution.AssignTerritories;
+import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
+
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -135,6 +139,59 @@ public class Game {
             }
         }
         return null;
+    }
+    public void assignTerritories(UUID gameId) {
+        Game game = getGame(gameId);
+        AssignTerritories assigner = new AssignTerritories();
+
+        List<UUID> playerIds = new ArrayList<>(game.getPlayers().keySet());
+        List<Integer> territoryIds = game.getTerritories().stream()
+                .map(Territory::id)
+                .toList();
+
+        if (territoryIds.size() % playerIds.size() != 0) {
+            throw new IllegalStateException("Territories must divide evenly among players");
+        }
+
+        // Verteile Territorien zufällig
+        Map<UUID, List<Integer>> assigned = assigner.assignTerritories(playerIds, territoryIds);
+
+        for (Map.Entry<UUID, List<Integer>> entry : assigned.entrySet()) {
+            UUID playerId = entry.getKey();
+            for (Integer territoryId : entry.getValue()) {
+                for (Territory t : game.getTerritories()) {
+                    if (t.id() == territoryId) {
+                        Territory updated = new Territory(playerId, t.id(), t.stat());
+                        game.changeTerritory(updated);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    public void distributeStartingTroops(UUID gameId, int troopsPerPlayer) {
+        Game game = getGame(gameId);
+        StartTroops distributor = new StartTroops();
+
+        for (UUID playerId : game.getPlayers().keySet()) {
+            List<Territory> owned = game.getTerritories().stream()
+                    .filter(t -> playerId.equals(t.owner()))
+                    .toList();
+
+            if (owned.isEmpty()) continue;
+
+            List<Integer> territoryIds = owned.stream()
+                    .map(Territory::id)
+                    .toList();
+
+            Map<Integer, Integer> distributed = distributor.distribute(territoryIds, troopsPerPlayer);
+
+            for (Territory t : owned) {
+                int newStat = distributed.getOrDefault(t.id(), 1);
+                Territory updated = new Territory(playerId, t.id(), newStat);
+                game.changeTerritory(updated);
+            }
+        }
     }
 
 }

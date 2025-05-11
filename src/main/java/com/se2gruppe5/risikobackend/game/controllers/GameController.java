@@ -7,36 +7,35 @@ import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
+import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import com.se2gruppe5.risikobackend.troopterritoryDistribution.AssignTerritories;
-import com.se2gruppe5.risikobackend.troopterritoryDistribution.Game;
 import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
-import com.se2gruppe5.risikobackend.troopterritoryDistribution.Territory;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-@Controller
 @RestController
 @RequestMapping("/game")
 public class GameController {
 
     private final GameService gameService;
     private final SseBroadcastService sseBroadcastService;
+
 
     //No create mapping, as it is instantiated by lobby
 
@@ -132,36 +131,25 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-    private final Game game;
 
-    public GameController() {
-        // Beispiel-Spiel und initialisierte Spieler
-        this.game = new Game(UUID.randomUUID());
+    @PostMapping("/assign-territories/{gameId}")
+    public ResponseEntity<Void> assignTerritories(@PathVariable UUID gameId) {
+        Game game = gameService.getGameById(gameId);
 
-        // Beispiel: Territorien und Spieler hinzufügen
-        game.addTerritory(new Territory("Territory1", 0));
-        game.addTerritory(new Territory("Territory2", 0));
-        game.addTerritory(new Territory("Territory3", 0));
-        game.addTerritory(new Territory("Territory4", 0));
+        // Hole Player-UUIDs
+        List<UUID> playerIds = new ArrayList<>(game.getPlayers().keySet());
+        // Hole Territory-IDs
+        List<String> territoryIds = game.getTerritories().stream()
+                .map(Territory::getId)
+                .toList();
 
-
-        // Spieler werden extern zugewiesen
-    }
-
-    // API für die Territorien-Zuweisung
-    @GetMapping("/assignTerritories")
-    public Map<String, List<String>> assignTerritories() {
-        List<String> players = game.getPlayers(); // Namen der Spieler holen
-        List<String> territories = game.getTerritories();
         AssignTerritories assigner = new AssignTerritories();
-        return assigner.assignTerritories(players, territories);
+        Map<UUID, List<String>> assignments = assigner.assignTerritories(playerIds, territoryIds);
+
+        game.assignTerritories(assignments);
+
+        return ResponseEntity.ok().build();
     }
 
-    // API für die Truppenverteilung
-    @GetMapping("/distributeTroops")
-    public Map<String, Map<String, Integer>> distributeStartingTroops() {
-        List<String> territories = game.getTerritories();
-        StartTroops starter = new StartTroops();
-        return starter.distributeStartingTroops(territories, 30); // Standard 30 Truppen
-    }
+
 }

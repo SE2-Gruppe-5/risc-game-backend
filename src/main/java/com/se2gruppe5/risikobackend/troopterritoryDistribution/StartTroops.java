@@ -8,31 +8,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class StartTroops {
     private final Random random = new SecureRandom();
-    public Map<String, Map<String, Integer>> distributeStartingTroops(List<String> territories, int totalTroops) {
-        if (territories.isEmpty()) {
-            throw new IllegalArgumentException("Player must own at least one territory");
+    public Map<Integer, Integer> distribute(List<Integer> territoryIds, int totalTroops) {
+        if (territoryIds.isEmpty()) throw new IllegalArgumentException("No territories");
+        if (totalTroops < territoryIds.size()) throw new IllegalArgumentException("Too few troops");
+
+        Map<Integer, Integer> result = new ConcurrentHashMap<>();
+        territoryIds.forEach(id -> result.put(id, 1));
+        int remaining = totalTroops - territoryIds.size();
+
+        while (remaining > 0) {
+            int randomId = territoryIds.get(random.nextInt(territoryIds.size()));
+            result.put(randomId, result.get(randomId) + 1);
+            remaining--;
         }
 
-        if (totalTroops < territories.size()) {
-            throw new IllegalArgumentException("Not enough troops to allocate at least one per territory");
-        }
-
-        int remainingTroops = totalTroops - territories.size();
-
-        // Initial Truppen (1 pro Territorium)
-        Map<String, Integer> territoryTroops = new ConcurrentHashMap<>();
-        territories.forEach(territory -> territoryTroops.put(territory, 1));
-
-        // Verteilung der restlichen Truppen zufällig
-        while (remainingTroops > 0) {
-            String randomTerritory = territories.get(random.nextInt(territories.size()));
-            territoryTroops.put(randomTerritory, territoryTroops.get(randomTerritory) + 1);
-            remainingTroops--;
-        }
-
-        // Rückgabe der Truppenverteilung
-        Map<String, Map<String, Integer>> result = new ConcurrentHashMap<>();
-        result.put("troops", territoryTroops);
         return result;
     }
 }

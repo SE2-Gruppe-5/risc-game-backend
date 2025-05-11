@@ -6,10 +6,14 @@ import com.se2gruppe5.risikobackend.common.util.IdUtil;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.repositories.GameRepository;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
+import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 

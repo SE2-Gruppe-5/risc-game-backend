@@ -6,31 +6,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 public class AssignTerritories {
     private final Random random = new SecureRandom();
-    public Map<String, List<String>> assignTerritories(List<String> players, List<String> allTerritories) {
-        if (players.isEmpty()) {
-            throw new IllegalArgumentException("There must be at least one player");
-        }
-
-        if (allTerritories.size() % players.size() != 0) {
-            throw new IllegalArgumentException("Territories must divide evenly among players");
-        }
-
-        List<String> shuffledTerritories = new ArrayList<>(allTerritories); // <-- fix
-        Collections.shuffle(shuffledTerritories, random);
-
-        int territoriesPerPlayer = allTerritories.size() / players.size();
-        Map<String, List<String>> territoriesAssignment = new ConcurrentHashMap<>();
+    public Map<UUID, List<Integer>> assignTerritories(List<UUID> players, List<Integer> territoryIds) {
+        Collections.shuffle(territoryIds, random);
+        Map<UUID, List<Integer>> result = new ConcurrentHashMap<>();
+        int size = territoryIds.size() / players.size();
 
         for (int i = 0; i < players.size(); i++) {
-            String player = players.get(i);
-            int start = i * territoriesPerPlayer;
-            int end = start + territoriesPerPlayer;
-            territoriesAssignment.put(player, shuffledTerritories.subList(start, end));
+            UUID playerId = players.get(i);
+            int from = i * size;
+            int to = from + size;
+            result.put(playerId, new ArrayList<>(territoryIds.subList(from, to)));
         }
 
-        return territoriesAssignment;
+        return result;
     }
 }
