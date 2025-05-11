@@ -77,10 +77,10 @@ public class GameController {
         }
     }
 
-    @GetMapping("/{gameId}/player/{playerId}")
+    @PostMapping("/{gameId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void getPlayer(@PathVariable("gameId") UUID gameUUID,
-                        @PathVariable("playerId") UUID playerUUID) {
+    public void getGameInfo(@PathVariable("gameId") UUID gameUUID,
+                            @RequestParam("uuid") UUID playerUUID) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
