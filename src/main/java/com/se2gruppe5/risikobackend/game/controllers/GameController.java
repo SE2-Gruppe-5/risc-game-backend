@@ -55,7 +55,7 @@ public class GameController {
         }
     }
 
-    @PatchMapping("/{id}/phase")
+    @GetMapping("/{id}/phase/next")
     @ResponseStatus(HttpStatus.CREATED)
     public void changePhase(@PathVariable("id") UUID gameUUID) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
