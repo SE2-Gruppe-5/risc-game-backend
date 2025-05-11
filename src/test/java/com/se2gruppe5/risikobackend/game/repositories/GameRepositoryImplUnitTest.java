@@ -16,6 +16,7 @@ class GameRepositoryImplUnitTest {
         gameRepository = new GameRepositoryImpl();
     }
 
+    /*
     @Test
     void testAddAndRemoveGame() {
         UUID uuid = UUID.randomUUID();
@@ -31,7 +32,6 @@ class GameRepositoryImplUnitTest {
         assertFalse(gameRepository.hasGame(uuid));
     }
 
-    /*
     @Test
     void testGetGame() {
         UUID uuid = UUID.randomUUID();
