@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface GameRepository extends Repository<UUID, Game> {
     default void addGame(Game game) {
-        add(game.uuid(), game);
+        add(game.getUuid(), game);
     }
 
     default void removeGame(UUID id) {
@@ -21,4 +21,6 @@ public interface GameRepository extends Repository<UUID, Game> {
     default Game getGame(UUID id) {
         return get(id);
     }
+
+
 }

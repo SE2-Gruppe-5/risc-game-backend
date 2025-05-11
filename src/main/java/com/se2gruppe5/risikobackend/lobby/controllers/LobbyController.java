@@ -6,17 +6,19 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.awt.*;
+import java.security.SecureRandom;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/lobby")
 public class LobbyController {
     private final LobbyService lobbyService;
     private final SseBroadcastService sseBroadcastService;
+    private final SecureRandom random = new SecureRandom();
 
     @Autowired
     public LobbyController(LobbyService lobbyService, SseBroadcastService sseBroadcastService) {
@@ -46,11 +48,13 @@ public class LobbyController {
     public void joinLobby(@PathVariable String id,
                           @RequestParam UUID uuid,
                           @RequestParam String name) {
+        System.out.printf("%s %s %s",id,name,uuid);
         if (!sseBroadcastService.hasSink(uuid)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Player not found");
         }
         try {
-            lobbyService.joinLobby(id, new Player(uuid, name));
+            Color c = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+            lobbyService.joinLobby(id, new Player(uuid, name, c.getRGB()));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {

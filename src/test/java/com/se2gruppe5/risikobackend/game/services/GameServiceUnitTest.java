@@ -25,13 +25,13 @@ class GameServiceUnitTest {
     @Test
     void testCreateGame() {
         UUID uuid = UUID.randomUUID();
-        Player player = new Player(uuid, "testPlayerName");
+        Player player = new Player(uuid, "testPlayerName", 0);
 
         Lobby lobby = new Lobby("testLobbyCode");
         lobby.players().put(uuid, player);
 
         Game game = gameService.createGame(lobby);
-        assertEquals(lobby.players(), game.players());
+        assertEquals(lobby.players(), game.getPlayers());
         Mockito.verify(gameRepository).addGame(game);
     }
 }

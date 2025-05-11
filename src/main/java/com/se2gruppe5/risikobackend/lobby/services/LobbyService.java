@@ -73,12 +73,12 @@ public class LobbyService {
         if (lobby.players().contains(player)) {
             throw new IllegalStateException("Player already in lobby");
         }
-        lobby.players().put(player.uuid(), player);
-        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.uuid(), player.name(), id));
+        lobby.players().put(player.getUuid(), player);
+        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.getUuid(), player.getName(), id));
         for (Map.Entry<UUID, Player> entry : lobby.players().entrySet()) {
-            if (entry.getKey().equals(player.uuid())) continue;
+            if (entry.getKey().equals(player.getUuid())) continue;
             Player lobbyPlayer = entry.getValue();
-            sseBroadcastService.send(player.uuid(), new JoinLobbyMessage(lobbyPlayer.uuid(), lobbyPlayer.name(), id));
+            sseBroadcastService.send(player.getUuid(), new JoinLobbyMessage(lobbyPlayer.getUuid(), lobbyPlayer.getName(), id));
         }
     }
 
@@ -108,7 +108,7 @@ public class LobbyService {
 
         Game game = gameService.createGame(lobby);
         lobbyRepository.removeLobby(id);
-        sseBroadcastService.broadcast(lobby, new GameStartMessage(game.uuid()));
+        sseBroadcastService.broadcast(lobby, new GameStartMessage(game.getUuid(), lobby.players()));
         game.start();
     }
 }
