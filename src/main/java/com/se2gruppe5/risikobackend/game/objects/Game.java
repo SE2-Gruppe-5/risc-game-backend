@@ -2,6 +2,7 @@ package com.se2gruppe5.risikobackend.game.objects;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,21 +10,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Game {
+    @Getter
     private final UUID uuid;
+    @Getter
     private ArrayList<Territory> territories;
-
-    public ConcurrentHashMap<UUID, Player> getPlayers() {
-        return players;
-    }
-
-    public ArrayList<Territory> getTerritories() {
-        return territories;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
-
+    @Getter
     private final ConcurrentHashMap<UUID, Player> players;
     private final List<Player> playerTurnOrder = new ArrayList<>();
 
@@ -44,7 +35,7 @@ public class Game {
 
     private void setAllPlayersCurrentTurnFalse() {
         for (Player player : players.values()) {
-            player.setIsCurrentTurn(false);
+            player.setCurrentTurn(false);
         }
     }
 
@@ -71,7 +62,7 @@ public class Game {
         if (playerIndex >= playerTurnOrder.size()) {
             playerIndex = 0;
         }
-        playerTurnOrder.get(playerIndex).setIsCurrentTurn(true);
+        playerTurnOrder.get(playerIndex).setCurrentTurn(true);
         requiresPlayerChangeFlag = false;
     }
 
