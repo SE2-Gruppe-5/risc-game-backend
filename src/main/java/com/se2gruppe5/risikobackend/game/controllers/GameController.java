@@ -86,9 +86,9 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
         }
         try {
-            sseBroadcastService.broadcast(playerUUID,
+            sseBroadcastService.send(playerUUID,
                     new ChangeTerritoryMessage(gameUUID, gameService.getTerritories(gameUUID)));
-            sseBroadcastService.broadcast(playerUUID,
+            sseBroadcastService.send(playerUUID,
                     new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new UpdatePhaseMessage(gameUUID, gameService.getPhase(gameUUID)));

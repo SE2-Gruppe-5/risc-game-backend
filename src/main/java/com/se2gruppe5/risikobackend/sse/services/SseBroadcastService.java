@@ -14,7 +14,6 @@ import reactor.core.publisher.FluxSink;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.UUID;
 
 @Service
@@ -63,11 +62,9 @@ public class SseBroadcastService {
     public void broadcast(Lobby lobby, Message message) {
         this.broadcast(lobby.players().keySet(), message);
     }
+
     public void broadcast(Game game, Message message) {
         this.broadcast(game.getPlayers().keySet(), message);
-    }
-    public void broadcast(UUID uuid, Message message) {
-        this.broadcast(Collections.singleton(uuid),message);
     }
 
     public void send(FluxSink<ServerSentEvent<String>> sink, Message message) {
