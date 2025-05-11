@@ -1,65 +1,22 @@
 package com.se2gruppe5.risikobackend.sse.repositories;
 
+import com.se2gruppe5.risikobackend.common.repositories.AbstractRepository;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.FluxSink;
 
-import java.util.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Repository
-public class SseSinkRepositoryImpl implements SseSinkRepository {
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final HashMap<UUID, FluxSink<String>> sinks = new HashMap<>();
-
+public class SseSinkRepositoryImpl extends AbstractRepository<UUID, FluxSink<ServerSentEvent<String>>> implements SseSinkRepository {
     @Override
-    public void addSink(UUID uuid, FluxSink<String> sink) {
-        try {
-            lock.writeLock().lock();
-            sinks.put(uuid, sink);
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    @Override
-    public void removeSink(UUID uuid) {
-        try {
-            lock.writeLock().lock();
-            sinks.remove(uuid);
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    @Override
-    public boolean hasSink(UUID uuid) {
+    public List<FluxSink<ServerSentEvent<String>>> getSinks() {
         try {
             lock.readLock().lock();
-            return sinks.containsKey(uuid);
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    @Override
-    public FluxSink<String> getSink(UUID uuid) {
-        try {
-            lock.readLock().lock();
-            FluxSink<String> sink = sinks.get(uuid);
-            if (sink != null) {
-                return sink;
-            }
-        } finally {
-            lock.readLock().unlock();
-        }
-        return null;
-    }
-
-    @Override
-    public List<FluxSink<String>> getSinks() {
-        try {
-            lock.readLock().lock();
-            return sinks.values().stream().toList();
+            return super.map.values().stream().toList();
         } finally {
             lock.readLock().unlock();
         }
@@ -67,10 +24,10 @@ public class SseSinkRepositoryImpl implements SseSinkRepository {
 
 
     @Override
-    public List<FluxSink<String>> getSinks(Collection<UUID> uuids) {
+    public List<FluxSink<ServerSentEvent<String>>> getSinks(Collection<UUID> uuids) {
         try {
             lock.readLock().lock();
-            return sinks.entrySet().stream()
+            return super.map.entrySet().stream()
                     .filter(entry -> uuids.contains(entry.getKey()))
                     .map(Map.Entry::getValue)
                     .toList();
