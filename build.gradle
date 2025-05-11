@@ -44,6 +44,7 @@ sonar {
         property "sonar.projectKey", "SE2-Gruppe-5_game-project-backend"
         property "sonar.organization", "se2-gruppe-5"
         property "sonar.host.url", "https://sonarcloud.io"
+        property("sonar.coverage.exclusions", "**/com/se2gruppe5/**") //todo: remove this line in sprint 3 !!!!
     }
 }
 
