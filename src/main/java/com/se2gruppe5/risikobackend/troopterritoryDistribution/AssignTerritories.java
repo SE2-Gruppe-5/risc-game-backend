@@ -1,5 +1,7 @@
 package com.se2gruppe5.risikobackend.troopterritoryDistribution;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -14,21 +16,18 @@ public class AssignTerritories {
             throw new IllegalArgumentException("Territories must divide evenly among players");
         }
 
-        Random random = new Random();
-        // Mischen der Territorien
-        List<String> shuffledTerritories = List.copyOf(allTerritories);
-        shuffledTerritories.sort((a, b) -> random.nextInt(3) - 1);  // Zufällig sortieren
+        List<String> shuffledTerritories = new ArrayList<>(allTerritories); // <-- fix
+        Collections.shuffle(shuffledTerritories, new Random());
 
-        // Berechnung der Anzahl an Territorien pro Spieler
         int territoriesPerPlayer = allTerritories.size() / players.size();
-
-        // Zuweisung der Territorien an die Spieler (ConcurrentHashMap)
         Map<String, List<String>> territoriesAssignment = new ConcurrentHashMap<>();
-        players.forEach(player -> {
-            int start = players.indexOf(player) * territoriesPerPlayer;
+
+        for (int i = 0; i < players.size(); i++) {
+            String player = players.get(i);
+            int start = i * territoriesPerPlayer;
             int end = start + territoriesPerPlayer;
             territoriesAssignment.put(player, shuffledTerritories.subList(start, end));
-        });
+        }
 
         return territoriesAssignment;
     }
