@@ -87,7 +87,7 @@ public class Game {
 
     public void nextPhase() {
         phaseIndex++;
-        if (phaseIndex > phaseIndexLength) {
+        if (phaseIndex >= phaseIndexLength) {
             phaseIndex = 0;
             requiresPlayerChangeFlag = true;
         }
