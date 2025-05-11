@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.awt.*;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +18,7 @@ import java.util.UUID;
 public class LobbyController {
     private final LobbyService lobbyService;
     private final SseBroadcastService sseBroadcastService;
+    private final SecureRandom random = new SecureRandom();
 
     @Autowired
     public LobbyController(LobbyService lobbyService, SseBroadcastService sseBroadcastService) {
@@ -52,8 +53,7 @@ public class LobbyController {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Player not found");
         }
         try {
-            Random rd = new Random();
-            Color c = new Color(rd.nextInt(256), rd.nextInt(256), rd.nextInt(256));
+            Color c = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
             lobbyService.joinLobby(id, new Player(uuid, name, c.getRGB()));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
