@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.troopterritoryDistribution;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 public class AssignTerritories {
+    private final Random random = new SecureRandom();
     public Map<String, List<String>> assignTerritories(List<String> players, List<String> allTerritories) {
         if (players.isEmpty()) {
             throw new IllegalArgumentException("There must be at least one player");
@@ -17,7 +19,7 @@ public class AssignTerritories {
         }
 
         List<String> shuffledTerritories = new ArrayList<>(allTerritories); // <-- fix
-        Collections.shuffle(shuffledTerritories, new Random());
+        Collections.shuffle(shuffledTerritories, random);
 
         int territoriesPerPlayer = allTerritories.size() / players.size();
         Map<String, List<String>> territoriesAssignment = new ConcurrentHashMap<>();

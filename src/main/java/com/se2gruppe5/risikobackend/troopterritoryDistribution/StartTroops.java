@@ -1,11 +1,13 @@
 package com.se2gruppe5.risikobackend.troopterritoryDistribution;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StartTroops {
+    private final Random random = new SecureRandom();
     public Map<String, Map<String, Integer>> distributeStartingTroops(List<String> territories, int totalTroops) {
         if (territories.isEmpty()) {
             throw new IllegalArgumentException("Player must own at least one territory");
@@ -15,7 +17,6 @@ public class StartTroops {
             throw new IllegalArgumentException("Not enough troops to allocate at least one per territory");
         }
 
-        Random random = new Random();
         int remainingTroops = totalTroops - territories.size();
 
         // Initial Truppen (1 pro Territorium)
