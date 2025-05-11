@@ -47,7 +47,7 @@ public class GameController {
             Player player = new Player(playerUUID, name, color);
             gameService.updatePlayer(gameUUID, player);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
+                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
@@ -64,11 +64,11 @@ public class GameController {
         try {
             gameService.nextPhase(gameUUID);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePhaseMessage(gameUUID, gameService.getPhase(gameUUID)));
+                    new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
             if (gameService.checkRequiresPlayerChange(gameUUID)) {
                 gameService.nextPlayer(gameUUID);
                 sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                        new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
+                        new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
             }
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -86,11 +86,11 @@ public class GameController {
         }
         try {
             sseBroadcastService.send(playerUUID,
-                    new ChangeTerritoryMessage(gameUUID, gameService.getTerritories(gameUUID)));
+                    new ChangeTerritoryMessage(gameService.getTerritories(gameUUID)));
             sseBroadcastService.send(playerUUID,
-                    new UpdatePlayersMessage(gameUUID, gameService.getPlayers(gameUUID)));
+                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePhaseMessage(gameUUID, gameService.getPhase(gameUUID)));
+                    new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
@@ -112,7 +112,7 @@ public class GameController {
             Territory territory = new Territory(owner, stat, id);
             gameService.changeTerritory(gameUUID, territory);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new ChangeTerritoryMessage(gameUUID, gameService.getTerritoryList(gameUUID)));
+                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
 
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
