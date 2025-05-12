@@ -2,10 +2,14 @@ package com.se2gruppe5.risikobackend.game.objects;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import com.se2gruppe5.risikobackend.troopterritoryDistribution.AssignTerritories;
+import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
+
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,6 +37,7 @@ public class Game {
         start();
     }
 
+
     private void setAllPlayersCurrentTurnFalse() {
         for (Player player : players.values()) {
             player.setCurrentTurn(false);
@@ -49,8 +54,8 @@ public class Game {
 
     private ArrayList<Territory> initializeTerritories() {
         ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
-        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11,1));
-        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22,2));
+        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11, 1));
+        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22, 2));
         return t;
     }
 
@@ -137,4 +142,62 @@ public class Game {
         return null;
     }
 
+    public void assignTerritories(UUID gameId) {
+        AssignTerritories assigner = new AssignTerritories();
+
+        List<UUID> playerIds = new ArrayList<>(players.keySet());
+        List<Integer> territoryIds = territories.stream()
+                .map(Territory::id)
+                .toList();
+
+        if (territoryIds.size() % playerIds.size() != 0) {
+            throw new IllegalStateException("Territories (" + territoryIds.size() + ") must divide evenly among players (" + playerIds.size() + ")");
+        }
+
+        // Verteile Territorien zufällig
+        Map<UUID, List<Integer>> assigned = assigner.assignTerritories(playerIds, territoryIds);
+
+        for (Map.Entry<UUID, List<Integer>> entry : assigned.entrySet()) {
+            UUID playerId = entry.getKey();
+            for (Integer territoryId : entry.getValue()) {
+                boolean found = false;
+                for (Territory t : territories) {
+                    if (t.id() == territoryId) {
+                        Territory updated = new Territory(playerId, t.id(), t.stat());
+                        changeTerritory(updated);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    throw new IllegalStateException("Territory with ID " + territoryId + " not found.");
+                }
+            }
+        }
+    }
+
+    public void distributeStartingTroops(int troopsPerPlayer) {
+        StartTroops distributor = new StartTroops();
+
+        for (UUID playerId : players.keySet()) {
+            List<Territory> owned = territories.stream()
+                    .filter(t -> playerId.equals(t.owner()))
+                    .toList();
+
+            if (owned.isEmpty()) continue;
+
+            List<Integer> territoryIds = owned.stream()
+                    .map(Territory::id)
+                    .toList();
+
+            Map<Integer, Integer> distributed = distributor.distributeStartingTroops(territoryIds, troopsPerPlayer);
+
+            for (Territory t : owned) {
+                int newStat = distributed.getOrDefault(t.id(), 1);
+                Territory updated = new Territory(playerId, t.id(), newStat);
+                changeTerritory(updated);
+            }
+        }
+
+    }
 }
