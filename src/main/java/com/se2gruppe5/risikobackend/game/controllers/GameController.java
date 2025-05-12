@@ -132,7 +132,7 @@ public class GameController {
         }
     }
 
-    @PatchMapping("/{id}/assign-territories")
+    @GetMapping("/{id}/assign-territories")
     @ResponseStatus(HttpStatus.CREATED)
     public void assignTerritories(@PathVariable("id") UUID gameUUID) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
