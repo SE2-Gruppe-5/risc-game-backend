@@ -37,6 +37,7 @@ public class Game {
         start();
     }
 
+
     private void setAllPlayersCurrentTurnFalse() {
         for (Player player : players.values()) {
             player.setCurrentTurn(false);
@@ -53,8 +54,8 @@ public class Game {
 
     private ArrayList<Territory> initializeTerritories() {
         ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
-        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11,1));
-        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22,2));
+        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11, 1));
+        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22, 2));
         return t;
     }
 
@@ -140,17 +141,17 @@ public class Game {
         }
         return null;
     }
+
     public void assignTerritories(UUID gameId) {
-        Game game = getGame(gameId);
         AssignTerritories assigner = new AssignTerritories();
 
-        List<UUID> playerIds = new ArrayList<>(game.getPlayers().keySet());
-        List<Integer> territoryIds = game.getTerritories().stream()
+        List<UUID> playerIds = new ArrayList<>(players.keySet());
+        List<Integer> territoryIds = territories.stream()
                 .map(Territory::id)
                 .toList();
 
         if (territoryIds.size() % playerIds.size() != 0) {
-            throw new IllegalStateException("Territories must divide evenly among players");
+            throw new IllegalStateException("Territories (" + territoryIds.size() + ") must divide evenly among players (" + playerIds.size() + ")");
         }
 
         // Verteile Territorien zufällig
@@ -159,22 +160,27 @@ public class Game {
         for (Map.Entry<UUID, List<Integer>> entry : assigned.entrySet()) {
             UUID playerId = entry.getKey();
             for (Integer territoryId : entry.getValue()) {
-                for (Territory t : game.getTerritories()) {
+                boolean found = false;
+                for (Territory t : territories) {
                     if (t.id() == territoryId) {
                         Territory updated = new Territory(playerId, t.id(), t.stat());
-                        game.changeTerritory(updated);
+                        changeTerritory(updated);
+                        found = true;
                         break;
                     }
+                }
+                if (!found) {
+                    throw new IllegalStateException("Territory with ID " + territoryId + " not found.");
                 }
             }
         }
     }
-    public void distributeStartingTroops(UUID gameId, int troopsPerPlayer) {
-        Game game = getGame(gameId);
+
+    public void distributeStartingTroops(int troopsPerPlayer) {
         StartTroops distributor = new StartTroops();
 
-        for (UUID playerId : game.getPlayers().keySet()) {
-            List<Territory> owned = game.getTerritories().stream()
+        for (UUID playerId : players.keySet()) {
+            List<Territory> owned = territories.stream()
                     .filter(t -> playerId.equals(t.owner()))
                     .toList();
 
@@ -184,14 +190,14 @@ public class Game {
                     .map(Territory::id)
                     .toList();
 
-            Map<Integer, Integer> distributed = distributor.distribute(territoryIds, troopsPerPlayer);
+            Map<Integer, Integer> distributed = distributor.distributeStartingTroops(territoryIds, troopsPerPlayer);
 
             for (Territory t : owned) {
                 int newStat = distributed.getOrDefault(t.id(), 1);
                 Territory updated = new Territory(playerId, t.id(), newStat);
-                game.changeTerritory(updated);
+                changeTerritory(updated);
             }
         }
-    }
 
+    }
 }

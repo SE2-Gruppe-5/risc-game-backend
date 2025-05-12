@@ -11,6 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AssignTerritories {
     private final Random random = new SecureRandom();
     public Map<UUID, List<Integer>> assignTerritories(List<UUID> players, List<Integer> territoryIds) {
+        if (players == null || players.isEmpty()) {
+            throw new IllegalArgumentException("No players");
+        }
+        if (territoryIds.size() % players.size() != 0) {
+            throw new IllegalArgumentException("Territories must divide evenly among players");
+        }
         Collections.shuffle(territoryIds, random);
         Map<UUID, List<Integer>> result = new ConcurrentHashMap<>();
         int size = territoryIds.size() / players.size();

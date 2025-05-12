@@ -132,23 +132,41 @@ public class GameController {
         }
     }
 
-    @PostMapping("/assign-territories/{gameId}")
-    public ResponseEntity<Void> assignTerritories(@PathVariable UUID gameId) {
-        Game game = gameService.getGameById(gameId);
+    @PatchMapping("/{id}/assign-territories")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void assignTerritories(@PathVariable("id") UUID gameUUID) {
+        if (!sseBroadcastService.hasSink(gameUUID)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
+        }
+        try {
+            gameService.assignTerritories(gameUUID);
+            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+                    new ChangeTerritoryMessage(gameService.getTerritories(gameUUID)));
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
 
-        // Hole Player-UUIDs
-        List<UUID> playerIds = new ArrayList<>(game.getPlayers().keySet());
-        // Hole Territory-IDs
-        List<String> territoryIds = game.getTerritories().stream()
-                .map(Territory::getId)
-                .toList();
-
-        AssignTerritories assigner = new AssignTerritories();
-        Map<UUID, List<String>> assignments = assigner.assignTerritories(playerIds, territoryIds);
-
-        game.assignTerritories(assignments);
-
-        return ResponseEntity.ok().build();
+    @PatchMapping("/{id}/distribute-troops")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void distributeTroops(@PathVariable("id") UUID gameUUID,
+                                 @RequestParam("troops") int troopsPerPlayer) {
+        if (!sseBroadcastService.hasSink(gameUUID)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
+        }
+        try {
+            gameService.distributeStartingTroops(gameUUID, troopsPerPlayer);
+            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
+            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+                    new ChangeTerritoryMessage(gameService.getTerritories(gameUUID)));
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
 

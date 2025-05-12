@@ -10,21 +10,20 @@ public class StartTroopsTest {
     @Test
     void testDistributeStartingTroops_basicDistribution() {
         StartTroops distributor = new StartTroops();
-        List<String> territories = List.of("A", "B", "C");
+        List<Integer> territories = List.of(1, 2, 3);
         int totalTroops = 6;
 
-        Map<String, Map<String, Integer>> result = distributor.distributeStartingTroops(territories, totalTroops);
-        Map<String, Integer> troopMap = result.get("troops");
+        Map<Integer, Integer> result = distributor.distributeStartingTroops(territories, totalTroops);
 
-        assertEquals(3, troopMap.size());
-        assertEquals(6, troopMap.values().stream().mapToInt(Integer::intValue).sum());
-        assertTrue(troopMap.values().stream().allMatch(t -> t >= 1));
+        assertEquals(3, result.size());
+        assertEquals(6, result.values().stream().mapToInt(Integer::intValue).sum());
+        assertTrue(result.values().stream().allMatch(t -> t >= 1));
     }
 
     @Test
     void testDistributeStartingTroops_notEnoughTroops_throws() {
         StartTroops distributor = new StartTroops();
-        List<String> territories = List.of("A", "B", "C");
+        List<Integer> territories = List.of(1, 2, 3);
 
         assertThrows(IllegalArgumentException.class, () ->
                 distributor.distributeStartingTroops(territories, 2));

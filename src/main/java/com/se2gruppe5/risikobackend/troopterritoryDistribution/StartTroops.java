@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class StartTroops {
     private final Random random = new SecureRandom();
-    public Map<Integer, Integer> distribute(List<Integer> territoryIds, int totalTroops) {
+    public Map<Integer, Integer> distributeStartingTroops(List<Integer> territoryIds, int totalTroops) {
         if (territoryIds.isEmpty()) throw new IllegalArgumentException("No territories");
         if (totalTroops < territoryIds.size()) throw new IllegalArgumentException("Too few troops");
 
