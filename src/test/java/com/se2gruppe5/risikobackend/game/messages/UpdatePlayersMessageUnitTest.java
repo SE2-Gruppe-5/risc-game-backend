@@ -10,14 +10,18 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UpdatePlayersMessageUnitTest {
-    private List<Player> playerList;
+    private HashMap<UUID, Player> playerList;
     private UpdatePlayersMessage msg;
 
     @BeforeEach
     void setUp() {
-        Player p1 = new Player(UUID.randomUUID(), "TestP1", 1);
-        Player p2 = new Player(UUID.randomUUID(), "TestP2", 2);
-        playerList = List.of(p1, p2);
+        UUID p1UUID = UUID.randomUUID();
+        UUID p2UUID = UUID.randomUUID();
+        Player p1 = new Player(p1UUID, "TestP1", 1);
+        Player p2 = new Player(p2UUID, "TestP2", 2);
+        playerList = new HashMap<>();
+        playerList.put(p1UUID,p1);
+        playerList.put(p2UUID,p2);
         msg = new UpdatePlayersMessage(playerList);
     }
 
@@ -30,7 +34,7 @@ class UpdatePlayersMessageUnitTest {
 
     @Test
     void testEmptyPlayerList() {
-        playerList.clear();
+        playerList = new HashMap<>();
         msg = new UpdatePlayersMessage(playerList);
 
         assertNotNull(msg.players());
