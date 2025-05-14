@@ -54,7 +54,7 @@ class GameControllerUnitTest {
         ArgumentCaptor<Player> playerCaptor = ArgumentCaptor.forClass(Player.class);
         verify(gameService, times(1)).updatePlayer(eq(gameId), playerCaptor.capture());
         Player captured = playerCaptor.getValue();
-        assertEquals(playerId, captured.getUuid());
+        assertEquals(playerId, captured.getId());
         assertEquals("name", captured.getName());
         assertEquals(1, captured.getColor());
 
@@ -109,30 +109,4 @@ class GameControllerUnitTest {
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
     }
-
-
-
-    @Test
-    void testAssignTerritoriesSuccess() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
-        gameController.assignTerritories(gameId);
-
-        verify(gameService, times(1)).assignTerritories(gameId);
-        verify(sseBroadcastService, times(1))
-                .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
-    }
-
-
-    @Test
-    void testDistributeTroopsSuccess() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
-        gameController.distributeTroops(gameId, 3);
-        verify(gameService, times(1)).distributeStartingTroops(gameId, 3);
-        // distributeTroops broadcasts two messages, verify by Game
-        verify(sseBroadcastService, times(1))
-                .broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
-        verify(sseBroadcastService, times(1))
-                .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
-    }
-
 }

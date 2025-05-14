@@ -133,17 +133,4 @@ class GameServiceUnitTest {
         assertThrows(IllegalArgumentException.class, () -> gameService.nextPhase(gameUUID));
         assertThrows(IllegalArgumentException.class, () -> gameService.getPhase(gameUUID));
     }
-
-    @Test
-    void territoryAssignCalledTest() {
-        
-        int troopsPPlayer = 4;
-        when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
-
-        gameService.assignTerritories(gameUUID);
-        verify(mockGame, times(1)).assignTerritories(gameUUID);
-
-        gameService.distributeStartingTroops(gameUUID, troopsPPlayer);
-        verify(mockGame, times(1)).distributeStartingTroops(troopsPPlayer);
-    }
 }

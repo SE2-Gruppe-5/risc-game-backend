@@ -132,7 +132,7 @@ class GameUnitTest {
     @Test
     void temporaryTerritoryDivideTest() { //todo must most likely be changed
 
-        assertDoesNotThrow(() -> game.assignTerritories(gameId));
+        assertDoesNotThrow(() -> game.assignTerritories());
         game.getTerritories().forEach(t ->
                 assertTrue(players.containsKey(t.owner()))
         );
@@ -142,7 +142,7 @@ class GameUnitTest {
         customTerritories.add(new Territory(player1Id, 3, 1));
 
 
-        assertThrows(IllegalStateException.class, () -> game.assignTerritories(gameId));
+        assertThrows(IllegalStateException.class, () -> game.assignTerritories());
     }
 
 
