@@ -96,7 +96,7 @@ public class GameController {
     @PatchMapping("/{id}/territory")
     @ResponseStatus(HttpStatus.CREATED)
     public void changeTerritory(@PathVariable("id") UUID gameUUID,
-                                @RequestParam UUID owner,
+                                @RequestParam(required = false) UUID owner,
                                 @RequestParam int id,
                                 @RequestParam int stat) {
         try {
