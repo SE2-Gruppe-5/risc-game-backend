@@ -34,7 +34,6 @@ public class Game {
         this.uuid = uuid;
         this.players = players;
         this.territories = territories;
-        start();
     }
 
 
