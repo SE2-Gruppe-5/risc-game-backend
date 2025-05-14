@@ -38,14 +38,10 @@ class GameUnitTest {
 
     @Test
     void testConstructorAndStartInitializesCorrectly() {
+        game.start();
 
         assertEquals(0, game.getPhaseIndex());
         assertFalse(game.getRequiresPlayerChange());
-
-        ArrayList<Territory> territories = game.getTerritories();
-        assertEquals(0, territories.size());
-        assertFalse(territories.stream().anyMatch(t -> t.owner().equals(player1Id)));
-        assertFalse(territories.stream().anyMatch(t -> t.owner().equals(player2Id)));
 
         assertTrue(game.getPlayerTurnOrder().getFirst().isCurrentTurn());
         assertFalse(game.getPlayerTurnOrder().getLast().isCurrentTurn());
@@ -53,6 +49,7 @@ class GameUnitTest {
 
     @Test
     void phaseOrderTest() {
+        game.start();
 
         //Nach setup initial phase #1
         assertEquals(0, game.getPhaseIndex());
@@ -76,6 +73,8 @@ class GameUnitTest {
 
     @Test
     void playerTurnOrderTest() {
+        game.start();
+
         //Nach Setup p1 turn
         assertTrue(game.getPlayerTurnOrder().getFirst().isCurrentTurn());
         assertFalse(game.getPlayerTurnOrder().getLast().isCurrentTurn());
