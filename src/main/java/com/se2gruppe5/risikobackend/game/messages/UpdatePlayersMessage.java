@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public record UpdatePlayersMessage(Map<UUID, Player> players) implements Message {
     public UpdatePlayersMessage(List<Player> players) {
-        this(players.stream().collect(Collectors.toMap(Player::getUuid, UnaryOperator.identity())));
+        this(players.stream().collect(Collectors.toMap(Player::getId, UnaryOperator.identity())));
     }
 
     @Override

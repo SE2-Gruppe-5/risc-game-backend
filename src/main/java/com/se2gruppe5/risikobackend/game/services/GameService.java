@@ -74,11 +74,4 @@ public class GameService {
         }
         return g;
     }
-    public void assignTerritories(UUID gameId) {
-        getGame(gameId).assignTerritories(gameId); // oder getGameById(gameId).assignTerritories();
-    }
-
-    public void distributeStartingTroops(UUID gameId, int troopsPerPlayer) {
-        getGame(gameId).distributeStartingTroops(troopsPerPlayer);
-    }
 }

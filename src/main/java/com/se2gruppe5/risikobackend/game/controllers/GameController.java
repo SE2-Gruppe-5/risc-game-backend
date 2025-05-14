@@ -7,27 +7,19 @@ import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
-import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.UUID;
-import com.se2gruppe5.risikobackend.troopterritoryDistribution.AssignTerritories;
-import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/game")
@@ -51,7 +43,6 @@ public class GameController {
                              @PathVariable("playerId") UUID playerUUID,
                              @RequestParam String name,
                              @RequestParam int color) {
-
         try {
             Player player = new Player(playerUUID, name, color);
             gameService.updatePlayer(gameUUID, player);
@@ -67,7 +58,6 @@ public class GameController {
     @GetMapping("/{id}/phase/next")
     @ResponseStatus(HttpStatus.CREATED)
     public void changePhase(@PathVariable("id") UUID gameUUID) {
-
         try {
             gameService.nextPhase(gameUUID);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
@@ -88,7 +78,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     public void getGameInfo(@PathVariable("gameId") UUID gameUUID,
                             @RequestParam("uuid") UUID playerUUID) {
-
         try {
             sseBroadcastService.send(playerUUID,
                     new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
@@ -107,7 +96,7 @@ public class GameController {
     @PatchMapping("/{id}/territory")
     @ResponseStatus(HttpStatus.CREATED)
     public void changeTerritory(@PathVariable("id") UUID gameUUID,
-                                @RequestParam UUID owner,
+                                @RequestParam(required = false) UUID owner,
                                 @RequestParam int id,
                                 @RequestParam int stat) {
 
@@ -123,38 +112,4 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
-
-    @GetMapping("/{id}/assign-territories")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void assignTerritories(@PathVariable("id") UUID gameUUID) {
-
-        try {
-            gameService.assignTerritories(gameUUID);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-    @PatchMapping("/{id}/distribute-troops")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void distributeTroops(@PathVariable("id") UUID gameUUID,
-                                 @RequestParam("troops") int troopsPerPlayer) {
-        try {
-            gameService.distributeStartingTroops(gameUUID, troopsPerPlayer);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
-    }
-
-
 }
