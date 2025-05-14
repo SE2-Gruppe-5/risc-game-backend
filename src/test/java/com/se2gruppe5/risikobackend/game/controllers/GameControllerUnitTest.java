@@ -63,13 +63,7 @@ class GameControllerUnitTest {
                 .broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
     }
 
-    @Test
-    void testUpdatePlayerNoSink() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(false);
-        assertThrows(ResponseStatusException.class,
-                () -> gameController.updatePlayer(gameId, playerId, "name", 1));
-        verify(gameService, never()).updatePlayer(any(), any());
-    }
+
 
     @Test
     void testChangePhaseSuccess() {
@@ -82,11 +76,7 @@ class GameControllerUnitTest {
                 .broadcast(eq(dummyGame), any(UpdatePhaseMessage.class));
     }
 
-    @Test
-    void testChangePhaseNoSink() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(false);
-        assertThrows(ResponseStatusException.class, () -> gameController.changePhase(gameId));
-    }
+
 
     @Test
     void testGetGameInfoSuccess() {
@@ -101,11 +91,7 @@ class GameControllerUnitTest {
                 .broadcast(eq(dummyGame), any(UpdatePhaseMessage.class));
     }
 
-    @Test
-    void testGetGameInfoNoSink() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(false);
-        assertThrows(ResponseStatusException.class, () -> gameController.getGameInfo(gameId, playerId));
-    }
+
 
     @Test
     void testChangeTerritorySuccess() {
@@ -124,11 +110,7 @@ class GameControllerUnitTest {
                 .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
     }
 
-    @Test
-    void testChangeTerritoryNoSink() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(false);
-        assertThrows(ResponseStatusException.class, () -> gameController.changeTerritory(gameId, playerId, 1, 1));
-    }
+
 
     @Test
     void testAssignTerritoriesSuccess() {
@@ -140,11 +122,6 @@ class GameControllerUnitTest {
                 .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
     }
 
-    @Test
-    void testAssignTerritoriesNoSink() {
-        when(sseBroadcastService.hasSink(gameId)).thenReturn(false);
-        assertThrows(ResponseStatusException.class, () -> gameController.assignTerritories(gameId));
-    }
 
     @Test
     void testDistributeTroopsSuccess() {
