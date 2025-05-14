@@ -62,6 +62,7 @@ public class GameService {
         getGame(gameId).nextPlayer();
     }
 
+
     public int getPhase(UUID gameId) {
         return getGame(gameId).getPhaseIndex();
     }

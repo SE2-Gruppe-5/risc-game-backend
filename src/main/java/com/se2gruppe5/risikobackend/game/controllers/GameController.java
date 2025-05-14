@@ -51,9 +51,7 @@ public class GameController {
                              @PathVariable("playerId") UUID playerUUID,
                              @RequestParam String name,
                              @RequestParam int color) {
-        if (!sseBroadcastService.hasSink(gameUUID)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
-        }
+
         try {
             Player player = new Player(playerUUID, name, color);
             gameService.updatePlayer(gameUUID, player);
@@ -69,9 +67,7 @@ public class GameController {
     @GetMapping("/{id}/phase/next")
     @ResponseStatus(HttpStatus.CREATED)
     public void changePhase(@PathVariable("id") UUID gameUUID) {
-        if (!sseBroadcastService.hasSink(gameUUID)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
-        }
+
         try {
             gameService.nextPhase(gameUUID);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
@@ -92,9 +88,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     public void getGameInfo(@PathVariable("gameId") UUID gameUUID,
                             @RequestParam("uuid") UUID playerUUID) {
-        if (!sseBroadcastService.hasSink(gameUUID)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
-        }
+
         try {
             sseBroadcastService.send(playerUUID,
                     new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
@@ -116,9 +110,7 @@ public class GameController {
                                 @RequestParam UUID owner,
                                 @RequestParam int id,
                                 @RequestParam int stat) {
-        if (!sseBroadcastService.hasSink(gameUUID)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
-        }
+
         try {
             Territory territory = new Territory(owner, stat, id);
             gameService.changeTerritory(gameUUID, territory);
@@ -135,9 +127,7 @@ public class GameController {
     @GetMapping("/{id}/assign-territories")
     @ResponseStatus(HttpStatus.CREATED)
     public void assignTerritories(@PathVariable("id") UUID gameUUID) {
-        if (!sseBroadcastService.hasSink(gameUUID)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
-        }
+
         try {
             gameService.assignTerritories(gameUUID);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
