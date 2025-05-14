@@ -97,7 +97,7 @@ public class GameController {
         }
         try {
             sseBroadcastService.send(playerUUID,
-                    new ChangeTerritoryMessage(gameService.getTerritories(gameUUID)));
+                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
             sseBroadcastService.send(playerUUID,
                     new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
@@ -141,7 +141,7 @@ public class GameController {
         try {
             gameService.assignTerritories(gameUUID);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new ChangeTerritoryMessage(gameService.getTerritories(gameUUID)));
+                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
@@ -153,15 +153,12 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     public void distributeTroops(@PathVariable("id") UUID gameUUID,
                                  @RequestParam("troops") int troopsPerPlayer) {
-        if (!sseBroadcastService.hasSink(gameUUID)) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
-        }
         try {
             gameService.distributeStartingTroops(gameUUID, troopsPerPlayer);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new ChangeTerritoryMessage(gameService.getTerritories(gameUUID)));
+                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
