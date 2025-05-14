@@ -49,6 +49,8 @@ public class Game {
         nextPlayer(); //hardcoded at -1, gets +=1 'ed
 
         this.territories = initializeTerritories();
+        this.assignTerritories();
+        this.distributeStartingTroops(10);
     }
 
     private ArrayList<Territory> initializeTerritories() {
@@ -141,13 +143,13 @@ public class Game {
         return null;
     }
 
-    public void assignTerritories(UUID gameId) {
+    public void assignTerritories() {
         AssignTerritories assigner = new AssignTerritories();
 
         List<UUID> playerIds = new ArrayList<>(players.keySet());
-        List<Integer> territoryIds = territories.stream()
+        List<Integer> territoryIds = new ArrayList<>(territories.stream()
                 .map(Territory::id)
-                .toList();
+                .toList());
 
         if (territoryIds.size() % playerIds.size() != 0) {
             throw new IllegalStateException("Territories (" + territoryIds.size() + ") must divide evenly among players (" + playerIds.size() + ")");
@@ -162,7 +164,7 @@ public class Game {
                 boolean found = false;
                 for (Territory t : territories) {
                     if (t.id() == territoryId) {
-                        Territory updated = new Territory(playerId, t.id(), t.stat());
+                        Territory updated = new Territory(playerId, t.stat(), t.id());
                         changeTerritory(updated);
                         found = true;
                         break;
@@ -193,7 +195,7 @@ public class Game {
 
             for (Territory t : owned) {
                 int newStat = distributed.getOrDefault(t.id(), 1);
-                Territory updated = new Territory(playerId, t.id(), newStat);
+                Territory updated = new Territory(playerId, newStat, t.id());
                 changeTerritory(updated);
             }
         }

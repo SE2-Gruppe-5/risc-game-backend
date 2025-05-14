@@ -1,5 +1,7 @@
 package com.se2gruppe5.risikobackend.lobby.services;
 
+import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 import com.se2gruppe5.risikobackend.lobby.messages.GameStartMessage;
@@ -110,5 +112,7 @@ public class LobbyService {
         lobbyRepository.removeLobby(id);
         sseBroadcastService.broadcast(lobby, new GameStartMessage(game.getUuid(), lobby.players()));
         game.start();
+        sseBroadcastService.broadcast(game, new UpdatePlayersMessage(game.getPlayers()));
+        sseBroadcastService.broadcast(game, new ChangeTerritoryMessage(game.getTerritories()));
     }
 }
