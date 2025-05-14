@@ -151,7 +151,7 @@ public class GameController {
 
     @PatchMapping("/{id}/distribute-troops")
     @ResponseStatus(HttpStatus.CREATED)
-    public void distributeTroops(@PathVariable("id") UUID gameUUID,
+    public void distributeStartingTroops(@PathVariable("id") UUID gameUUID,
                                  @RequestParam("troops") int troopsPerPlayer) {
         if (!sseBroadcastService.hasSink(gameUUID)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Game not found");
