@@ -73,12 +73,12 @@ public class LobbyService {
         if (lobby.players().contains(player)) {
             throw new IllegalStateException("Player already in lobby");
         }
-        lobby.players().put(player.getUuid(), player);
-        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.getUuid(), player.getName(), id));
+        lobby.players().put(player.getId(), player);
+        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.getId(), player.getName(), id));
         for (Map.Entry<UUID, Player> entry : lobby.players().entrySet()) {
-            if (entry.getKey().equals(player.getUuid())) continue;
+            if (entry.getKey().equals(player.getId())) continue;
             Player lobbyPlayer = entry.getValue();
-            sseBroadcastService.send(player.getUuid(), new JoinLobbyMessage(lobbyPlayer.getUuid(), lobbyPlayer.getName(), id));
+            sseBroadcastService.send(player.getId(), new JoinLobbyMessage(lobbyPlayer.getId(), lobbyPlayer.getName(), id));
         }
     }
 

@@ -54,8 +54,8 @@ public class Game {
 
     private ArrayList<Territory> initializeTerritories() {
         ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
-        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11, 1));
-        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22, 2));
+        t.add(new Territory(playerTurnOrder.getFirst().getId(), 11, 1));
+        t.add(new Territory(playerTurnOrder.getLast().getId(), 22, 2));
         return t;
     }
 
@@ -104,8 +104,8 @@ public class Game {
 
     public void updatePlayer(Player p) {
         checkPlayerValid(p);
-        players.put(p.getUuid(), p);
-        playerTurnOrder.remove(getListedPlayerById(p.getUuid()));
+        players.put(p.getId(), p);
+        playerTurnOrder.remove(getListedPlayerById(p.getId()));
         playerTurnOrder.add(p);
     }
 
@@ -119,8 +119,8 @@ public class Game {
     }
 
     private void checkPlayerValid(Player p) {
-        if (!players.containsKey(p.getUuid())) {
-            throw new IllegalArgumentException("Territory with ID" + p.getUuid() + "does not exist. [what?] [how?]");
+        if (!players.containsKey(p.getId())) {
+            throw new IllegalArgumentException("Territory with ID" + p.getId() + "does not exist. [what?] [how?]");
         }
     }
 
@@ -135,7 +135,7 @@ public class Game {
 
     private Player getListedPlayerById(UUID id) {
         for (Player p : players.values()) {
-            if (p.getUuid() == id) {
+            if (p.getId() == id) {
                 return p;
             }
         }

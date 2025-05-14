@@ -11,17 +11,17 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Player {
-    public Player(UUID uuid, String name, int color){
-        this(uuid, name, color, new ArrayList<>());
+    public Player(UUID id, String name, int color){
+        this(id, name, color, new ArrayList<>());
     }
 
-    public Player(UUID uuid, String name, int color, List<Card> cards){
-        this.uuid = uuid;
+    public Player(UUID id, String name, int color, List<Card> cards){
+        this.id = id;
         this.name = name;
         this.color = color;
         this.cards = cards;
     }
-    private final UUID uuid;
+    private final UUID id;
     private final String name;
     private final int color;
     private final List<Card> cards;
