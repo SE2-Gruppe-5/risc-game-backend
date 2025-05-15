@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -145,7 +146,7 @@ class LobbyServiceUnitTest {
         lobby.players().put(uuid2, player2);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
-        Mockito.when(gameService.createGame(lobby)).thenReturn(new Game(UUID.randomUUID(), lobby.players()));
+        Mockito.when(gameService.createGame(lobby)).thenReturn(new Game(UUID.randomUUID(), lobby.players(), new ArrayList<>()));
         assertDoesNotThrow(() -> lobbyService.startGame(lobbyId));
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
         Mockito.verify(gameService, Mockito.times(1)).createGame(lobby);

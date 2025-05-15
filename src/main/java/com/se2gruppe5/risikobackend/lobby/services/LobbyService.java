@@ -1,5 +1,7 @@
 package com.se2gruppe5.risikobackend.lobby.services;
 
+import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 import com.se2gruppe5.risikobackend.lobby.messages.GameStartMessage;
@@ -73,12 +75,12 @@ public class LobbyService {
         if (lobby.players().contains(player)) {
             throw new IllegalStateException("Player already in lobby");
         }
-        lobby.players().put(player.getUuid(), player);
-        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.getUuid(), player.getName(), id));
+        lobby.players().put(player.getId(), player);
+        sseBroadcastService.broadcast(lobby, new JoinLobbyMessage(player.getId(), player.getName(), id));
         for (Map.Entry<UUID, Player> entry : lobby.players().entrySet()) {
-            if (entry.getKey().equals(player.getUuid())) continue;
+            if (entry.getKey().equals(player.getId())) continue;
             Player lobbyPlayer = entry.getValue();
-            sseBroadcastService.send(player.getUuid(), new JoinLobbyMessage(lobbyPlayer.getUuid(), lobbyPlayer.getName(), id));
+            sseBroadcastService.send(player.getId(), new JoinLobbyMessage(lobbyPlayer.getId(), lobbyPlayer.getName(), id));
         }
     }
 
@@ -110,5 +112,7 @@ public class LobbyService {
         lobbyRepository.removeLobby(id);
         sseBroadcastService.broadcast(lobby, new GameStartMessage(game.getUuid(), lobby.players()));
         game.start();
+        sseBroadcastService.broadcast(game, new UpdatePlayersMessage(game.getPlayers()));
+        sseBroadcastService.broadcast(game, new ChangeTerritoryMessage(game.getTerritories()));
     }
 }

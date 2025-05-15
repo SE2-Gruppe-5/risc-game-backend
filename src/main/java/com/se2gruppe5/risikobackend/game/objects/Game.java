@@ -20,21 +20,17 @@ public class Game {
     private ArrayList<Territory> territories;
     @Getter
     private final ConcurrentHashMap<UUID, Player> players;
+
+    public List<Player> getPlayerTurnOrder() {
+        return playerTurnOrder;
+    }
+
     private final List<Player> playerTurnOrder = new ArrayList<>();
-
-    public Game(UUID uuid) {
-        this(uuid, new ConcurrentHashMap<>(), new ArrayList<>());
-    }
-
-    public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players) {
-        this(uuid, players, new ArrayList<>());
-    }
 
     public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, ArrayList<Territory> territories) {
         this.uuid = uuid;
         this.players = players;
         this.territories = territories;
-        start();
     }
 
 
@@ -50,12 +46,14 @@ public class Game {
         nextPlayer(); //hardcoded at -1, gets +=1 'ed
 
         this.territories = initializeTerritories();
+        this.assignTerritories();
+        this.distributeStartingTroops(10);
     }
 
     private ArrayList<Territory> initializeTerritories() {
         ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
-        t.add(new Territory(playerTurnOrder.getFirst().getUuid(), 11, 1));
-        t.add(new Territory(playerTurnOrder.getLast().getUuid(), 22, 2));
+        t.add(new Territory(playerTurnOrder.getFirst().getId(), 11, 1));
+        t.add(new Territory(playerTurnOrder.getLast().getId(), 22, 2));
         return t;
     }
 
@@ -74,7 +72,7 @@ public class Game {
     private boolean requiresPlayerChangeFlag = false;
 
 
-    public int getPhase() {
+    public int getPhaseIndex() {
         return Math.max(phaseIndex, 0);
     }
 
@@ -104,8 +102,8 @@ public class Game {
 
     public void updatePlayer(Player p) {
         checkPlayerValid(p);
-        players.put(p.getUuid(), p);
-        playerTurnOrder.remove(getListedPlayerById(p.getUuid()));
+        players.put(p.getId(), p);
+        playerTurnOrder.remove(getListedPlayerById(p.getId()));
         playerTurnOrder.add(p);
     }
 
@@ -119,8 +117,8 @@ public class Game {
     }
 
     private void checkPlayerValid(Player p) {
-        if (!players.containsKey(p.getUuid())) {
-            throw new IllegalArgumentException("Territory with ID" + p.getUuid() + "does not exist. [what?] [how?]");
+        if (!players.containsKey(p.getId())) {
+            throw new IllegalArgumentException("Territory with ID" + p.getId() + "does not exist. [what?] [how?]");
         }
     }
 
@@ -135,20 +133,20 @@ public class Game {
 
     private Player getListedPlayerById(UUID id) {
         for (Player p : players.values()) {
-            if (p.getUuid() == id) {
+            if (p.getId() == id) {
                 return p;
             }
         }
         return null;
     }
 
-    public void assignTerritories(UUID gameId) {
+    public void assignTerritories() {
         AssignTerritories assigner = new AssignTerritories();
 
         List<UUID> playerIds = new ArrayList<>(players.keySet());
-        List<Integer> territoryIds = territories.stream()
+        List<Integer> territoryIds = new ArrayList<>(territories.stream()
                 .map(Territory::id)
-                .toList();
+                .toList());
 
         if (territoryIds.size() % playerIds.size() != 0) {
             throw new IllegalStateException("Territories (" + territoryIds.size() + ") must divide evenly among players (" + playerIds.size() + ")");
@@ -163,7 +161,7 @@ public class Game {
                 boolean found = false;
                 for (Territory t : territories) {
                     if (t.id() == territoryId) {
-                        Territory updated = new Territory(playerId, t.id(), t.stat());
+                        Territory updated = new Territory(playerId, t.stat(), t.id());
                         changeTerritory(updated);
                         found = true;
                         break;
@@ -194,7 +192,7 @@ public class Game {
 
             for (Territory t : owned) {
                 int newStat = distributed.getOrDefault(t.id(), 1);
-                Territory updated = new Territory(playerId, t.id(), newStat);
+                Territory updated = new Territory(playerId, newStat, t.id());
                 changeTerritory(updated);
             }
         }

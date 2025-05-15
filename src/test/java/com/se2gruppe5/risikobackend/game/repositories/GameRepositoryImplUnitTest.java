@@ -1,47 +1,57 @@
+
 package com.se2gruppe5.risikobackend.game.repositories;
 
+import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameRepositoryImplUnitTest {
-    GameRepository gameRepository;
+    private GameRepositoryImpl repository;
+    private ConcurrentHashMap<UUID, Player> players;
 
     @BeforeEach
     void setup() {
-        gameRepository = new GameRepositoryImpl();
+        repository = new GameRepositoryImpl();
+        players = new ConcurrentHashMap<>();
+        UUID p1UUID = UUID.randomUUID();
+        Player p1 = new Player(p1UUID, "P1", 0xFFFFFF);
+        UUID p2UUID = UUID.randomUUID();
+        Player p2 = new Player(p2UUID, "P2", 0xFFFFFF);
+        players.put(p1UUID, p1);
+        players.put(p2UUID, p2);
     }
 
-    /*
     @Test
     void testAddAndRemoveGame() {
-        UUID uuid = UUID.randomUUID();
-        Game game = new Game(uuid);
+        UUID id = UUID.randomUUID();
+        Game game = new Game(id, players, new ArrayList<>());
 
-        gameRepository.removeGame(uuid);
-        assertFalse(gameRepository.hasGame(uuid));
+        repository.remove(id);
+        assertFalse(repository.has(id));
 
-        gameRepository.addGame(game);
-        assertTrue(gameRepository.hasGame(uuid));
+        repository.add(id, game);
+        assertTrue(repository.has(id));
 
-        gameRepository.removeGame(uuid);
-        assertFalse(gameRepository.hasGame(uuid));
+        repository.remove(id);
+        assertFalse(repository.has(id));
     }
 
     @Test
     void testGetGame() {
-        UUID uuid = UUID.randomUUID();
-        Game game = new Game(uuid);
-        gameRepository.addGame(game);
+        UUID id = UUID.randomUUID();
+        Game game = new Game(id, players, new ArrayList<>());
+        repository.add(id, game);
 
-        assertEquals(game, gameRepository.getGame(uuid));
+        assertEquals(game, repository.get(id));
 
-        gameRepository.removeGame(uuid);
-        assertNull(gameRepository.getGame(uuid));
+        repository.remove(id);
+        assertNull(repository.get(id));
     }
-     */
 }
