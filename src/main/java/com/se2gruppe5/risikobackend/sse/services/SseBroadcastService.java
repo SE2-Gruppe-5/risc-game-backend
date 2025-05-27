@@ -69,6 +69,7 @@ public class SseBroadcastService {
 
     public void send(FluxSink<ServerSentEvent<String>> sink, Message message) {
         if (sink != null) {
+            // fixme why are you encoding the json with base64? its just bloating the message size without clear benefit
             String data = Base64.getEncoder().encodeToString(gson.toJson(message).getBytes(StandardCharsets.UTF_8));
             sink.next(ServerSentEvent.builder(data)
                     .event(message.getType().name())

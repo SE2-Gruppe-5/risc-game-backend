@@ -13,6 +13,7 @@ import java.awt.*;
 import java.security.SecureRandom;
 import java.util.UUID;
 
+// fixme improvement idea: you could use @ExceptionHandler annotations to map java exceptions to http response codes
 @RestController
 @RequestMapping("/lobby")
 public class LobbyController {

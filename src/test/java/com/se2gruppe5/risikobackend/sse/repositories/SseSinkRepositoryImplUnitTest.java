@@ -100,6 +100,7 @@ class SseSinkRepositoryImplUnitTest {
             sinkRepository.addSink(uuids.get(i), sinks.get(i));
         }
 
+        // fixme split into individual tests with same setup
         // Check if getSinks() with all UUIDs returns all sinks
         List<FluxSink<ServerSentEvent<String>>> returnedSinks = sinkRepository.getSinks(uuids);
 
@@ -114,6 +115,7 @@ class SseSinkRepositoryImplUnitTest {
         assertTrue(listsHaveSameElements(subsetSinks, returnedSubsetSinks));
     }
 
+    // fixme naming convention for such methods: assertListsHave...
     // A simple equals would also check the order of the list elements
     // However, the order does not matter in these tests
     private <E> boolean listsHaveSameElements(List<E> list1, List<E> list2) {

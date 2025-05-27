@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+// fixme this class has and requires too much internal information about Game (feature envy)
+//  consumers of this class might just call the game repo and game methods directly, as its not abstracted
+//  add a Game interface and expose this to consumers directly
+
 @Service
 public class GameService {
     private final GameRepository gameRepository;
@@ -30,6 +34,7 @@ public class GameService {
         return game;
     }
 
+    // fixme some mehtods here use getGameById and some getGame but the ones using getGameById dont do the null check for the method call
     public Game getGameById(UUID gameId) {
         return gameRepository.getGame(gameId);
     }

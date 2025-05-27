@@ -47,6 +47,7 @@ class GameUnitTest {
         assertFalse(game.getPlayerTurnOrder().getLast().isCurrentTurn());
     }
 
+    // fixme split these tests into individual phases, where each test's result is a precondition for the next
     @Test
     void phaseOrderTest() {
         game.start();
