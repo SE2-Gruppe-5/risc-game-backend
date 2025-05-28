@@ -46,7 +46,7 @@ public class GameController {
         try {
             Player player = new Player(playerUUID, name, color);
             gameService.updatePlayer(gameUUID, player);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                     new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -60,11 +60,11 @@ public class GameController {
     public void changePhase(@PathVariable("id") UUID gameUUID) {
         try {
             gameService.nextPhase(gameUUID);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                     new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
             if (gameService.checkRequiresPlayerChange(gameUUID)) {
                 gameService.nextPlayer(gameUUID);
-                sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+                sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                         new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
             }
         } catch (IllegalArgumentException e) {
@@ -83,7 +83,7 @@ public class GameController {
                     new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
             sseBroadcastService.send(playerUUID,
                     new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                     new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -103,7 +103,7 @@ public class GameController {
         try {
             Territory territory = new Territory(owner, stat, id);
             gameService.changeTerritory(gameUUID, territory);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                     new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
 
         } catch (IllegalArgumentException e) {

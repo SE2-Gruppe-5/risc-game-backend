@@ -69,7 +69,8 @@ public class SseBroadcastService {
 
     public void send(FluxSink<ServerSentEvent<String>> sink, Message message) {
         if (sink != null) {
-            String data = Base64.getEncoder().encodeToString(gson.toJson(message).getBytes(StandardCharsets.UTF_8));
+            String jsonstr = gson.toJson(message);
+            String data = Base64.getEncoder().encodeToString(jsonstr.getBytes(StandardCharsets.UTF_8));
             sink.next(ServerSentEvent.builder(data)
                     .event(message.getType().name())
                     .build());
