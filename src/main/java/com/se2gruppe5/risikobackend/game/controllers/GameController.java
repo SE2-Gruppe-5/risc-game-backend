@@ -88,12 +88,13 @@ public class GameController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleGameNotFound(IllegalArgumentException ex) {
-        ex.printStackTrace(); // Similarly to LobbyController, just print the exception for debugging
+    public void handleGameNotFound() {
+        // Spring will automatically return 404 Not Found here
     }
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleGameConflict() {
+        // Spring will automatically return 409 Conflict here
     }
 }

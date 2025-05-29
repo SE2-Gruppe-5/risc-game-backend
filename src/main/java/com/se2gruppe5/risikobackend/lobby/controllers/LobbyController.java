@@ -67,13 +67,13 @@ public class LobbyController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleLobbyNotFound(IllegalArgumentException ex) {
-        ex.printStackTrace(); // Print the exception for debugging
+    public void handleLobbyNotFound() {
+        // Spring will automatically return 404 Not Found here
     }
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleLobbyConflict() {
-        // This exception is generally unproblematic so we don't log it
+        // Spring will automatically return 409 Conflict here
     }
 }
