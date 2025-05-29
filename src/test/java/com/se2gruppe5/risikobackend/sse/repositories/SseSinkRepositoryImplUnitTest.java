@@ -80,7 +80,7 @@ class SseSinkRepositoryImplUnitTest {
         List<FluxSink<ServerSentEvent<String>>> returnedSinks = sinkRepository.getSinks();
 
         assertNotSame(sinks, returnedSinks);
-        assertTrue(listsHaveSameElements(sinks, returnedSinks));
+        assertListsHaveSameElements(sinks, returnedSinks);
     }
 
     @ParameterizedTest
@@ -114,24 +114,18 @@ class SseSinkRepositoryImplUnitTest {
         List<FluxSink<ServerSentEvent<String>>> subsetSinks = sinks.subList(from, to);
 
         assertNotSame(subsetSinks, returnedSubsetSinks);
-        assertTrue(listsHaveSameElements(subsetSinks, returnedSubsetSinks));
+        assertListsHaveSameElements(subsetSinks, returnedSubsetSinks);
     }
 
     // A simple equals would also check the order of the list elements
     // However, the order does not matter in these tests
-    private <E> boolean listsHaveSameElements(List<E> list1, List<E> list2) {
+    private <E> void assertListsHaveSameElements(List<E> list1, List<E> list2) {
         for(E el : list1) {
-            if(!list2.contains(el)) {
-                return false;
-            }
+            assertTrue(list2.contains(el));
         }
 
         for(E el : list2) {
-            if(!list1.contains(el)) {
-                return false;
-            }
+            assertTrue(list1.contains(el));
         }
-
-        return true;
     }
 }
