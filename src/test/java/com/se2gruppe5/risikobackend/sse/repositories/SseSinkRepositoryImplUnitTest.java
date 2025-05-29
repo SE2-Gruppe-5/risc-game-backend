@@ -2,6 +2,8 @@ package com.se2gruppe5.risikobackend.sse.repositories;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.FluxSink;
@@ -81,8 +83,16 @@ class SseSinkRepositoryImplUnitTest {
         assertTrue(listsHaveSameElements(sinks, returnedSinks));
     }
 
-    @Test
-    void testGetSinksWithUUIDs() {
+    @ParameterizedTest
+    @CsvSource({
+            "0, 3",
+            "0, 2",
+            "0, 1",
+            "1, 3",
+            "1, 2",
+            "2, 3"
+    })
+    void testGetSinksWithUUIDs(int from, int to) {
         @SuppressWarnings("unchecked")
         List<FluxSink<ServerSentEvent<String>>> sinks = List.of(
                 Mockito.mock(FluxSink.class),
@@ -100,15 +110,8 @@ class SseSinkRepositoryImplUnitTest {
             sinkRepository.addSink(uuids.get(i), sinks.get(i));
         }
 
-        // Check if getSinks() with all UUIDs returns all sinks
-        List<FluxSink<ServerSentEvent<String>>> returnedSinks = sinkRepository.getSinks(uuids);
-
-        assertNotSame(sinks, returnedSinks);
-        assertTrue(listsHaveSameElements(sinks, returnedSinks));
-
-        // Check if getSinks() with a few UUIDs returns the corresponding sinks
-        List<FluxSink<ServerSentEvent<String>>> returnedSubsetSinks = sinkRepository.getSinks(uuids.subList(0, 2));
-        List<FluxSink<ServerSentEvent<String>>> subsetSinks = sinks.subList(0, 2);
+        List<FluxSink<ServerSentEvent<String>>> returnedSubsetSinks = sinkRepository.getSinks(uuids.subList(from, to));
+        List<FluxSink<ServerSentEvent<String>>> subsetSinks = sinks.subList(from, to);
 
         assertNotSame(subsetSinks, returnedSubsetSinks);
         assertTrue(listsHaveSameElements(subsetSinks, returnedSubsetSinks));
