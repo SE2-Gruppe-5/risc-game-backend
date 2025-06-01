@@ -17,7 +17,7 @@ public class Game {
     @Getter
     private final UUID uuid;
     @Getter
-    private ArrayList<Territory> territories;
+    private List<Territory> territories;
     @Getter
     private final ConcurrentHashMap<UUID, Player> players;
 
@@ -27,7 +27,7 @@ public class Game {
 
     private final List<Player> playerTurnOrder = new ArrayList<>();
 
-    public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, ArrayList<Territory> territories) {
+    public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, List<Territory> territories) {
         this.uuid = uuid;
         this.players = players;
         this.territories = territories;
@@ -45,16 +45,8 @@ public class Game {
         nextPhase(); //hardcoded at -1, gets +=1 'ed
         nextPlayer(); //hardcoded at -1, gets +=1 'ed
 
-        this.territories = initializeTerritories();
         this.assignTerritories();
         this.distributeStartingTroops(10);
-    }
-
-    private ArrayList<Territory> initializeTerritories() {
-        ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
-        t.add(new Territory(playerTurnOrder.getFirst().getId(), 11, 1));
-        t.add(new Territory(playerTurnOrder.getLast().getId(), 22, 2));
-        return t;
     }
 
     private int playerIndex = -1;

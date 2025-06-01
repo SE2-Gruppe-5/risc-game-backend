@@ -1,8 +1,11 @@
 package com.se2gruppe5.risikobackend.game.services;
 
+import com.se2gruppe5.risikobackend.Constants;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import com.se2gruppe5.risikobackend.common.util.BoardLoader;
 import com.se2gruppe5.risikobackend.common.util.IdUtil;
+import com.se2gruppe5.risikobackend.common.util.ResourceFileLoader;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.repositories.GameRepository;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
@@ -10,7 +13,7 @@ import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,7 +28,12 @@ public class GameService {
 
     public Game createGame(Lobby lobby) {
         UUID gameId = IdUtil.generateUuid(gameRepository::hasGame);
-        Game game = new Game(gameId, lobby.players(),new ArrayList<Territory>());//todo
+
+        ResourceFileLoader loader = new ResourceFileLoader();
+        String boardData = loader.load(Constants.boardPath);
+        List<Territory> territories =  BoardLoader.loadTerritories(boardData);
+
+        Game game = new Game(gameId, lobby.players(), territories);
         gameRepository.addGame(game);
         return game;
     }
@@ -42,7 +50,7 @@ public class GameService {
         getGameById(gameId).changeTerritory(territory);
     }
 
-    public ArrayList<Territory> getTerritoryList(UUID gameId) {
+    public List<Territory> getTerritoryList(UUID gameId) {
         return getGameById(gameId).getTerritories();
     }
 

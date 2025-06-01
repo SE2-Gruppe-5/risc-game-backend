@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -95,7 +96,7 @@ class GameUnitTest {
         Territory original = new Territory(UUID.randomUUID(), 1, 1);
         customTerritories.add(original);
 
-        ArrayList<Territory> territories = game.getTerritories();
+        List<Territory> territories = game.getTerritories();
         Territory added = territories.getFirst();
         assertEquals(original, added);
 
