@@ -4,9 +4,11 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.LeaveGameMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
+import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
@@ -85,6 +87,27 @@ public class GameController {
                     new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/abandon/{playerId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void abandon(@PathVariable("id") UUID gameUUID,
+                        @PathVariable("playerId") UUID playerUUID) {
+        try {
+            Game game = gameService.getGameById(gameUUID);
+            Player player = game.getPlayers().remove(playerUUID);
+            if (player == null) {
+                throw new IllegalArgumentException("Player not found in game");
+            }
+
+            sseBroadcastService.send(playerUUID, new LeaveGameMessage(playerUUID)); // Need to send this extra because we already removed the player from the game
+            sseBroadcastService.broadcast(game, new LeaveGameMessage(playerUUID));
+            sseBroadcastService.broadcast(game, new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
