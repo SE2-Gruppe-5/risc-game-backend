@@ -5,16 +5,11 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 public class Territory {
-    @Getter
-    @Setter
     private UUID owner;
-
-    @Getter
-    @Setter
     private int stat;
-
-    @Getter
     private final int id;
 
     public Territory(UUID owner, int stat, int id) {
