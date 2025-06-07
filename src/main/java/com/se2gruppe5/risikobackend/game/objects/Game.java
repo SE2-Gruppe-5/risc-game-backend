@@ -86,26 +86,29 @@ public class Game {
         return requiresPlayerChangeFlag;
     }
 
-    public void changeTerritory(Territory t) {
-        checkTerritoryValid(t);
-        territories.remove(getListedTerritoryById(t.id()));
-        territories.add(t);
+    public Territory getTerritoryById(int id) {
+        for (Territory terrs : territories) {
+            if (terrs.getId() == id) {
+                return terrs;
+            }
+        }
+        throw new IllegalArgumentException("Territory ID invalid.");
+    }
+
+    public Player getPlayerById(UUID id) {
+        for (Player p : players.values()) {
+            if (p.getId() == id) {
+                return p;
+            }
+        }
+        throw new IllegalArgumentException("Player ID invalid.");
     }
 
     public void updatePlayer(Player p) {
         checkPlayerValid(p);
         players.put(p.getId(), p);
-        playerTurnOrder.remove(getListedPlayerById(p.getId()));
+        playerTurnOrder.remove(getPlayerById(p.getId()));
         playerTurnOrder.add(p);
-    }
-
-    private void checkTerritoryValid(Territory t) {
-        if (t.id() <= 0) {
-            throw new IllegalArgumentException("Territory ID invalid.");
-        }
-        if (getListedTerritoryById(t.id()) == null) {
-            throw new IllegalArgumentException("Territory with ID" + t.id() + "does not exist. [what?] [how?]");
-        }
     }
 
     private void checkPlayerValid(Player p) {
@@ -114,30 +117,12 @@ public class Game {
         }
     }
 
-    private Territory getListedTerritoryById(int id) {
-        for (Territory terrs : territories) {
-            if (terrs.id() == id) {
-                return terrs;
-            }
-        }
-        return null;
-    }
-
-    private Player getListedPlayerById(UUID id) {
-        for (Player p : players.values()) {
-            if (p.getId() == id) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public void assignTerritories() {
         AssignTerritories assigner = new AssignTerritories();
 
         List<UUID> playerIds = new ArrayList<>(players.keySet());
         List<Integer> territoryIds = new ArrayList<>(territories.stream()
-                .map(Territory::id)
+                .map(Territory::getId)
                 .toList());
 
         if (territoryIds.size() % playerIds.size() != 0) {
@@ -150,18 +135,7 @@ public class Game {
         for (Map.Entry<UUID, List<Integer>> entry : assigned.entrySet()) {
             UUID playerId = entry.getKey();
             for (Integer territoryId : entry.getValue()) {
-                boolean found = false;
-                for (Territory t : territories) {
-                    if (t.id() == territoryId) {
-                        Territory updated = new Territory(playerId, t.stat(), t.id());
-                        changeTerritory(updated);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    throw new IllegalStateException("Territory with ID " + territoryId + " not found.");
-                }
+                getTerritoryById(territoryId).setOwner(playerId);
             }
         }
     }
@@ -171,21 +145,22 @@ public class Game {
 
         for (UUID playerId : players.keySet()) {
             List<Territory> owned = territories.stream()
-                    .filter(t -> playerId.equals(t.owner()))
+                    .filter(t -> playerId.equals(t.getOwner()))
                     .toList();
 
             if (owned.isEmpty()) continue;
 
             List<Integer> territoryIds = owned.stream()
-                    .map(Territory::id)
+                    .map(Territory::getId)
                     .toList();
 
             Map<Integer, Integer> distributed = distributor.distributeStartingTroops(territoryIds, troopsPerPlayer);
 
             for (Territory t : owned) {
-                int newStat = distributed.getOrDefault(t.id(), 1);
-                Territory updated = new Territory(playerId, newStat, t.id());
-                changeTerritory(updated);
+                int newStat = distributed.getOrDefault(t.getId(), 1);
+                Territory territory = getTerritoryById(t.getId());
+                territory.setOwner(playerId);
+                territory.setStat(newStat);
             }
         }
 

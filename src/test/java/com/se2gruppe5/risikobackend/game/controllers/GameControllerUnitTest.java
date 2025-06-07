@@ -27,11 +27,13 @@ class GameControllerUnitTest {
     private SseBroadcastService sseBroadcastService;
     private UUID gameId;
     private UUID playerId;
+    private Territory territory;
     private Game dummyGame;
 
     @BeforeEach
     void setup() {
         gameService = Mockito.mock(GameService.class);
+        territory = Mockito.mock(Territory.class);
 
         // use a field dummyGame so we can verify broadcasts against it
         dummyGame = Mockito.mock(Game.class);
@@ -40,6 +42,7 @@ class GameControllerUnitTest {
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
         when(gameService.getPhase(any(UUID.class))).thenReturn(0);
+        when(gameService.getTerritoryById(any(UUID.class), anyInt())).thenReturn(territory);
         sseBroadcastService = Mockito.mock(SseBroadcastService.class);
         gameController = new GameController(gameService, sseBroadcastService);
         gameId = UUID.randomUUID();
@@ -98,13 +101,8 @@ class GameControllerUnitTest {
         when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
         gameController.changeTerritory(gameId, playerId, 5, 10);
 
-        ArgumentCaptor<Territory> territoryCaptor = ArgumentCaptor.forClass(Territory.class);
-        verify(gameService, times(1))
-                .changeTerritory(eq(gameId), territoryCaptor.capture());
-        Territory capturedTerr = territoryCaptor.getValue();
-        assertEquals(playerId, capturedTerr.owner());
-        assertEquals(10, capturedTerr.stat());
-        assertEquals(5, capturedTerr.id());
+        verify(territory, times(1)).setOwner(playerId);
+        verify(territory, times(1)).setStat(10);
 
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));

@@ -92,30 +92,6 @@ class GameUnitTest {
     }
 
     @Test
-    void changeTerritoryTest() {
-        Territory original = new Territory(UUID.randomUUID(), 1, 1);
-        customTerritories.add(original);
-
-        List<Territory> territories = game.getTerritories();
-        Territory added = territories.getFirst();
-        assertEquals(original, added);
-
-        Territory updated = new Territory(original.owner(), original.stat() + 5, original.id());
-        game.changeTerritory(updated);
-        assertTrue(game.getTerritories().contains(updated));
-        assertFalse(game.getTerritories().contains(original));
-
-        //Attempt invalid changes
-        assertThrows(IllegalArgumentException.class, () ->
-                game.changeTerritory(new Territory(original.owner(), 10, -1))
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                game.changeTerritory(new Territory(player1Id, 10, 99))
-        );
-    }
-
-    @Test
     void updatePlayerTest() {
         customTerritories.add(new Territory(player1Id, 0, 1));
         int color = 0x0F0F0F;
@@ -134,7 +110,7 @@ class GameUnitTest {
 
         assertDoesNotThrow(() -> game.assignTerritories());
         game.getTerritories().forEach(t ->
-                assertTrue(players.containsKey(t.owner()))
+                assertTrue(players.containsKey(t.getOwner()))
         );
 
         customTerritories.add(new Territory(player1Id, 1, 1));
@@ -153,6 +129,6 @@ class GameUnitTest {
 
         assertEquals(customTerritories, game.getTerritories());
         assertDoesNotThrow(() -> game.distributeStartingTroops(5));
-        game.getTerritories().forEach(t -> assertTrue(t.stat() >= 1));
+        game.getTerritories().forEach(t -> assertTrue(t.getStat() >= 1));
     }
 }

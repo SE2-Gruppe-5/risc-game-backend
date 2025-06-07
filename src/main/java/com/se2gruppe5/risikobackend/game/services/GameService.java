@@ -46,12 +46,12 @@ public class GameService {
         return getGameById(gameId).getRequiresPlayerChange();
     }
 
-    public void changeTerritory(UUID gameId, Territory territory) {
-        getGameById(gameId).changeTerritory(territory);
-    }
-
     public List<Territory> getTerritoryList(UUID gameId) {
         return getGameById(gameId).getTerritories();
+    }
+
+    public Territory getTerritoryById(UUID gameId, int territoryId) {
+        return getGameById(gameId).getTerritoryById(territoryId);
     }
 
     public void updatePlayer(UUID gameId, Player player) {

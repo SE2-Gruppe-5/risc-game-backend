@@ -101,8 +101,10 @@ public class GameController {
                                 @RequestParam int stat) {
 
         try {
-            Territory territory = new Territory(owner, stat, id);
-            gameService.changeTerritory(gameUUID, territory);
+            Territory territory = gameService.getTerritoryById(gameUUID, id);
+            territory.setOwner(owner);
+            territory.setStat(stat);
+
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
 

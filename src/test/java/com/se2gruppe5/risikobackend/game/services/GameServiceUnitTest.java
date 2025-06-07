@@ -71,14 +71,6 @@ class GameServiceUnitTest {
     }
 
     @Test
-    void changeTerritoryTest() {
-        Territory t = new Territory(UUID.randomUUID(), 11, 1);
-        when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
-        gameService.changeTerritory(gameUUID, t);
-        verify(mockGame, times(1)).changeTerritory(t);
-    }
-
-    @Test
     void getTerritoryTest() {
         Territory t = new Territory(UUID.randomUUID(), 11, 1);
 
