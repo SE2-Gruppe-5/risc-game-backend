@@ -10,13 +10,10 @@ import com.se2gruppe5.risikobackend.game.services.GameService;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -28,12 +25,14 @@ class GameControllerUnitTest {
     private UUID gameId;
     private UUID playerId;
     private Territory territory;
+    private Player player;
     private Game dummyGame;
 
     @BeforeEach
     void setup() {
         gameService = Mockito.mock(GameService.class);
         territory = Mockito.mock(Territory.class);
+        player = Mockito.mock(Player.class);
 
         // use a field dummyGame so we can verify broadcasts against it
         dummyGame = Mockito.mock(Game.class);
@@ -43,6 +42,7 @@ class GameControllerUnitTest {
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
         when(gameService.getPhase(any(UUID.class))).thenReturn(0);
         when(gameService.getTerritoryById(any(UUID.class), anyInt())).thenReturn(territory);
+        when(gameService.getPlayerById(any(UUID.class), any(UUID.class))).thenReturn(player);
         sseBroadcastService = Mockito.mock(SseBroadcastService.class);
         gameController = new GameController(gameService, sseBroadcastService);
         gameId = UUID.randomUUID();
@@ -54,12 +54,8 @@ class GameControllerUnitTest {
         when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
         gameController.updatePlayer(gameId, playerId, "name", 1);
 
-        ArgumentCaptor<Player> playerCaptor = ArgumentCaptor.forClass(Player.class);
-        verify(gameService, times(1)).updatePlayer(eq(gameId), playerCaptor.capture());
-        Player captured = playerCaptor.getValue();
-        assertEquals(playerId, captured.getId());
-        assertEquals("name", captured.getName());
-        assertEquals(1, captured.getColor());
+        verify(player, times(1)).setName(eq("name"));
+        verify(player, times(1)).setColor(1);
 
         // broadcast should be called with the Game and the proper message
         verify(sseBroadcastService, times(1))

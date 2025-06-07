@@ -44,8 +44,9 @@ public class GameController {
                              @RequestParam String name,
                              @RequestParam int color) {
         try {
-            Player player = new Player(playerUUID, name, color);
-            gameService.updatePlayer(gameUUID, player);
+            Player player = gameService.getPlayerById(gameUUID, playerUUID);
+            player.setName(name);
+            player.setColor(color);
             sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
                     new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
         } catch (IllegalArgumentException e) {

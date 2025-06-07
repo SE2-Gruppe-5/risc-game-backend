@@ -92,20 +92,6 @@ class GameUnitTest {
     }
 
     @Test
-    void updatePlayerTest() {
-        customTerritories.add(new Territory(player1Id, 0, 1));
-        int color = 0x0F0F0F;
-        Player modified = new Player(player2Id, "Markus123", color);
-        game.updatePlayer(modified);
-        assertEquals(color, game.getPlayers().get(player2Id).getColor());
-
-        //Attempt invalid assignments
-        UUID newStranger = UUID.randomUUID();
-        Player invalid = new Player(newStranger, "Stranger", 0x404404);
-        assertThrows(IllegalArgumentException.class, () -> game.updatePlayer(invalid));
-    }
-
-    @Test
     void temporaryTerritoryDivideTest() { //todo must most likely be changed
 
         assertDoesNotThrow(() -> game.assignTerritories());

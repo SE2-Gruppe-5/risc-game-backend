@@ -104,19 +104,6 @@ public class Game {
         throw new IllegalArgumentException("Player ID invalid.");
     }
 
-    public void updatePlayer(Player p) {
-        checkPlayerValid(p);
-        players.put(p.getId(), p);
-        playerTurnOrder.remove(getPlayerById(p.getId()));
-        playerTurnOrder.add(p);
-    }
-
-    private void checkPlayerValid(Player p) {
-        if (!players.containsKey(p.getId())) {
-            throw new IllegalArgumentException("Territory with ID" + p.getId() + "does not exist. [what?] [how?]");
-        }
-    }
-
     public void assignTerritories() {
         AssignTerritories assigner = new AssignTerritories();
 

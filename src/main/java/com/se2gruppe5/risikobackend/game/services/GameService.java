@@ -54,8 +54,8 @@ public class GameService {
         return getGameById(gameId).getTerritoryById(territoryId);
     }
 
-    public void updatePlayer(UUID gameId, Player player) {
-        getGameById(gameId).updatePlayer(player);
+    public Player getPlayerById(UUID gameId, UUID playerId) {
+        return getGameById(gameId).getPlayerById(playerId);
     }
 
     public ConcurrentHashMap<UUID, Player> getPlayers(UUID gameId) {
