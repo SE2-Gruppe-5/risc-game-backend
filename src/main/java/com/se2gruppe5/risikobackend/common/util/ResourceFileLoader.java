@@ -16,7 +16,9 @@ public class ResourceFileLoader {
 
         while(scanner.hasNextLine()) {
             sb.append(scanner.nextLine());
-            sb.append("\n");
+            if(scanner.hasNextLine()) {
+                sb.append("\n");
+            }
         }
 
         return sb.toString();

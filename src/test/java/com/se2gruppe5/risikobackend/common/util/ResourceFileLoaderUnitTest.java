@@ -17,7 +17,7 @@ public class ResourceFileLoaderUnitTest {
     @Test
     public void testLoadSuccessful() {
         String result = loader.load("ResourceFileLoaderTestCase1.txt");
-        assertEquals("Geladener Inhalt\n", result);
+        assertEquals("Geladener Inhalt", result);
     }
 
     @Test
