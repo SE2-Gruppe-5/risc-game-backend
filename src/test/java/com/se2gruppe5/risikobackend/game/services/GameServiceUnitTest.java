@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.game.services;
 
+import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -72,7 +73,7 @@ class GameServiceUnitTest {
 
     @Test
     void getTerritoryTest() {
-        Territory t = new Territory(UUID.randomUUID(), 11, 1);
+        Territory t = new Territory(1, UUID.randomUUID(), 11, Continent.POWER_SUPPLY);
 
         ArrayList<Territory> territoryList = new ArrayList<>();
         territoryList.add(t);

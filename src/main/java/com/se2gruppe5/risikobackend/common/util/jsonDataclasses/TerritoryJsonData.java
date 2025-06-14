@@ -1,14 +1,16 @@
 package com.se2gruppe5.risikobackend.common.util.jsonDataclasses;
 
+import com.se2gruppe5.risikobackend.common.objects.Continent;
+import com.se2gruppe5.risikobackend.common.objects.helpers.Position;
+import com.se2gruppe5.risikobackend.common.objects.helpers.Size;
+
 public class TerritoryJsonData {
     public int id;
+    public Continent continent;
 
-    // These properties are currently not used but may be relevant if we want to e.g. configure the map server-side
-    public String continent;
+    // Not relevant server-side
+    // Can be used for server-side map generation
     public Position position;
-    public Size size;
-
-    public record Position(int x, int y) {}
-    public record Size(int x, int y) {}
+    public Size heightWidth;
 }
 

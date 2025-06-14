@@ -1,12 +1,12 @@
 package com.se2gruppe5.risikobackend.game.objects;
 
+import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -99,9 +99,9 @@ class GameUnitTest {
                 assertTrue(players.containsKey(t.getOwner()))
         );
 
-        customTerritories.add(new Territory(player1Id, 1, 1));
-        customTerritories.add(new Territory(player2Id, 2, 1));
-        customTerritories.add(new Territory(player1Id, 3, 1));
+        customTerritories.add(new Territory(1, player1Id, 1, Continent.CMOS));
+        customTerritories.add(new Territory(1, player2Id, 2, Continent.DCON));
+        customTerritories.add(new Territory(1, player1Id, 3, Continent.MMC));
 
 
         assertThrows(IllegalStateException.class, () -> game.assignTerritories());
@@ -110,8 +110,8 @@ class GameUnitTest {
 
     @Test
     void startingTroopDistributionTest() {
-        customTerritories.add(new Territory(UUID.randomUUID(), 11, 1));
-        customTerritories.add(new Territory(UUID.randomUUID(), 22, 2));
+        customTerritories.add(new Territory(1, UUID.randomUUID(), 11, Continent.EMBEDDED_CONTROLLER));
+        customTerritories.add(new Territory(2, UUID.randomUUID(), 22, Continent.ESSENTIALS));
 
         assertEquals(customTerritories, game.getTerritories());
         assertDoesNotThrow(() -> game.distributeStartingTroops(5));

@@ -6,17 +6,33 @@ import com.se2gruppe5.risikobackend.common.util.jsonDataclasses.BoardJsonData;
 import com.se2gruppe5.risikobackend.common.util.jsonDataclasses.TerritoryJsonData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BoardLoader {
     public static List<Territory> loadTerritories(String json) {
         BoardJsonData data = new Gson().fromJson(json, BoardJsonData.class);
-        ArrayList<Territory> territories = new ArrayList<>();
+        HashMap<Integer, Territory> territoriesMap = new HashMap<>();
 
-        for(TerritoryJsonData territory : data.territories) {
-            territories.add(new Territory(null, 0, territory.id));
+        for(TerritoryJsonData t : data.territories) {
+            territoriesMap.put(
+                    t.id, new Territory(t.id, null, 0, t.continent, t.position, t.heightWidth)
+            );
         }
 
-        return territories;
+        for(List<Integer> connection : data.connections) {
+            Territory fromTerritory = territoriesMap.get(connection.getFirst());
+            for(int i = 1; i < connection.size(); i++) {
+                Territory toTerritory = territoriesMap.get(connection.get(i));
+
+                // Don't add duplicates to connections
+                if(!fromTerritory.getConnections().contains(toTerritory)) {
+                    fromTerritory.getConnections().add(toTerritory);
+                    toTerritory.getConnections().add(fromTerritory);
+                }
+            }
+        }
+
+        return new ArrayList<>(territoriesMap.values());
     }
 }
