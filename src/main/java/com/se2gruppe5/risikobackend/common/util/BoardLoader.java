@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BoardLoader {
-    public static List<Territory> loadTerritories(String json) {
+    public List<Territory> loadTerritories(String json) {
         BoardJsonData data = new Gson().fromJson(json, BoardJsonData.class);
         HashMap<Integer, Territory> territoriesMap = new HashMap<>();
 
         for(TerritoryJsonData t : data.territories()) {
             territoriesMap.put(
-                    t.id(), new Territory(t.id(), null, 0, t.continent(), t.position(), t.heightWidth())
+                    t.id(), new Territory(t.id(), null, 0, t.continent(), t.position(), t.size())
             );
         }
 

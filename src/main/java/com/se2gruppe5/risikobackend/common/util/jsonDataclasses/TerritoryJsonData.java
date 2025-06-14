@@ -11,5 +11,5 @@ public record TerritoryJsonData(
     // Not relevant server-side
     // Can be used for server-side map generation
     Position position,
-    Size heightWidth) {
+    Size size) {
 }

@@ -30,8 +30,10 @@ public class GameService {
         UUID gameId = IdUtil.generateUuid(gameRepository::hasGame);
 
         ResourceFileLoader loader = new ResourceFileLoader();
+        BoardLoader boardLoader = new BoardLoader();
+
         String boardData = loader.load(Constants.boardPath);
-        List<Territory> territories =  BoardLoader.loadTerritories(boardData);
+        List<Territory> territories =  boardLoader.loadTerritories(boardData);
 
         Game game = new Game(gameId, lobby.players(), territories);
         gameRepository.addGame(game);
