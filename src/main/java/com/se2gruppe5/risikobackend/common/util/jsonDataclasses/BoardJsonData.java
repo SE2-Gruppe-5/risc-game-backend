@@ -2,7 +2,7 @@ package com.se2gruppe5.risikobackend.common.util.jsonDataclasses;
 
 import java.util.List;
 
-public class BoardJsonData {
-    public List<TerritoryJsonData> territories;
-    public List<List<Integer>> connections;
+public record BoardJsonData(
+        List<TerritoryJsonData> territories,
+        List<List<Integer>> connections) {
 }

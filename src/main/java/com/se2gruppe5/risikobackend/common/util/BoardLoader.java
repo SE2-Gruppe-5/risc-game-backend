@@ -14,13 +14,13 @@ public class BoardLoader {
         BoardJsonData data = new Gson().fromJson(json, BoardJsonData.class);
         HashMap<Integer, Territory> territoriesMap = new HashMap<>();
 
-        for(TerritoryJsonData t : data.territories) {
+        for(TerritoryJsonData t : data.territories()) {
             territoriesMap.put(
-                    t.id, new Territory(t.id, null, 0, t.continent, t.position, t.heightWidth)
+                    t.id(), new Territory(t.id(), null, 0, t.continent(), t.position(), t.heightWidth())
             );
         }
 
-        for(List<Integer> connection : data.connections) {
+        for(List<Integer> connection : data.connections()) {
             Territory fromTerritory = territoriesMap.get(connection.getFirst());
             for(int i = 1; i < connection.size(); i++) {
                 Territory toTerritory = territoriesMap.get(connection.get(i));
