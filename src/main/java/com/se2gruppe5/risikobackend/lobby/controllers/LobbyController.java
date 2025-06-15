@@ -65,9 +65,10 @@ public class LobbyController {
     @DeleteMapping("/{id}/player")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void leaveLobby(@PathVariable String id,
-                           @RequestParam UUID uuid) {
+                           @RequestParam UUID uuid,
+                           @RequestParam(required = false) String reason) {
         try {
-            lobbyService.leaveLobby(id, uuid);
+            lobbyService.leaveLobby(id, uuid, reason);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

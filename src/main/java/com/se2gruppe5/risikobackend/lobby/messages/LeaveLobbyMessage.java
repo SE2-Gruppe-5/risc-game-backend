@@ -5,7 +5,7 @@ import com.se2gruppe5.risikobackend.sse.MessageType;
 
 import java.util.UUID;
 
-public record LeaveLobbyMessage(UUID uuid) implements Message {
+public record LeaveLobbyMessage(UUID uuid, String reason) implements Message {
     @Override
     public MessageType getType() {
         return MessageType.LEAVE_LOBBY;

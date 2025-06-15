@@ -56,7 +56,7 @@ public class LobbyService {
             throw new IllegalArgumentException("Lobby not found");
         }
         for (UUID uuid : lobby.players().keySet()) {
-            sseBroadcastService.send(uuid, new LeaveLobbyMessage(uuid));
+            sseBroadcastService.send(uuid, new LeaveLobbyMessage(uuid, "Lobby deleted"));
         }
         lobbyRepository.removeLobby(id);
     }
@@ -90,13 +90,13 @@ public class LobbyService {
      * @param id the lobby id
      * @param playerId the player id
      */
-    public void leaveLobby(String id, UUID playerId) {
+    public void leaveLobby(String id, UUID playerId, String reason) {
         Lobby lobby = lobbyRepository.getLobby(id);
         if (lobby == null) {
             throw new IllegalArgumentException("Lobby not found");
         }
         lobby.players().remove(playerId);
-        sseBroadcastService.broadcast(lobby, new LeaveLobbyMessage(playerId));
+        sseBroadcastService.broadcast(lobby, new LeaveLobbyMessage(playerId, reason));
     }
 
     public void startGame(String id) {

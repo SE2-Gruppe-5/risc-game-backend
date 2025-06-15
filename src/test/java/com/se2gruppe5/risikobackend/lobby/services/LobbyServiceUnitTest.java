@@ -11,6 +11,8 @@ import com.se2gruppe5.risikobackend.lobby.repositories.LobbyRepository;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ class LobbyServiceUnitTest {
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
         assertDoesNotThrow(() -> lobbyService.deleteLobby(lobbyId));
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
-        Mockito.verify(sseBroadcaster, Mockito.times(1)).send(uuid, new LeaveLobbyMessage(uuid));
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).send(uuid, new LeaveLobbyMessage(uuid, "Lobby deleted"));
         Mockito.verify(lobbyRepository, Mockito.times(1)).removeLobby(lobbyId);
     }
 
@@ -106,8 +108,9 @@ class LobbyServiceUnitTest {
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
     }
 
-    @Test
-    void testLeaveLobby() {
+    @CsvSource(value = {"testReason", "null"}, nullValues = {"null"})
+    @ParameterizedTest
+    void testLeaveLobby(String reason) {
         String lobbyId = "testLobbyId";
         Lobby lobby = new Lobby(lobbyId);
 
@@ -116,10 +119,10 @@ class LobbyServiceUnitTest {
         lobby.players().put(uuid, player);
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(lobby);
-        assertDoesNotThrow(() -> lobbyService.leaveLobby(lobbyId, uuid));
+        assertDoesNotThrow(() -> lobbyService.leaveLobby(lobbyId, uuid, reason));
         assertTrue(lobby.players().isEmpty());
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
-        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(lobby, new LeaveLobbyMessage(uuid));
+        Mockito.verify(sseBroadcaster, Mockito.times(1)).broadcast(lobby, new LeaveLobbyMessage(uuid, reason));
     }
 
     @Test
@@ -128,7 +131,7 @@ class LobbyServiceUnitTest {
         UUID uuid = UUID.randomUUID();
 
         Mockito.when(lobbyRepository.getLobby(lobbyId)).thenReturn(null);
-        assertThrows(IllegalArgumentException.class, () -> lobbyService.leaveLobby(lobbyId, uuid));
+        assertThrows(IllegalArgumentException.class, () -> lobbyService.leaveLobby(lobbyId, uuid, "testReason"));
         Mockito.verify(lobbyRepository, Mockito.times(1)).getLobby(lobbyId);
     }
 
