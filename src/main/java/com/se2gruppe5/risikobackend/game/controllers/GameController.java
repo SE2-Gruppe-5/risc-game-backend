@@ -12,6 +12,7 @@ import com.se2gruppe5.risikobackend.game.services.GameService;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -110,6 +111,18 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (IllegalStateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+    }
+    @PostMapping("/game/{gameId}/cheat/conquer")
+    public ResponseEntity<?> cheatConquer(
+            @PathVariable UUID gameId,
+            @RequestParam UUID playerId,
+            @RequestParam int territoryId) {
+        try {
+            gameService.cheatConquer(gameId, playerId, territoryId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -74,4 +74,9 @@ public class GameService {
         }
         return g;
     }
+    public void cheatConquer(UUID gameId, UUID cheatingPlayerId, int targetTerritoryId) {
+        Game game = getGame(gameId);
+        game.cheatConquer(cheatingPlayerId, targetTerritoryId);
+        // Hier kann man z.B. Cheat-Detection-Logs oder Events triggern, wenn nötig
+    }
 }

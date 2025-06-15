@@ -8,6 +8,7 @@ import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,8 +25,12 @@ public class Game {
     public List<Player> getPlayerTurnOrder() {
         return playerTurnOrder;
     }
+    private boolean cheatMode = false;
+
 
     private final List<Player> playerTurnOrder = new ArrayList<>();
+
+    private final Map<Integer, List<Integer>> territoryNeighbors = initializeTerritoryNeighbors();
 
     public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, ArrayList<Territory> territories) {
         this.uuid = uuid;
@@ -139,6 +144,43 @@ public class Game {
         }
         return null;
     }
+    public void enableCheatMode() {
+        this.cheatMode = true;
+    }
+
+    public boolean isCheatMode() {
+        return cheatMode;
+    }
+    public void cheatConquer(UUID cheatingPlayerId, int targetTerritoryId) {
+        if (!isCheatMode()) {
+            throw new IllegalStateException("Cheat mode is not enabled.");
+        }
+
+        Player cheater = players.get(cheatingPlayerId);
+        if (cheater == null) {
+            throw new IllegalArgumentException("Player does not exist.");
+        }
+
+        Territory target = getListedTerritoryById(targetTerritoryId);
+        if (target == null) {
+            throw new IllegalArgumentException("Target territory does not exist.");
+        }
+
+        // Check if any of the cheater's territories are neighbors to the target
+        boolean isNeighbor = territories.stream()
+                .filter(t -> cheatingPlayerId.equals(t.owner()))
+                .anyMatch(t -> areNeighbors(t, target)); // you need to define this logic
+
+        if (!isNeighbor) {
+            throw new IllegalArgumentException("Target is not neighboring any territory owned by the cheating player.");
+        }
+
+        // Cheat: Ownership change
+        Territory cheated = new Territory(cheatingPlayerId, target.stat(), target.id());
+        changeTerritory(cheated);
+
+        System.out.println("[CHEAT] " + cheater.getName() + " instantly conquered territory " + target.id());
+    }
 
     public void assignTerritories() {
         AssignTerritories assigner = new AssignTerritories();
@@ -197,5 +239,20 @@ public class Game {
             }
         }
 
+    }
+    private Map<Integer, List<Integer>> initializeTerritoryNeighbors() {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        // Beispielhafte Nachbarschaften – muss durch eine echte Logik ersetzt werden.
+        map.put(1, List.of(2));
+        map.put(2, List.of(1, 3));
+        map.put(3, List.of(2));
+
+        // Alle realen Nachbarn hier eintragen
+        return map;
+    }
+    public boolean areNeighbors(Territory a, Territory b) {
+        List<Integer> neighbors = territoryNeighbors.getOrDefault(a.id(), List.of());
+        return neighbors.contains(b.id());
     }
 }
