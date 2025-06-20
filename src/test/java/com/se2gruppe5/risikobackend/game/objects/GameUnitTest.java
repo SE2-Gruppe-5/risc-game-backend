@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameUnitTest {
-    private UUID gameId;
     private UUID player1Id;
     private UUID player2Id;
     private ConcurrentHashMap<UUID, Player> players;
@@ -22,7 +21,7 @@ class GameUnitTest {
 
     @BeforeEach
     void setup() {
-        gameId = UUID.randomUUID();
+        UUID gameId = UUID.randomUUID();
         customTerritories = new ArrayList<>();
         //Initialize Players
         player1Id = UUID.randomUUID();
