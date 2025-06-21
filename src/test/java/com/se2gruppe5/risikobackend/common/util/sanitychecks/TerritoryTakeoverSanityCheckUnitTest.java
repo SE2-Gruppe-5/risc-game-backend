@@ -2,7 +2,6 @@ package com.se2gruppe5.risikobackend.common.util.sanitychecks;
 
 import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -11,12 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TerritoryTakeoverSanityCheckUnitTest {
-    private TerritoryTakeoverSanityCheck check;
-
-    @BeforeEach
-    void setUp() {
-        check =  new TerritoryTakeoverSanityCheck();
-    }
+    private final TerritoryTakeoverSanityCheck check = TerritoryTakeoverSanityCheck.getInstance();
 
     @Test
     void testInitialAssignment() {

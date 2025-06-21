@@ -29,8 +29,8 @@ public class GameService {
     public Game createGame(Lobby lobby) {
         UUID gameId = IdUtil.generateUuid(gameRepository::hasGame);
 
-        ResourceFileLoader loader = new ResourceFileLoader();
-        BoardLoader boardLoader = new BoardLoader();
+        ResourceFileLoader loader = ResourceFileLoader.getInstance();
+        BoardLoader boardLoader = BoardLoader.getInstance();
 
         String boardData = loader.load(Constants.BOARD_PATH);
         List<Territory> territories =  boardLoader.loadTerritories(boardData);

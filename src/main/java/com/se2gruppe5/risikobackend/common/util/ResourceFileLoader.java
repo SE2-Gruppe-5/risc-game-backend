@@ -1,10 +1,17 @@
 package com.se2gruppe5.risikobackend.common.util;
 
 
+import lombok.Getter;
+
 import java.io.InputStream;
 import java.util.Scanner;
 
 public class ResourceFileLoader {
+    @Getter
+    private static final ResourceFileLoader instance = new ResourceFileLoader();
+
+    private ResourceFileLoader() {}
+
     public String load(String path) {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(path);
         if(stream == null) {

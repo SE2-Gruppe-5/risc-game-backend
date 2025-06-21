@@ -4,12 +4,18 @@ import com.google.gson.Gson;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.util.jsondata.BoardJsonData;
 import com.se2gruppe5.risikobackend.common.util.jsondata.TerritoryJsonData;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class BoardLoader {
+    @Getter
+    private static final BoardLoader instance = new BoardLoader();
+
+    private BoardLoader() {}
+
     public List<Territory> loadTerritories(String json) {
         BoardJsonData data = new Gson().fromJson(json, BoardJsonData.class);
         HashMap<Integer, Territory> territoriesMap = new HashMap<>();

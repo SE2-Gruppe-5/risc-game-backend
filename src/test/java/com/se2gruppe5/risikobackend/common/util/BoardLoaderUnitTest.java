@@ -5,7 +5,6 @@ import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Position;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Size;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -14,16 +13,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardLoaderUnitTest {
-    private final ResourceFileLoader loader = new ResourceFileLoader();
+    private final ResourceFileLoader loader = ResourceFileLoader.getInstance();
     private final String testBoard = loader.load(TestConstants.TEST_BOARD_PATH);
     private final String testBoardDuplicateConn = loader.load(TestConstants.TEST_BOARD_DUPLICATE_CONNECTIONS);
 
-    private BoardLoader boardLoader;
-
-    @BeforeEach
-    void setUp() {
-        boardLoader = new BoardLoader();
-    }
+    private final BoardLoader boardLoader = BoardLoader.getInstance();
 
     @Test
     void allTerritoriesLoadedTest() {

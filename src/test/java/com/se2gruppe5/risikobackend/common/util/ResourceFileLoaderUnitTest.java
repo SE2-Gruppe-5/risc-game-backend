@@ -1,19 +1,13 @@
 package com.se2gruppe5.risikobackend.common.util;
 
 import com.se2gruppe5.risikobackend.TestConstants;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ResourceFileLoaderUnitTest {
-    private ResourceFileLoader loader;
-
-    @BeforeEach
-    void setUp() {
-        loader = new ResourceFileLoader();
-    }
+    private final ResourceFileLoader loader = ResourceFileLoader.getInstance();
 
     @Test
     void testLoadSuccessful() {

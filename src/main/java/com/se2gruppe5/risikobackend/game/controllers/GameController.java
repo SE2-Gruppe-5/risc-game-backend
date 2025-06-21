@@ -83,7 +83,7 @@ public class GameController {
                                 @RequestParam int id,
                                 @RequestParam int stat) {
         Territory territory = gameService.getTerritory(gameUUID, id);
-        new TerritoryTakeoverSanityCheck().plausible(territory, owner, stat);
+        TerritoryTakeoverSanityCheck.getInstance().plausible(territory, owner, stat);
         territory.setOwner(owner);
         territory.setStat(stat);
 

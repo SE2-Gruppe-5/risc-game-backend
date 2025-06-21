@@ -1,11 +1,16 @@
 package com.se2gruppe5.risikobackend.common.util.sanitychecks;
 
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import lombok.Getter;
 
 import java.util.UUID;
 
 // Proof-of-concept, may be fine-tuned or expanded further
 public class TerritoryTakeoverSanityCheck {
+    @Getter
+    private static final TerritoryTakeoverSanityCheck instance = new TerritoryTakeoverSanityCheck();
+
+    private TerritoryTakeoverSanityCheck() {}
 
     public void plausible(Territory territory, UUID requestedOwner, int requestedStat) {
         // Always allow assignment of a territory if it is currently unowned
