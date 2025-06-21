@@ -8,9 +8,19 @@ import java.util.UUID;
 public class TerritoryTakeoverSanityCheck {
 
     public void plausible(Territory territory, UUID requestedOwner, int requestedStat) {
-        // Allow assignment of a territory at all times if it is currently unowned
+        // Always allow assignment of a territory if it is currently unowned
         if (territory.getOwner() == null) {
             return;
+        }
+
+        // Always allow clearing a territory assignment
+        if(requestedOwner == null) {
+            if(requestedStat == 0) {
+                return;
+            }
+            else {
+                throw new IllegalStateException("Ownerless territory cannot have troops");
+            }
         }
 
         // Assume any stat change is plausible when the owner stays the same (reinforcement)

@@ -33,6 +33,20 @@ class TerritoryTakeoverSanityCheckUnitTest {
     }
 
     @Test
+    void testValidClearTerritory() {
+        UUID owner =  UUID.randomUUID();
+        Territory t1 = new Territory(1, owner, 1, Continent.DCON);
+        assertDoesNotThrow(() -> check.plausible(t1, null, 0));
+    }
+
+    @Test
+    void testInvalidClearTerritory() {
+        UUID owner =  UUID.randomUUID();
+        Territory t1 = new Territory(1, owner, 1, Continent.DCON);
+        assertThrows(IllegalStateException.class, () -> check.plausible(t1, null, 10));
+    }
+
+    @Test
     void testValidTakeover() {
         UUID player =  UUID.randomUUID();
         UUID enemy = UUID.randomUUID();
