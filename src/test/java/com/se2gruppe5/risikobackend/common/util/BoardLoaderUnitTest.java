@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BoardLoaderUnitTest {
+class BoardLoaderUnitTest {
     private final ResourceFileLoader loader = new ResourceFileLoader();
     private final String testBoard = loader.load("testBoard.json");
     private final String testBoardDuplicateConn = loader.load("testBoardDuplicateConnections.json");

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ResourceFileLoaderUnitTest {
+class ResourceFileLoaderUnitTest {
     private ResourceFileLoader loader;
 
     @BeforeEach

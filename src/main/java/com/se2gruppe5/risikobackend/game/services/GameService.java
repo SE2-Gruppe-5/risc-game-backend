@@ -32,7 +32,7 @@ public class GameService {
         ResourceFileLoader loader = new ResourceFileLoader();
         BoardLoader boardLoader = new BoardLoader();
 
-        String boardData = loader.load(Constants.boardPath);
+        String boardData = loader.load(Constants.BOARD_PATH);
         List<Territory> territories =  boardLoader.loadTerritories(boardData);
 
         Game game = new Game(gameId, lobby.players(), territories);
