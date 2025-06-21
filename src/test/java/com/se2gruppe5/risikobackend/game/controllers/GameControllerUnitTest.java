@@ -41,8 +41,8 @@ class GameControllerUnitTest {
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
         when(gameService.getPhase(any(UUID.class))).thenReturn(0);
-        when(gameService.getTerritoryById(any(UUID.class), anyInt())).thenReturn(territory);
-        when(gameService.getPlayerById(any(UUID.class), any(UUID.class))).thenReturn(player);
+        when(gameService.getTerritory(any(UUID.class), anyInt())).thenReturn(territory);
+        when(gameService.getPlayer(any(UUID.class), any(UUID.class))).thenReturn(player);
         sseBroadcastService = Mockito.mock(SseBroadcastService.class);
         gameController = new GameController(gameService, sseBroadcastService);
         gameId = UUID.randomUUID();

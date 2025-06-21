@@ -45,15 +45,15 @@ public class GameService {
     }
 
     public List<Territory> getTerritoryList(UUID gameId) {
-        return getGameById(gameId).getTerritories();
+        return getGame(gameId).getTerritories();
     }
 
-    public Territory getTerritoryById(UUID gameId, int territoryId) {
-        return getGameById(gameId).getTerritoryById(territoryId);
+    public Territory getTerritory(UUID gameId, int territoryId) {
+        return getGame(gameId).getTerritoryById(territoryId);
     }
 
-    public Player getPlayerById(UUID gameId, UUID playerId) {
-        return getGameById(gameId).getPlayerById(playerId);
+    public Player getPlayer(UUID gameId, UUID playerId) {
+        return getGame(gameId).getPlayerById(playerId);
     }
 
     public ConcurrentHashMap<UUID, Player> getPlayers(UUID gameId) {

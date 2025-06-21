@@ -43,7 +43,7 @@ public class GameController {
                              @PathVariable("playerId") UUID playerUUID,
                              @RequestParam String name,
                              @RequestParam int color) {
-        Player player = gameService.getPlayerById(gameUUID, playerUUID);
+        Player player = gameService.getPlayer(gameUUID, playerUUID);
         player.setName(name);
         player.setColor(color);
         sseBroadcastService.broadcast(gameService.getGame(gameUUID),
@@ -82,12 +82,12 @@ public class GameController {
                                 @RequestParam(required = false) UUID owner,
                                 @RequestParam int id,
                                 @RequestParam int stat) {
-        Territory territory = gameService.getTerritoryById(gameUUID, id);
+        Territory territory = gameService.getTerritory(gameUUID, id);
         new TerritoryTakeoverSanityCheck().plausible(territory, owner, stat);
         territory.setOwner(owner);
         territory.setStat(stat);
 
-        sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
+        sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                 new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
     }
 
