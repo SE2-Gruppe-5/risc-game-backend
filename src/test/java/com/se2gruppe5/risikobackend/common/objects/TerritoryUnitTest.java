@@ -19,9 +19,20 @@ public class TerritoryUnitTest {
     }
 
     @Test
+    public void testConnectedIdListConversion() {
+        t1.getConnections().add(t2);
+        t2.getConnections().add(t3);
+        t1.connectionsToIds();
+        t2.connectionsToIds();
+
+        assertTrue(t1.getConnectionIds().contains(t2.getId()));
+        assertTrue(t2.getConnectionIds().contains(t3.getId()));
+    }
+
+    @Test
     public void testTerritoriesConnected() {
-        t1.getConnectionIds().add(t2.getId());
-        t1.getConnectionIds().add(t3.getId());
+        t1.getConnections().add(t2);
+        t1.getConnections().add(t3);
 
         assertTrue(t1.isConnected(t2));
         assertTrue(t1.isConnected(t3));
@@ -29,8 +40,8 @@ public class TerritoryUnitTest {
 
     @Test
     public void testTerritoriesNotConnected() {
-        t1.getConnectionIds().add(t2.getId());
-        t2.getConnectionIds().add(t3.getId());
+        t1.getConnections().add(t2);
+        t2.getConnections().add(t3);
 
         assertFalse(t1.isConnected(t3));
         assertFalse(t3.isConnected(t1));

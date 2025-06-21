@@ -104,7 +104,7 @@ public class GameController {
 
         try {
             Territory territory = gameService.getTerritoryById(gameUUID, id);
-            new TerritoryTakeoverSanityCheck().plausible(territory, gameService.getTerritoryList(gameUUID), owner, stat);
+            new TerritoryTakeoverSanityCheck().plausible(territory, owner, stat);
             territory.setOwner(owner);
             territory.setStat(stat);
 

@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.common.objects;
 
+import com.google.gson.annotations.Expose;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Position;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Size;
 import lombok.Getter;
@@ -16,13 +17,22 @@ public class Territory {
     private final int id;
     private final Continent continent;
 
-    // Cannot contain territories directly, as this leads to an endless recursion when serializing again
+    // Cannot expose territories directly, as this leads to an endless recursion when serializing
+    private final transient ArrayList<Territory> connections = new ArrayList<>();
     private final ArrayList<Integer> connectionIds =  new ArrayList<>();
+
     private final Position position;
     private final Size heightWidth;
 
     public boolean isConnected(Territory territory) {
-        return connectionIds.contains(territory.getId());
+        return connections.contains(territory);
+    }
+
+    public void connectionsToIds() {
+        connectionIds.clear();
+        for (Territory territory : connections) {
+            connectionIds.add(territory.getId());
+        }
     }
 
     // Minimal constructor e.g. for unit tests
