@@ -46,7 +46,7 @@ public class Game {
         nextPlayer(); //hardcoded at -1, gets +=1 'ed
 
         this.assignTerritories();
-        this.distributeStartingTroops(60/players.size());
+        this.distributeStartingTroops((int)Math.ceil( (double)territories.size() / players.size() ));
     }
 
     private int playerIndex = -1;
