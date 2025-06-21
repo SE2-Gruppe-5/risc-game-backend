@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.common.util;
 
+import com.se2gruppe5.risikobackend.TestConstants;
 import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Position;
@@ -14,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardLoaderUnitTest {
     private final ResourceFileLoader loader = new ResourceFileLoader();
-    private final String testBoard = loader.load("testBoard.json");
-    private final String testBoardDuplicateConn = loader.load("testBoardDuplicateConnections.json");
+    private final String testBoard = loader.load(TestConstants.TEST_BOARD_PATH);
+    private final String testBoardDuplicateConn = loader.load(TestConstants.TEST_BOARD_DUPLICATE_CONNECTIONS);
 
     private BoardLoader boardLoader;
 

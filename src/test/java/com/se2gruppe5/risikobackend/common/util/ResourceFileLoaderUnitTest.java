@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.common.util;
 
+import com.se2gruppe5.risikobackend.TestConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +17,7 @@ class ResourceFileLoaderUnitTest {
 
     @Test
     void testLoadSuccessful() {
-        String result = loader.load("ResourceFileLoaderTestCase1.txt");
+        String result = loader.load(TestConstants.TEST_RES_LOADER_PATH);
         assertEquals("Geladener Inhalt", result);
     }
 
