@@ -15,12 +15,14 @@ public class Territory {
     private int stat;
     private final int id;
     private final Continent continent;
-    private final ArrayList<Territory> connections =  new ArrayList<>();
+
+    // Cannot contain territories directly, as this leads to an endless recursion when serializing again
+    private final ArrayList<Integer> connectionIds =  new ArrayList<>();
     private final Position position;
     private final Size heightWidth;
 
     public boolean isConnected(Territory territory) {
-        return connections.contains(territory);
+        return connectionIds.contains(territory.getId());
     }
 
     // Minimal constructor e.g. for unit tests

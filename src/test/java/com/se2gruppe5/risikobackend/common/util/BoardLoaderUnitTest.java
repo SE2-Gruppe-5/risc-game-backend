@@ -65,13 +65,13 @@ public class BoardLoaderUnitTest {
         Territory t2 =  territoriesMap.get(2);
         Territory t3 =  territoriesMap.get(3);
 
-        assertTrue(t1.getConnections().contains(t2));
-        assertTrue(t2.getConnections().contains(t1));
-        assertTrue(t2.getConnections().contains(t3));
-        assertTrue(t3.getConnections().contains(t2));
+        assertTrue(t1.getConnectionIds().contains(t2.getId()));
+        assertTrue(t2.getConnectionIds().contains(t1.getId()));
+        assertTrue(t2.getConnectionIds().contains(t3.getId()));
+        assertTrue(t3.getConnectionIds().contains(t2.getId()));
 
-        assertFalse(t1.getConnections().contains(t3));
-        assertFalse(t3.getConnections().contains(t1));
+        assertFalse(t1.getConnectionIds().contains(t3.getId()));
+        assertFalse(t3.getConnectionIds().contains(t1.getId()));
     }
 
     @Test
@@ -82,8 +82,8 @@ public class BoardLoaderUnitTest {
         Territory t1 =  territoriesMap.get(1);
         Territory t2 =  territoriesMap.get(2);
 
-        assertEquals(1, t1.getConnections().size());
-        assertEquals(1, t2.getConnections().size());
+        assertEquals(1, t1.getConnectionIds().size());
+        assertEquals(1, t2.getConnectionIds().size());
     }
 
 

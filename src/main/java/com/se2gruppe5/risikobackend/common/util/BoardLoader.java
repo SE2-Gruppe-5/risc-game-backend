@@ -26,9 +26,9 @@ public class BoardLoader {
                 Territory toTerritory = territoriesMap.get(connection.get(i));
 
                 // Don't add duplicates to connections
-                if(!fromTerritory.getConnections().contains(toTerritory)) {
-                    fromTerritory.getConnections().add(toTerritory);
-                    toTerritory.getConnections().add(fromTerritory);
+                if(!fromTerritory.getConnectionIds().contains(toTerritory.getId())) {
+                    fromTerritory.getConnectionIds().add(toTerritory.getId());
+                    toTerritory.getConnectionIds().add(fromTerritory.getId());
                 }
             }
         }

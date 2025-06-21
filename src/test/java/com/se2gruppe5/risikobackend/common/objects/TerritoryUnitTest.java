@@ -20,8 +20,8 @@ public class TerritoryUnitTest {
 
     @Test
     public void testTerritoriesConnected() {
-        t1.getConnections().add(t2);
-        t1.getConnections().add(t3);
+        t1.getConnectionIds().add(t2.getId());
+        t1.getConnectionIds().add(t3.getId());
 
         assertTrue(t1.isConnected(t2));
         assertTrue(t1.isConnected(t3));
@@ -29,8 +29,8 @@ public class TerritoryUnitTest {
 
     @Test
     public void testTerritoriesNotConnected() {
-        t1.getConnections().add(t2);
-        t2.getConnections().add(t3);
+        t1.getConnectionIds().add(t2.getId());
+        t2.getConnectionIds().add(t3.getId());
 
         assertFalse(t1.isConnected(t3));
         assertFalse(t3.isConnected(t1));
