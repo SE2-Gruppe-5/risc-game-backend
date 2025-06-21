@@ -1,0 +1,379 @@
+{
+  "territories": [
+    {
+      "id": 1,
+      "position": {"x": 100, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "POWER_SUPPLY"
+    },
+    {
+      "id": 2,
+      "position": {"x": 100, "y": 250},
+      "size": {"x": 100, "y": 100},
+      "continent": "POWER_SUPPLY"
+    },
+    {
+      "id": 3,
+      "position": {"x": 100, "y": 400},
+      "size": {"x": 100, "y": 100},
+      "continent": "POWER_SUPPLY"
+    },
+    {
+      "id": 4,
+      "position": {"x": 100, "y": 550},
+      "size": {"x": 100, "y": 100},
+      "continent": "POWER_SUPPLY"
+    },
+    {
+      "id": 5,
+      "position": {"x": 100, "y": 700},
+      "size": {"x": 100, "y": 100},
+      "continent": "POWER_SUPPLY"
+    },
+    {
+      "id": 6,
+      "position": {"x": 100, "y": 850},
+      "size": {"x": 100, "y": 100},
+      "continent": "POWER_SUPPLY"
+    },
+    {
+      "id":  7,
+      "position": {"x":  75, "y":  1000},
+      "size": {"x":  100, "y":  150},
+      "continent": "MMC"
+    },
+    {
+      "id":  8,
+      "position": {"x":  200, "y":  1000},
+      "size": {"x":  100, "y":  150},
+      "continent": "MMC"
+    },
+    {
+      "id": 9,
+      "position": {"x": 250, "y": 150},
+      "size": {"x": 50, "y": 50},
+      "continent": "DCON"
+    },
+    {
+      "id": 10,
+      "position": {"x": 350, "y": 250},
+      "size": {"x": 200, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 11,
+      "position": {"x": 350, "y": 450},
+      "size": {"x": 200, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 12,
+      "position": {"x": 350, "y": 650},
+      "size": {"x": 200, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 13,
+      "position": {"x": 350, "y": 850},
+      "size": {"x": 200, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 14,
+      "position": {"x": 560, "y": 250},
+      "size": {"x": 50, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 15,
+      "position": {"x": 560, "y": 450},
+      "size": {"x": 50, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 16,
+      "position": {"x": 560, "y": 650},
+      "size": {"x": 50, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 17,
+      "position": {"x": 560, "y": 850},
+      "size": {"x": 50, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 18,
+      "position": {"x": 450, "y": 1050},
+      "size": {"x": 50, "y": 50},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 19,
+      "position": {"x": 650, "y": 1050},
+      "size": {"x": 50, "y": 50},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 20,
+      "position": {"x": 600, "y": 100},
+      "size": {"x": 250, "y": 75},
+      "continent": "DCON"
+    },
+    {
+      "id": 21,
+      "position": {"x": 900, "y": 70},
+      "size": {"x": 100, "y": 100},
+      "continent": "DCON"
+    },
+    {
+      "id": 22,
+      "position": {"x": 1200, "y": 100},
+      "size": {"x": 200, "y": 80},
+      "continent": "DCON"
+    },
+    {
+      "id": 23,
+      "position": {"x": 1200, "y": 200},
+      "size": {"x": 200, "y": 80},
+      "continent": "DCON"
+    },
+    {
+      "id": 24,
+      "position": {"x": 1500, "y": 180},
+      "size": {"x": 120, "y": 120},
+      "continent": "DCON"
+    },
+    {
+      "id": 25,
+      "position": {"x": 1630, "y": 180},
+      "size": {"x": 120, "y": 120},
+      "continent": "DCON"
+    },
+    {
+      "id": 26,
+      "position": {"x": 950, "y": 350},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 27,
+      "position": {"x": 1160, "y": 350},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 28,
+      "position": {"x": 950, "y": 460},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 29,
+      "position": {"x": 1160, "y": 460},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 30,
+      "position": {"x": 950, "y": 570},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 31,
+      "position": {"x": 1160, "y": 570},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 32,
+      "position": {"x": 950, "y": 680},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 33,
+      "position": {"x": 1160, "y": 680},
+      "size": {"x": 200, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 34,
+      "position": {"x": 1160, "y": 950},
+      "size": {"x": 170, "y": 100},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 35,
+      "position": {"x": 1160, "y": 1060},
+      "size": {"x": 170, "y": 100},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 36,
+      "position": {"x": 1400, "y": 1050},
+      "size": {"x": 100, "y": 100},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 37,
+      "position": {"x": 1450, "y": 900},
+      "size": {"x": 140, "y": 80},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 38,
+      "position": {"x": 1650, "y": 900},
+      "size": {"x": 120, "y": 150},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 39,
+      "position": {"x": 1650, "y": 1060},
+      "size": {"x": 120, "y": 80},
+      "continent": "ESSENTIALS"
+    },
+    {
+      "id": 40,
+      "position": {"x": 1600, "y": 450},
+      "size": {"x": 150, "y": 150},
+      "continent": "SOUTHBRIDGE"
+    },
+    {
+      "id": 41,
+      "position": {"x": 1760, "y": 450},
+      "size": {"x": 150, "y": 150},
+      "continent": "SOUTHBRIDGE"
+    },
+    {
+      "id": 42,
+      "position": {"x": 1600, "y": 610},
+      "size": {"x": 150, "y": 150},
+      "continent": "SOUTHBRIDGE"
+    },
+    {
+      "id": 43,
+      "position": {"x": 1760, "y": 610},
+      "size": {"x": 150, "y": 150},
+      "continent": "SOUTHBRIDGE"
+    },
+    {
+      "id": 44,
+      "position": {"x": 1830, "y": 770},
+      "size": {"x": 40, "y": 40},
+      "continent": "EMBEDDED_CONTROLLER"
+    },
+    {
+      "id": 45,
+      "position": {"x": 1930, "y": 770},
+      "size": {"x": 100, "y": 40},
+      "continent": "EMBEDDED_CONTROLLER"
+    },
+    {
+      "id": 46,
+      "position": {"x": 1810, "y": 100},
+      "size": {"x": 100, "y":  80},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 47,
+      "position": {"x": 1920, "y": 100},
+      "size": {"x": 100, "y":  80},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 48,
+      "position": {"x": 1770, "y": 200},
+      "size": {"x": 100, "y":  150},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 49,
+      "position": {"x": 1880, "y": 200},
+      "size": {"x": 100, "y":  150},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 50,
+      "position": {"x": 2020, "y": 350},
+      "size": {"x": 50, "y":  50},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 51,
+      "position": {"x": 2120, "y": 100},
+      "size": {"x": 50, "y":  100},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 52,
+      "position": {"x": 2200, "y": 350},
+      "size": {"x": 100, "y":  75},
+      "continent": "WIRELESS_MESH"
+    },
+    {
+      "id": 53,
+      "position": {"x": 2020, "y": 600},
+      "size": {"x":  100, "y":  100},
+      "continent": "EMBEDDED_CONTROLLER"
+    },
+    {
+      "id": 54,
+      "position": {"x": 2220, "y": 570},
+      "size": {"x":  50, "y":  50},
+      "continent": "EMBEDDED_CONTROLLER"
+    },
+    {
+      "id": 55,
+      "position": {"x": 2200, "y": 640},
+      "size": {"x":  75, "y":  75},
+      "continent": "EMBEDDED_CONTROLLER"
+    },
+    {
+      "id": 56,
+      "position": {"x": 2040, "y": 750},
+      "size": {"x":  140, "y":  140},
+      "continent": "CMOS"
+    },
+    {
+      "id": 57,
+      "position": {"x": 2140, "y": 950},
+      "size": {"x":  80, "y":  80},
+      "continent": "CMOS"
+    },
+    {
+      "id": 58,
+      "position": {"x": 2250, "y": 950},
+      "size": {"x":  30, "y":  40},
+      "continent": "CMOS"
+    },
+    {
+      "id": 59,
+      "position": {"x": 2350, "y": 960},
+      "size": {"x":  30, "y":  40},
+      "continent": "CMOS"
+    },
+    {
+      "id": 60,
+      "position": {"x": 2340, "y": 850},
+      "size": {"x":  30, "y":  40},
+      "continent": "CMOS"
+    }
+
+  ],
+
+  "connections": [
+    [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8],
+    [1, 9], [2, 9], [3, 11], [4, 11], [5, 12], [8, 18], [18, 19], [9, 10], [9, 20],
+    [10, 14], [11, 15], [12, 16], [13, 17], [13, 18], [16, 17],
+    [20, 14], [20, 21], [21, 22], [22, 23], [23, 24], [24, 25],
+    [15, 28], [16, 32], [21, 26], [23, 27],
+    [26, 27], [26, 28], [27, 29], [28, 29], [28, 30], [29, 31], [30, 31], [30, 32], [32, 33],
+    [33, 34], [19, 35], [34, 35], [35, 36], [34, 37], [37, 38], [38, 39], [36, 39],
+    [38, 43], [31, 42], [29, 40], [25, 40], [40, 41], [40, 42], [41, 43], [42, 43],
+    [43, 44], [38, 44], [44, 45], [41, 48], [41, 49], [49, 46], [22, 46], [46, 47], [48, 49],
+    [49, 50], [50, 53], [47, 51], [51, 52], [52, 60], [45, 56], [45, 53], [43, 53], [53, 54], [53, 55], [53, 56], [54, 55],
+    [56, 57], [56, 60], [57, 58],[39, 57], [58, 59], [59, 60]
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "territories": [
+    {
+      "id": 1,
+      "position": {"x": 100, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 2,
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "CPU"
+    }
+  ],
+
+  "connections": [
+    [1, 2], [1, 2], [1, 2]
+  ]
+}

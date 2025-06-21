@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.game.services;
 
+import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -71,16 +72,8 @@ class GameServiceUnitTest {
     }
 
     @Test
-    void changeTerritoryTest() {
-        Territory t = new Territory(UUID.randomUUID(), 11, 1);
-        when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
-        gameService.changeTerritory(gameUUID, t);
-        verify(mockGame, times(1)).changeTerritory(t);
-    }
-
-    @Test
     void getTerritoryTest() {
-        Territory t = new Territory(UUID.randomUUID(), 11, 1);
+        Territory t = new Territory(1, UUID.randomUUID(), 11, Continent.POWER_SUPPLY);
 
         ArrayList<Territory> territoryList = new ArrayList<>();
         territoryList.add(t);
@@ -91,23 +84,15 @@ class GameServiceUnitTest {
     }
 
     @Test
-    void getAndUpdatePlayersTest() {
+    void getPlayersTest() {
+        Player player1 = new Player(UUID.randomUUID(), "Elias", 0x000000);
+
+        ConcurrentHashMap<UUID, Player> playerList = new ConcurrentHashMap<>();
+        playerList.put(player1.getId(), player1);
 
         when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
-        //Create Player
-        ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
-        UUID p = UUID.randomUUID();
-        players.put(p, new Player(p, "ChangeMe", 0x000000));
-        when(mockGame.getPlayers()).thenReturn(players);
-
-        //Replace him (retain UUID, no usually used this way in-game)
-        Player newP = new Player(p, "Markus", 0xFFFFFF);
-        gameService.updatePlayer(gameUUID, newP);
-        verify(mockGame, times(1)).updatePlayer(newP);
-
-        //Player-Map should be the same
-        ConcurrentHashMap<UUID, Player> returned = gameService.getPlayers(gameUUID);
-        assertEquals(players, returned);
+        when(mockGame.getPlayers()).thenReturn(playerList);
+        assertEquals(playerList, gameService.getPlayers(gameUUID));
     }
 
     @Test

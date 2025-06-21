@@ -1,0 +1,26 @@
+{
+  "territories": [
+    {
+      "id": 1,
+      "position": {"x": 100, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "RAM"
+    },
+    {
+      "id": 2,
+      "position": {"x": 200, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "CPU"
+    },
+    {
+      "id": 3,
+      "position": {"x": 300, "y": 100},
+      "size": {"x": 100, "y": 100},
+      "continent": "CMOS"
+    }
+  ],
+
+  "connections": [
+    [1, 2], [2, 3]
+  ]
+}

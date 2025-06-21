@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.game.controllers;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import com.se2gruppe5.risikobackend.common.util.sanitychecks.TerritoryTakeoverSanityCheck;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
@@ -42,8 +43,9 @@ public class GameController {
                              @PathVariable("playerId") UUID playerUUID,
                              @RequestParam String name,
                              @RequestParam int color) {
-        Player player = new Player(playerUUID, name, color);
-        gameService.updatePlayer(gameUUID, player);
+        Player player = gameService.getPlayer(gameUUID, playerUUID);
+        player.setName(name);
+        player.setColor(color);
         sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                 new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
     }
@@ -80,17 +82,22 @@ public class GameController {
                                 @RequestParam(required = false) UUID owner,
                                 @RequestParam int id,
                                 @RequestParam int stat) {
-        Territory territory = new Territory(owner, stat, id);
-        gameService.changeTerritory(gameUUID, territory);
+        Territory territory = gameService.getTerritory(gameUUID, id);
+        TerritoryTakeoverSanityCheck.getInstance().plausible(territory, owner, stat);
+        territory.setOwner(owner);
+        territory.setStat(stat);
+
         sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                 new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
     }
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleGameNotFound() {
         // Spring will automatically return 404 Not Found here
     }
+
 
     @ExceptionHandler(IllegalStateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)

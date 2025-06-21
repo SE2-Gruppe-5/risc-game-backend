@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.game.objects;
 
+import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameUnitTest {
-    private UUID gameId;
     private UUID player1Id;
     private UUID player2Id;
     private ConcurrentHashMap<UUID, Player> players;
@@ -21,7 +21,7 @@ class GameUnitTest {
 
     @BeforeEach
     void setup() {
-        gameId = UUID.randomUUID();
+        UUID gameId = UUID.randomUUID();
         customTerritories = new ArrayList<>();
         //Initialize Players
         player1Id = UUID.randomUUID();
@@ -67,54 +67,16 @@ class GameUnitTest {
     }
 
     @Test
-    void changeTerritoryTest() {
-        Territory original = new Territory(UUID.randomUUID(), 1, 1);
-        customTerritories.add(original);
-
-        ArrayList<Territory> territories = game.getTerritories();
-        Territory added = territories.getFirst();
-        assertEquals(original, added);
-
-        Territory updated = new Territory(original.owner(), original.stat() + 5, original.id());
-        game.changeTerritory(updated);
-        assertTrue(game.getTerritories().contains(updated));
-        assertFalse(game.getTerritories().contains(original));
-
-        //Attempt invalid changes
-        assertThrows(IllegalArgumentException.class, () ->
-                game.changeTerritory(new Territory(original.owner(), 10, -1))
-        );
-
-        assertThrows(IllegalArgumentException.class, () ->
-                game.changeTerritory(new Territory(player1Id, 10, 99))
-        );
-    }
-
-    @Test
-    void updatePlayerTest() {
-        customTerritories.add(new Territory(player1Id, 0, 1));
-        int color = 0x0F0F0F;
-        Player modified = new Player(player2Id, "Markus123", color);
-        game.updatePlayer(modified);
-        assertEquals(color, game.getPlayers().get(player2Id).getColor());
-
-        //Attempt invalid assignments
-        UUID newStranger = UUID.randomUUID();
-        Player invalid = new Player(newStranger, "Stranger", 0x404404);
-        assertThrows(IllegalArgumentException.class, () -> game.updatePlayer(invalid));
-    }
-
-    @Test
     void temporaryTerritoryDivideTest() { //todo must most likely be changed
 
         assertDoesNotThrow(() -> game.assignTerritories());
         game.getTerritories().forEach(t ->
-                assertTrue(players.containsKey(t.owner()))
+                assertTrue(players.containsKey(t.getOwner()))
         );
 
-        customTerritories.add(new Territory(player1Id, 1, 1));
-        customTerritories.add(new Territory(player2Id, 2, 1));
-        customTerritories.add(new Territory(player1Id, 3, 1));
+        customTerritories.add(new Territory(1, player1Id, 1, Continent.CMOS));
+        customTerritories.add(new Territory(1, player2Id, 2, Continent.DCON));
+        customTerritories.add(new Territory(1, player1Id, 3, Continent.MMC));
 
 
         assertThrows(IllegalStateException.class, () -> game.assignTerritories());
@@ -123,11 +85,11 @@ class GameUnitTest {
 
     @Test
     void startingTroopDistributionTest() {
-        customTerritories.add(new Territory(UUID.randomUUID(), 11, 1));
-        customTerritories.add(new Territory(UUID.randomUUID(), 22, 2));
+        customTerritories.add(new Territory(1, UUID.randomUUID(), 11, Continent.EMBEDDED_CONTROLLER));
+        customTerritories.add(new Territory(2, UUID.randomUUID(), 22, Continent.ESSENTIALS));
 
         assertEquals(customTerritories, game.getTerritories());
         assertDoesNotThrow(() -> game.distributeStartingTroops(5));
-        game.getTerritories().forEach(t -> assertTrue(t.stat() >= 1));
+        game.getTerritories().forEach(t -> assertTrue(t.getStat() >= 1));
     }
 }
