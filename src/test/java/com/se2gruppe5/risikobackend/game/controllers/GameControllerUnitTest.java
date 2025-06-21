@@ -79,6 +79,20 @@ class GameControllerUnitTest {
 
 
     @Test
+    void testChangePhaseToNextPlayerSuccess() {
+        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
+        when(gameService.checkRequiresPlayerChange(gameId)).thenReturn(true);
+        gameController.changePhase(gameId);
+
+        verify(gameService, times(1)).nextPhase(gameId);
+        verify(gameService, times(1)).nextPlayer(gameId);
+        verify(sseBroadcastService, times(1))
+                .broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
+    }
+
+
+
+    @Test
     void testGetGameInfoSuccess() {
         when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
         gameController.getGameInfo(gameId, playerId);
