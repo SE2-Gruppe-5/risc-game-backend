@@ -1,8 +1,7 @@
-package com.se2gruppe5.risikobackend.common.util.sanityChecks;
+package com.se2gruppe5.risikobackend.common.util.sanitychecks;
 
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 // Proof-of-concept, may be fine-tuned or expanded further

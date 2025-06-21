@@ -10,18 +10,18 @@ public class ResourceFileLoaderUnitTest {
     private ResourceFileLoader loader;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         loader = new ResourceFileLoader();
     }
 
     @Test
-    public void testLoadSuccessful() {
+    void testLoadSuccessful() {
         String result = loader.load("ResourceFileLoaderTestCase1.txt");
         assertEquals("Geladener Inhalt", result);
     }
 
     @Test
-    public void testLoadFailed() {
+    void testLoadFailed() {
         assertThrows(IllegalArgumentException.class, () -> loader.load("non-existent.txt"));
     }
 }

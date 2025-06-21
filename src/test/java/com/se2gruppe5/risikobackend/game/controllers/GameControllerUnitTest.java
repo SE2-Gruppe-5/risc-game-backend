@@ -54,7 +54,7 @@ class GameControllerUnitTest {
         when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
         gameController.updatePlayer(gameId, playerId, "name", 1);
 
-        verify(player, times(1)).setName(eq("name"));
+        verify(player, times(1)).setName("name");
         verify(player, times(1)).setColor(1);
 
         // broadcast should be called with the Game and the proper message

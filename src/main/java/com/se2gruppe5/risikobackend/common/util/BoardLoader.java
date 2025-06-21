@@ -2,8 +2,8 @@ package com.se2gruppe5.risikobackend.common.util;
 
 import com.google.gson.Gson;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
-import com.se2gruppe5.risikobackend.common.util.jsonDataclasses.BoardJsonData;
-import com.se2gruppe5.risikobackend.common.util.jsonDataclasses.TerritoryJsonData;
+import com.se2gruppe5.risikobackend.common.util.jsondata.BoardJsonData;
+import com.se2gruppe5.risikobackend.common.util.jsondata.TerritoryJsonData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

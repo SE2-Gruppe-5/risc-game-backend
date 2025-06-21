@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikobackend.common.util.sanityChecks;
+package com.se2gruppe5.risikobackend.common.util.sanitychecks;
 
 import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
@@ -14,19 +14,19 @@ public class TerritoryTakeoverSanityCheckUnitTest {
     private TerritoryTakeoverSanityCheck check;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         check =  new TerritoryTakeoverSanityCheck();
     }
 
     @Test
-    public void testReinforcement() {
+    void testReinforcement() {
         UUID owner =  UUID.randomUUID();
         Territory t1 = new Territory(1, owner, 1, Continent.RAM);
         assertDoesNotThrow(() -> check.plausible(t1, owner, 1));
     }
 
     @Test
-    public void testValidTakeover() {
+    void testValidTakeover() {
         UUID player =  UUID.randomUUID();
         UUID enemy = UUID.randomUUID();
 
@@ -38,7 +38,7 @@ public class TerritoryTakeoverSanityCheckUnitTest {
     }
 
     @Test
-    public void testInvalidTakeover() {
+    void testInvalidTakeover() {
         UUID player =  UUID.randomUUID();
         UUID enemy = UUID.randomUUID();
 

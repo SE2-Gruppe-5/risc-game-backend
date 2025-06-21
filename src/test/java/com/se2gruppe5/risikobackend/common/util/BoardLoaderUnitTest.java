@@ -20,12 +20,12 @@ public class BoardLoaderUnitTest {
     private BoardLoader boardLoader;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         boardLoader = new BoardLoader();
     }
 
     @Test
-    public void allTerritoriesLoadedTest() {
+    void allTerritoriesLoadedTest() {
         List<Territory> territories = boardLoader.loadTerritories(testBoard);
         HashMap<Integer, Territory> territoriesMap = territoriesToMap(territories);
 
@@ -35,7 +35,7 @@ public class BoardLoaderUnitTest {
     }
 
     @Test
-    public void territoryDetailsCorrectTest() {
+    void territoryDetailsCorrectTest() {
         List<Territory> territories = boardLoader.loadTerritories(testBoard);
         HashMap<Integer, Territory> territoriesMap = territoriesToMap(territories);
 
@@ -57,7 +57,7 @@ public class BoardLoaderUnitTest {
     }
 
     @Test
-    public void connectionsCorrectTest() {
+    void connectionsCorrectTest() {
         List<Territory> territories = boardLoader.loadTerritories(testBoard);
         HashMap<Integer, Territory> territoriesMap = territoriesToMap(territories);
 
@@ -75,7 +75,7 @@ public class BoardLoaderUnitTest {
     }
 
     @Test
-    public void connectionsNoDuplicatesTest() {
+    void connectionsNoDuplicatesTest() {
         List<Territory> territories = boardLoader.loadTerritories(testBoardDuplicateConn);
         HashMap<Integer, Territory> territoriesMap = territoriesToMap(territories);
 

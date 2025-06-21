@@ -1,17 +1,17 @@
 package com.se2gruppe5.risikobackend.common.objects;
 
-import com.google.gson.annotations.Expose;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Position;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 @Getter
 @Setter
-public class Territory {
+public class Territory implements Serializable {
     private UUID owner;
     private int stat;
     private final int id;

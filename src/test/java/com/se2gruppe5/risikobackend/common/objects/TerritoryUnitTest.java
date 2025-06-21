@@ -12,14 +12,14 @@ public class TerritoryUnitTest {
     private Territory t3;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         t1 = new Territory(1, null, 0, Continent.SOUTHBRIDGE);
         t2 = new Territory(2, null, 0, Continent.WIRELESS_MESH);
         t3 = new Territory(3, null, 0, Continent.CMOS);
     }
 
     @Test
-    public void testConnectedIdListConversion() {
+    void testConnectedIdListConversion() {
         t1.getConnections().add(t2);
         t2.getConnections().add(t3);
         t1.connectionsToIds();
@@ -30,7 +30,7 @@ public class TerritoryUnitTest {
     }
 
     @Test
-    public void testTerritoriesConnected() {
+    void testTerritoriesConnected() {
         t1.getConnections().add(t2);
         t1.getConnections().add(t3);
 
@@ -39,7 +39,7 @@ public class TerritoryUnitTest {
     }
 
     @Test
-    public void testTerritoriesNotConnected() {
+    void testTerritoriesNotConnected() {
         t1.getConnections().add(t2);
         t2.getConnections().add(t3);
 

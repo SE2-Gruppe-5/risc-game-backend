@@ -1,4 +1,4 @@
-package com.se2gruppe5.risikobackend.common.util.jsonDataclasses;
+package com.se2gruppe5.risikobackend.common.util.jsondata;
 
 import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.helpers.Position;
