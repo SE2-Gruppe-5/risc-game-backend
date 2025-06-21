@@ -19,6 +19,13 @@ class TerritoryTakeoverSanityCheckUnitTest {
     }
 
     @Test
+    void testInitialAssignment() {
+        // Allow any stat change
+        Territory t1 = new Territory(1, null, 0, Continent.EMBEDDED_CONTROLLER);
+        assertDoesNotThrow(() -> check.plausible(t1, UUID.randomUUID(), 1));
+    }
+
+    @Test
     void testReinforcement() {
         UUID owner =  UUID.randomUUID();
         Territory t1 = new Territory(1, owner, 1, Continent.RAM);
@@ -31,20 +38,36 @@ class TerritoryTakeoverSanityCheckUnitTest {
         UUID enemy = UUID.randomUUID();
 
         Territory t1 = new Territory(1, player, 1, Continent.RAM);
-        Territory t2 = new Territory(1, enemy, 10, Continent.CPU);
+        Territory t2 = new Territory(2, enemy, 10, Continent.CPU);
         t1.getConnections().add(t2);
 
         assertDoesNotThrow(() -> check.plausible(t1, enemy, 1));
     }
 
     @Test
-    void testInvalidTakeover() {
+    void testInvalidTakeoverTooFewTroops() {
         UUID player =  UUID.randomUUID();
         UUID enemy = UUID.randomUUID();
 
         Territory t1 = new Territory(1, player, 10, Continent.RAM);
-        Territory t2 = new Territory(1, enemy, 1, Continent.CPU);
+        Territory t2 = new Territory(2, enemy, 1, Continent.CPU);
         t1.getConnections().add(t2);
+
+        assertThrows(IllegalStateException.class, () -> check.plausible(t1, enemy, 10));
+    }
+
+    @Test
+    void testInvalidTakeoverNotAdjacent() {
+        UUID player =  UUID.randomUUID();
+        UUID enemy =  UUID.randomUUID();
+
+        Territory t1 = new Territory(1, player, 10, Continent.RAM);
+        Territory t2 = new Territory(2, player, 10, Continent.CPU);
+        Territory t3 = new Territory(3, null, 0, Continent.POWER_SUPPLY);
+        Territory t4 = new Territory(4, enemy, 10, Continent.ESSENTIALS);
+        t1.getConnections().add(t2);
+        t1.getConnections().add(t3);
+        t3.getConnections().add(t4);
 
         assertThrows(IllegalStateException.class, () -> check.plausible(t1, enemy, 10));
     }

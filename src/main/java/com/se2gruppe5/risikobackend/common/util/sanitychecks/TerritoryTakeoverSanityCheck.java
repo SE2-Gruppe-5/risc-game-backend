@@ -8,22 +8,26 @@ import java.util.UUID;
 public class TerritoryTakeoverSanityCheck {
 
     public void plausible(Territory territory, UUID requestedOwner, int requestedStat) {
-        // Assume any stat change is plausible when the owner stays the same (reinforcement)
-        if (territory.getOwner() == null || (requestedOwner == null && requestedStat == 0) ||
-                territory.getOwner().equals(requestedOwner)) {
+        // Allow assignment of a territory at all times if it is currently unowned
+        if (territory.getOwner() == null) {
             return;
         }
 
-        // Assume a stat change is plausible if the attacker has an adjacent troop count matching the stat change
+        // Assume any stat change is plausible when the owner stays the same (reinforcement)
+        if(territory.getOwner().equals(requestedOwner)) {
+            return;
+        }
+
         boolean adjacentAttacker = false;
         int maxAttackerTroops = 0;
         for(Territory connected : territory.getConnections()) {
-            if (connected.getOwner().equals(requestedOwner)) {
+            if (connected.getOwner() != null && connected.getOwner().equals(requestedOwner)) {
                 adjacentAttacker = true;
                 maxAttackerTroops = Math.max(maxAttackerTroops, connected.getStat());
             }
         }
 
+        // Assume a stat change is plausible if the attacker has an adjacent troop count matching the stat change
         if(adjacentAttacker && maxAttackerTroops >= requestedStat) {
             return;
         }
