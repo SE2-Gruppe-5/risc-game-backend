@@ -35,7 +35,7 @@ class GameControllerUnitTest {
 
         // use a field dummyGame so we can verify broadcasts against it
         dummyGame = Mockito.mock(Game.class);
-        when(gameService.getGameById(any(UUID.class))).thenReturn(dummyGame);
+        when(gameService.getGame(any(UUID.class))).thenReturn(dummyGame);
         when(gameService.getPlayers(any(UUID.class))).thenReturn(new java.util.concurrent.ConcurrentHashMap<>());
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
         when(gameService.getTerritoryList(any(UUID.class))).thenReturn(new java.util.ArrayList<>());
@@ -74,6 +74,20 @@ class GameControllerUnitTest {
         verify(gameService, times(1)).nextPhase(gameId);
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(UpdatePhaseMessage.class));
+    }
+
+
+
+    @Test
+    void testChangePhaseToNextPlayerSuccess() {
+        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
+        when(gameService.checkRequiresPlayerChange(gameId)).thenReturn(true);
+        gameController.changePhase(gameId);
+
+        verify(gameService, times(1)).nextPhase(gameId);
+        verify(gameService, times(1)).nextPlayer(gameId);
+        verify(sseBroadcastService, times(1))
+                .broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
     }
 
 

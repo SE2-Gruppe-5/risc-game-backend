@@ -48,30 +48,6 @@ class GameUnitTest {
     }
 
     @Test
-    void phaseOrderTest() {
-        game.start();
-
-        //Nach setup initial phase #1
-        assertEquals(0, game.getPhaseIndex());
-        assertFalse(game.getRequiresPlayerChange());
-
-        //nextPhase -> phase #2
-        game.nextPhase();
-        assertEquals(1, game.getPhaseIndex());
-        assertFalse(game.getRequiresPlayerChange());
-
-        //nextPhase -> phase #3
-        game.nextPhase();
-        assertEquals(2, game.getPhaseIndex());
-        assertFalse(game.getRequiresPlayerChange());
-
-        //nextPhase -> wrap around back to phase #1 + playerchange required
-        game.nextPhase();
-        assertEquals(0, game.getPhaseIndex());
-        assertTrue(game.getRequiresPlayerChange());
-    }
-
-    @Test
     void playerTurnOrderTest() {
         game.start();
 

@@ -57,7 +57,7 @@ class GameServiceUnitTest {
     @Test
     void getGameFromRepoTest() {
         when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
-        Game result = gameService.getGameById(gameUUID);
+        Game result = gameService.getGame(gameUUID);
         assertSame(mockGame, result);
         verify(gameRepository, times(1)).getGame(gameUUID);
     }
