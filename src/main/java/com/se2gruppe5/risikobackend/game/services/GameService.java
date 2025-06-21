@@ -40,12 +40,8 @@ public class GameService {
         return game;
     }
 
-    public Game getGameById(UUID gameId) {
-        return gameRepository.getGame(gameId);
-    }
-
     public boolean checkRequiresPlayerChange(UUID gameId) {
-        return getGameById(gameId).getRequiresPlayerChange();
+        return getGame(gameId).getRequiresPlayerChange();
     }
 
     public List<Territory> getTerritoryList(UUID gameId) {
@@ -61,7 +57,7 @@ public class GameService {
     }
 
     public ConcurrentHashMap<UUID, Player> getPlayers(UUID gameId) {
-        return getGameById(gameId).getPlayers();
+        return getGame(gameId).getPlayers();
     }
 
     public void nextPhase(UUID gameId) {
@@ -77,7 +73,7 @@ public class GameService {
         return getGame(gameId).getPhaseIndex();
     }
 
-    private Game getGame(UUID gameId) {
+    public Game getGame(UUID gameId) {
         Game g = gameRepository.getGame(gameId);
         if (g == null) {
             throw new IllegalArgumentException("Game not found");
