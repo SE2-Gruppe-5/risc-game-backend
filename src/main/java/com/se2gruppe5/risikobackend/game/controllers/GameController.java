@@ -13,6 +13,7 @@ import com.se2gruppe5.risikobackend.game.services.GameService;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -103,5 +104,17 @@ public class GameController {
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleGameConflict() {
         // Spring will automatically return 409 Conflict here
+    }
+    @PostMapping("/game/{gameId}/cheat/conquer")
+    public ResponseEntity<?> cheatConquer(
+            @PathVariable UUID gameId,
+            @RequestParam UUID playerId,
+            @RequestParam int territoryId) {
+        try {
+            gameService.cheatConquer(gameId, playerId, territoryId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
