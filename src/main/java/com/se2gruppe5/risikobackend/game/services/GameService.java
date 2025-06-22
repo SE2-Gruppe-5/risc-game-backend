@@ -18,7 +18,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class GameService {
+public class
+GameService {
     private final GameRepository gameRepository;
 
     @Autowired
