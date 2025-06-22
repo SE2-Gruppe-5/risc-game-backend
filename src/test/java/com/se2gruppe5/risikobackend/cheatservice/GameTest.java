@@ -112,4 +112,28 @@ class GameTest {
 
         assertTrue(ex.getMessage().contains("Target territory does not exist"));
     }
+    @Test
+    void testAreNeighbors_NewNeighborPairs() {
+        Territory t9 = new Territory(player1Id, 5, 9);
+        Territory t20 = new Territory(player2Id, 3, 20);
+        Territory t30 = new Territory(player1Id, 5, 30);
+        Territory t32 = new Territory(player2Id, 3, 32);
+        Territory t25 = new Territory(player1Id, 5, 25);
+        Territory t48 = new Territory(player2Id, 3, 48);
+
+        assertTrue(game.areNeighbors(t9, t20));
+        assertTrue(game.areNeighbors(t30, t32));
+        assertTrue(game.areNeighbors(t25, t48));
+    }
+
+    @Test
+    void testAreNeighbors_NonNeighbors() {
+        Territory t1 = new Territory(player1Id, 5, 1);
+        Territory t5 = new Territory(player2Id, 3, 5);
+        Territory t10 = new Territory(player1Id, 5, 10);
+        Territory t20 = new Territory(player2Id, 3, 20);
+
+        assertFalse(game.areNeighbors(t1, t5));
+        assertFalse(game.areNeighbors(t10, t20)); // 10 hat 9,14 als Nachbarn, nicht 20
+    }
 }
