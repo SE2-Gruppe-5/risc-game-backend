@@ -18,7 +18,7 @@ public class Game {
     @Getter
     private final UUID uuid;
     @Getter
-    private ArrayList<Territory> territories;
+    private List<Territory> territories;
     @Getter
     private final ConcurrentHashMap<UUID, Player> players;
 
@@ -32,7 +32,8 @@ public class Game {
 
     private final Map<Integer, List<Integer>> territoryNeighbors = initializeTerritoryNeighbors();
 
-    public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, ArrayList<Territory> territories) {
+
+    public Game(UUID uuid, ConcurrentHashMap<UUID, Player> players, List<Territory> territories) {
         this.uuid = uuid;
         this.players = players;
         this.territories = territories;
@@ -50,16 +51,8 @@ public class Game {
         nextPhase(); //hardcoded at -1, gets +=1 'ed
         nextPlayer(); //hardcoded at -1, gets +=1 'ed
 
-        this.territories = initializeTerritories();
         this.assignTerritories();
-        this.distributeStartingTroops(10);
-    }
-
-    private ArrayList<Territory> initializeTerritories() {
-        ArrayList<Territory> t = new ArrayList<>(); //todo: implement properly
-        t.add(new Territory(playerTurnOrder.getFirst().getId(), 11, 1));
-        t.add(new Territory(playerTurnOrder.getLast().getId(), 22, 2));
-        return t;
+        this.distributeStartingTroops((int)Math.ceil( (double)territories.size() / players.size() ));
     }
 
     private int playerIndex = -1;
@@ -99,50 +92,22 @@ public class Game {
         return requiresPlayerChangeFlag;
     }
 
-    public void changeTerritory(Territory t) {
-        checkTerritoryValid(t);
-        territories.remove(getListedTerritoryById(t.id()));
-        territories.add(t);
-    }
-
-    public void updatePlayer(Player p) {
-        checkPlayerValid(p);
-        players.put(p.getId(), p);
-        playerTurnOrder.remove(getListedPlayerById(p.getId()));
-        playerTurnOrder.add(p);
-    }
-
-    private void checkTerritoryValid(Territory t) {
-        if (t.id() <= 0) {
-            throw new IllegalArgumentException("Territory ID invalid.");
-        }
-        if (getListedTerritoryById(t.id()) == null) {
-            throw new IllegalArgumentException("Territory with ID" + t.id() + "does not exist. [what?] [how?]");
-        }
-    }
-
-    private void checkPlayerValid(Player p) {
-        if (!players.containsKey(p.getId())) {
-            throw new IllegalArgumentException("Territory with ID" + p.getId() + "does not exist. [what?] [how?]");
-        }
-    }
-
-    private Territory getListedTerritoryById(int id) {
+    public Territory getTerritoryById(int id) {
         for (Territory terrs : territories) {
-            if (terrs.id() == id) {
+            if (terrs.getId() == id) {
                 return terrs;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Territory ID invalid.");
     }
 
-    private Player getListedPlayerById(UUID id) {
+    public Player getPlayerById(UUID id) {
         for (Player p : players.values()) {
             if (p.getId() == id) {
                 return p;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Player ID invalid.");
     }
     public void enableCheatMode() {
         this.cheatMode = true;
@@ -187,7 +152,7 @@ public class Game {
 
         List<UUID> playerIds = new ArrayList<>(players.keySet());
         List<Integer> territoryIds = new ArrayList<>(territories.stream()
-                .map(Territory::id)
+                .map(Territory::getId)
                 .toList());
 
         if (territoryIds.size() % playerIds.size() != 0) {
@@ -200,18 +165,7 @@ public class Game {
         for (Map.Entry<UUID, List<Integer>> entry : assigned.entrySet()) {
             UUID playerId = entry.getKey();
             for (Integer territoryId : entry.getValue()) {
-                boolean found = false;
-                for (Territory t : territories) {
-                    if (t.id() == territoryId) {
-                        Territory updated = new Territory(playerId, t.stat(), t.id());
-                        changeTerritory(updated);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    throw new IllegalStateException("Territory with ID " + territoryId + " not found.");
-                }
+                getTerritoryById(territoryId).setOwner(playerId);
             }
         }
     }
@@ -221,21 +175,22 @@ public class Game {
 
         for (UUID playerId : players.keySet()) {
             List<Territory> owned = territories.stream()
-                    .filter(t -> playerId.equals(t.owner()))
+                    .filter(t -> playerId.equals(t.getOwner()))
                     .toList();
 
             if (owned.isEmpty()) continue;
 
             List<Integer> territoryIds = owned.stream()
-                    .map(Territory::id)
+                    .map(Territory::getId)
                     .toList();
 
             Map<Integer, Integer> distributed = distributor.distributeStartingTroops(territoryIds, troopsPerPlayer);
 
             for (Territory t : owned) {
-                int newStat = distributed.getOrDefault(t.id(), 1);
-                Territory updated = new Territory(playerId, newStat, t.id());
-                changeTerritory(updated);
+                int newStat = distributed.getOrDefault(t.getId(), 1);
+                Territory territory = getTerritoryById(t.getId());
+                territory.setOwner(playerId);
+                territory.setStat(newStat);
             }
         }
 

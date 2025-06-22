@@ -36,11 +36,7 @@ public class LobbyController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLobby(@PathVariable String id) {
-        try {
-            lobbyService.deleteLobby(id);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        lobbyService.deleteLobby(id);
     }
 
     @PutMapping("/{id}/player")
@@ -48,40 +44,36 @@ public class LobbyController {
     public void joinLobby(@PathVariable String id,
                           @RequestParam UUID uuid,
                           @RequestParam String name) {
-        System.out.printf("%s %s %s",id,name,uuid);
         if (!sseBroadcastService.hasSink(uuid)) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Player not found");
         }
-        try {
-            Color c = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
-            lobbyService.joinLobby(id, new Player(uuid, name, c.getRGB()));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+
+        Color c = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        lobbyService.joinLobby(id, new Player(uuid, name, c.getRGB()));
     }
 
     @DeleteMapping("/{id}/player")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void leaveLobby(@PathVariable String id,
                            @RequestParam UUID uuid) {
-        try {
-            lobbyService.leaveLobby(id, uuid);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        lobbyService.leaveLobby(id, uuid);
     }
 
     @GetMapping("/{id}/start")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable String id) {
-        try {
-            lobbyService.startGame(id);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+        lobbyService.startGame(id);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleLobbyNotFound() {
+        // Spring will automatically return 404 Not Found here
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handleLobbyConflict() {
+        // Spring will automatically return 409 Conflict here
     }
 }

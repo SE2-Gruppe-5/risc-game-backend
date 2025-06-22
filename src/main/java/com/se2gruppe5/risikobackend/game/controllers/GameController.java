@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.game.controllers;
 
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
+import com.se2gruppe5.risikobackend.common.util.sanitychecks.TerritoryTakeoverSanityCheck;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -44,34 +44,23 @@ public class GameController {
                              @PathVariable("playerId") UUID playerUUID,
                              @RequestParam String name,
                              @RequestParam int color) {
-        try {
-            Player player = new Player(playerUUID, name, color);
-            gameService.updatePlayer(gameUUID, player);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+        Player player = gameService.getPlayer(gameUUID, playerUUID);
+        player.setName(name);
+        player.setColor(color);
+        sseBroadcastService.broadcast(gameService.getGame(gameUUID),
+                new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
     }
 
     @GetMapping("/{id}/phase/next")
     @ResponseStatus(HttpStatus.CREATED)
     public void changePhase(@PathVariable("id") UUID gameUUID) {
-        try {
-            gameService.nextPhase(gameUUID);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
-            if (gameService.checkRequiresPlayerChange(gameUUID)) {
-                gameService.nextPlayer(gameUUID);
-                sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                        new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
-            }
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        gameService.nextPhase(gameUUID);
+        sseBroadcastService.broadcast(gameService.getGame(gameUUID),
+                new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
+        if (gameService.checkRequiresPlayerChange(gameUUID)) {
+            gameService.nextPlayer(gameUUID);
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID),
+                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
         }
     }
 
@@ -79,18 +68,12 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     public void getGameInfo(@PathVariable("gameId") UUID gameUUID,
                             @RequestParam("uuid") UUID playerUUID) {
-        try {
-            sseBroadcastService.send(playerUUID,
-                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
-            sseBroadcastService.send(playerUUID,
-                    new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+        sseBroadcastService.send(playerUUID,
+                new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
+        sseBroadcastService.send(playerUUID,
+                new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
+        sseBroadcastService.broadcast(gameService.getGame(gameUUID),
+                new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
     }
 
 
@@ -100,18 +83,27 @@ public class GameController {
                                 @RequestParam(required = false) UUID owner,
                                 @RequestParam int id,
                                 @RequestParam int stat) {
+        Territory territory = gameService.getTerritory(gameUUID, id);
+        TerritoryTakeoverSanityCheck.getInstance().plausible(territory, owner, stat);
+        territory.setOwner(owner);
+        territory.setStat(stat);
 
-        try {
-            Territory territory = new Territory(owner, stat, id);
-            gameService.changeTerritory(gameUUID, territory);
-            sseBroadcastService.broadcast(gameService.getGameById(gameUUID),
-                    new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
+        sseBroadcastService.broadcast(gameService.getGame(gameUUID),
+                new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
+    }
 
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleGameNotFound() {
+        // Spring will automatically return 404 Not Found here
+    }
+
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handleGameConflict() {
+        // Spring will automatically return 409 Conflict here
     }
     @PostMapping("/game/{gameId}/cheat/conquer")
     public ResponseEntity<?> cheatConquer(
