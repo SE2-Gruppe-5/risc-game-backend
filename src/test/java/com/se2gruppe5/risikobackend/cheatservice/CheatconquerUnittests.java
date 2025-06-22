@@ -19,22 +19,20 @@ public class CheatconquerUnittests {
 
     private GameController gameController;
     private GameService gameService;
-    private SseBroadcastService sseBroadcastService;
     private UUID gameId;
     private UUID playerId;
-    private Game dummyGame;
 
     @BeforeEach
     void setup() {
         gameService = Mockito.mock(GameService.class);
-        sseBroadcastService = Mockito.mock(SseBroadcastService.class);
+        SseBroadcastService sseBroadcastService = Mockito.mock(SseBroadcastService.class);
         gameController = new GameController(gameService, sseBroadcastService);
 
         gameId = UUID.randomUUID();
         playerId = UUID.randomUUID();
 
-        dummyGame = Mockito.mock(Game.class);
-        when(gameService.getGameById(any(UUID.class))).thenReturn(dummyGame);
+        Game dummyGame = Mockito.mock(Game.class);
+        when(gameService.getGame(any(UUID.class))).thenReturn(dummyGame);
     }
 
     @Test

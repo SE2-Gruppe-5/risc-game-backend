@@ -126,25 +126,39 @@ public class Game {
             throw new IllegalArgumentException("Player does not exist.");
         }
 
-        Territory target = getListedTerritoryById(targetTerritoryId);
+        Territory target = getTerritoryById(targetTerritoryId);
         if (target == null) {
             throw new IllegalArgumentException("Target territory does not exist.");
         }
 
         // Check if any of the cheater's territories are neighbors to the target
         boolean isNeighbor = territories.stream()
-                .filter(t -> cheatingPlayerId.equals(t.owner()))
-                .anyMatch(t -> areNeighbors(t, target)); // you need to define this logic
+                .filter(t -> cheatingPlayerId.equals(t.getOwner()))
+                .anyMatch(t -> areNeighbors(t, target));
 
         if (!isNeighbor) {
             throw new IllegalArgumentException("Target is not neighboring any territory owned by the cheating player.");
         }
 
         // Cheat: Ownership change
-        Territory cheated = new Territory(cheatingPlayerId, target.stat(), target.id());
+        Territory cheated = new Territory(target.getId(),
+                cheatingPlayerId,
+                target.getStat(),
+                target.getContinent(),
+                target.getPosition(),
+                target.getHeightWidth());
         changeTerritory(cheated);
 
-        System.out.println("[CHEAT] " + cheater.getName() + " instantly conquered territory " + target.id());
+        System.out.println("[CHEAT] " + cheater.getName() + " instantly conquered territory " + target.getId());
+    }
+    public void changeTerritory(Territory updatedTerritory) {
+        for (int i = 0; i < territories.size(); i++) {
+            if (territories.get(i).getId() == updatedTerritory.getId()) {
+                territories.set(i, updatedTerritory);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Territory with ID " + updatedTerritory.getId() + " not found.");
     }
 
     public void assignTerritories() {
@@ -262,7 +276,7 @@ public class Game {
         return map;
     }
     public boolean areNeighbors(Territory a, Territory b) {
-        List<Integer> neighbors = territoryNeighbors.getOrDefault(a.id(), List.of());
-        return neighbors.contains(b.id());
+        List<Integer> neighbors = territoryNeighbors.getOrDefault(a.getId(), List.of());
+        return neighbors.contains(b.getId());
     }
 }
