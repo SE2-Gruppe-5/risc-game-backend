@@ -129,18 +129,18 @@ class GameControllerUnitTest {
         when(dummyGame.getPlayers()).thenReturn(new ConcurrentHashMap<>());
 
         assertThrows(IllegalArgumentException.class, () -> gameController.abandon(gameId, playerId));
-        verify(gameService, times(1)).getGame(eq(gameId));
-        verify(dummyGame, times(1)).getPlayers();
+        verify(gameService).getGame(eq(gameId));
+        verify(dummyGame).getPlayers();
 
         ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
         players.put(playerId, new Player(playerId, "TestPlayer", 1));
         when(dummyGame.getPlayers()).thenReturn(players);
 
         assertDoesNotThrow(() -> gameController.abandon(gameId, playerId));
-        verify(gameService, times(1)).getGame(eq(gameId));
-        verify(dummyGame, times(1)).getPlayers();
-        verify(sseBroadcastService, times(1)).send(eq(playerId), eq(new LeaveGameMessage(playerId)));
-        verify(sseBroadcastService, times(1)).broadcast(eq(dummyGame), eq(new LeaveGameMessage(playerId)));
-        verify(sseBroadcastService, times(1)).broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
+        verify(gameService).getGame(eq(gameId));
+        verify(dummyGame).getPlayers();
+        verify(sseBroadcastService).send(eq(playerId), eq(new LeaveGameMessage(playerId)));
+        verify(sseBroadcastService).broadcast(eq(dummyGame), eq(new LeaveGameMessage(playerId)));
+        verify(sseBroadcastService).broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
     }
 }
