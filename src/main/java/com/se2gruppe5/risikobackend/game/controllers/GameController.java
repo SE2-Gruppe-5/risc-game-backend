@@ -5,6 +5,7 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.util.sanitychecks.TerritoryTakeoverSanityCheck;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
@@ -98,9 +99,14 @@ public class GameController {
         TerritoryTakeoverSanityCheck.getInstance().plausible(territory, owner, stat);
         territory.setOwner(owner);
         territory.setStat(stat);
+        UUID winnerID = gameService.checkWon(gameUUID);
+
 
         sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                 new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
+        if(winnerID != null) {
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID), new PlayerWonMessage((winnerID)));
+        }
     }
 
 

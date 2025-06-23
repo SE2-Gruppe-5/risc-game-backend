@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -129,5 +130,15 @@ class GameControllerUnitTest {
         verify(gameService).getGame(eq(gameId));
         verify(gameService).getPlayer(eq(gameId), eq(playerId));
         verify(sseBroadcastService).broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
+    }
+
+    @Test
+    void testChangeTerritoryChecksWinner() {
+        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
+        when(gameService.checkWon(any())).thenReturn(playerId);
+        gameController.changeTerritory(gameId, playerId, 5, 10);
+
+        verify(sseBroadcastService, times(1))
+                .broadcast(eq(dummyGame), any(PlayerWonMessage.class));
     }
 }
