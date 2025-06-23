@@ -9,5 +9,6 @@ public enum MessageType {
     UPDATE_PHASE,
     UPDATE_PLAYERS,
     UPDATE_TERRITORIES,
-    ACCUSE_CHEATING
+    ACCUSE_CHEATING,
+    PLAYER_WON
 }

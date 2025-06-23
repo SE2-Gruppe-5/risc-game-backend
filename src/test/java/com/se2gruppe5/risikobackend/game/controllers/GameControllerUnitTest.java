@@ -4,6 +4,7 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.CheatAccusationMessage;
+import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -120,12 +121,12 @@ class GameControllerUnitTest {
     }
 
     @Test
-    void testCheatAccusationSuccess() {
+    void testChangeTerritoryChecksWinner() {
         when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
-
-        gameController.getCheatingInfo(gameId, playerId);
+        when(gameService.checkWon(any())).thenReturn(playerId);
+        gameController.changeTerritory(gameId, playerId, 5, 10);
 
         verify(sseBroadcastService, times(1))
-                .broadcast(eq(dummyGame), any(CheatAccusationMessage.class));
+                .broadcast(eq(dummyGame), any(PlayerWonMessage.class));
     }
 }

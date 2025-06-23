@@ -80,4 +80,10 @@ public class GameService {
         }
         return g;
     }
+    public UUID checkWon(UUID gameId){
+        Game g = gameRepository.getGame(gameId);
+        return g.checkWon();
+
+
+    }
 }
