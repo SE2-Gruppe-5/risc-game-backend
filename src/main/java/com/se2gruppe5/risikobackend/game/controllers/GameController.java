@@ -98,21 +98,15 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     public void abandon(@PathVariable("id") UUID gameUUID,
                         @PathVariable("playerId") UUID playerUUID) {
-        try {
-            Game game = gameService.getGameById(gameUUID);
-            Player player = game.getPlayers().remove(playerUUID);
-            if (player == null) {
-                throw new IllegalArgumentException("Player not found in game");
-            }
-
-            sseBroadcastService.send(playerUUID, new LeaveGameMessage(playerUUID)); // Need to send this extra because we already removed the player from the game
-            sseBroadcastService.broadcast(game, new LeaveGameMessage(playerUUID));
-            sseBroadcastService.broadcast(game, new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        Game game = gameService.getGame(gameUUID);
+        Player player = game.getPlayers().remove(playerUUID);
+        if (player == null) {
+            throw new IllegalArgumentException("Player not found in game");
         }
+
+        sseBroadcastService.send(playerUUID, new LeaveGameMessage(playerUUID)); // Need to send this extra because we already removed the player from the game
+        sseBroadcastService.broadcast(game, new LeaveGameMessage(playerUUID));
+        sseBroadcastService.broadcast(game, new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
     }
 
 
