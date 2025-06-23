@@ -86,6 +86,11 @@ public class GameController {
         player.setDead(true);
 
         sseBroadcastService.broadcast(game, new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
+
+        UUID winnerID = game.checkWon();
+        if(winnerID != null) {
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID), new PlayerWonMessage((winnerID)));
+        }
     }
 
 
