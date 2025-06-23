@@ -57,11 +57,7 @@ public class LobbyController {
     public void leaveLobby(@PathVariable String id,
                            @RequestParam UUID uuid,
                            @RequestParam(required = false) String reason) {
-        try {
-            lobbyService.leaveLobby(id, uuid, reason);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        lobbyService.leaveLobby(id, uuid, reason);
     }
 
     @GetMapping("/{id}/start")
