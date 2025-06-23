@@ -5,6 +5,7 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.util.sanitychecks.TerritoryTakeoverSanityCheck;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.CheatAccusationMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
@@ -91,6 +92,14 @@ public class GameController {
                 new ChangeTerritoryMessage(gameService.getTerritoryList(gameUUID)));
     }
 
+
+    @PostMapping("/{id}/cheating")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void getCheatingInfo(@PathVariable("id") UUID gameUUID,
+                            @RequestParam("uuid") UUID playerUUID) {
+        sseBroadcastService.broadcast(gameService.getGame(gameUUID),
+                new CheatAccusationMessage(playerUUID));
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
