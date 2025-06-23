@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.LeaveGameMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -108,5 +110,27 @@ class GameControllerUnitTest {
 
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
+    }
+
+
+    @Test
+    void testAbandonGame() {
+        when(gameService.getGame(gameId)).thenReturn(dummyGame);
+        when(dummyGame.getPlayers()).thenReturn(new ConcurrentHashMap<>());
+
+        assertThrows(IllegalArgumentException.class, () -> gameController.abandon(gameId, playerId));
+        verify(gameService, times(1)).getGame(eq(gameId));
+        verify(dummyGame, times(1)).getPlayers();
+
+        ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
+        players.put(playerId, new Player(playerId, "TestPlayer", 1));
+        when(dummyGame.getPlayers()).thenReturn(players);
+
+        assertDoesNotThrow(() -> gameController.abandon(gameId, playerId));
+        verify(gameService, times(1)).getGame(eq(gameId));
+        verify(dummyGame, times(1)).getPlayers();
+        verify(sseBroadcastService, times(1)).send(eq(playerId), eq(new LeaveGameMessage(playerId)));
+        verify(sseBroadcastService, times(1)).broadcast(eq(dummyGame), eq(new LeaveGameMessage(playerId)));
+        verify(sseBroadcastService, times(1)).broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
     }
 }
