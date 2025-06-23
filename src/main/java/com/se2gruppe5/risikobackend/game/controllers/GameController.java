@@ -76,10 +76,10 @@ public class GameController {
                 new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
     }
 
-    @PostMapping("/{id}/kill/{playerId}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @DeleteMapping("/{id}/player/{playerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void killPlayer(@PathVariable("id") UUID gameUUID,
-                        @PathVariable("playerId") UUID playerUUID) {
+                           @PathVariable("playerId") UUID playerUUID) {
         Game game = gameService.getGame(gameUUID);
         Player player = gameService.getPlayer(gameUUID, playerUUID);
         player.setDead(true);
