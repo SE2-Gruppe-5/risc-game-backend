@@ -64,8 +64,16 @@ class LobbyControllerUnitTest {
     void testLeaveLobby() {
         String lobbyId = "testLobbyId";
         UUID uuid = UUID.randomUUID();
-        lobbyController.leaveLobby(lobbyId, uuid);
-        Mockito.verify(lobbyService, Mockito.times(1)).leaveLobby(lobbyId, uuid);
+        lobbyController.leaveLobby(lobbyId, uuid, null);
+        Mockito.verify(lobbyService, Mockito.times(1)).leaveLobby(lobbyId, uuid, null);
+    }
+
+    @Test
+    void testLeaveLobbyWithReason() {
+        String lobbyId = "testLobbyId";
+        UUID uuid = UUID.randomUUID();
+        lobbyController.leaveLobby(lobbyId, uuid, "testReason");
+        Mockito.verify(lobbyService, Mockito.times(1)).leaveLobby(lobbyId, uuid, "testReason");
     }
 
     @Test

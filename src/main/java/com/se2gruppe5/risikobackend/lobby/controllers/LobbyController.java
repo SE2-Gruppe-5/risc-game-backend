@@ -55,8 +55,9 @@ public class LobbyController {
     @DeleteMapping("/{id}/player")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void leaveLobby(@PathVariable String id,
-                           @RequestParam UUID uuid) {
-        lobbyService.leaveLobby(id, uuid);
+                           @RequestParam UUID uuid,
+                           @RequestParam(required = false) String reason) {
+        lobbyService.leaveLobby(id, uuid, reason);
     }
 
     @GetMapping("/{id}/start")
