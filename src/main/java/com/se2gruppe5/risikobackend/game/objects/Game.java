@@ -168,17 +168,32 @@ public class Game {
     public UUID checkWon() {
 
         for(Player player : players.values()){
-            boolean hasWon = true;
-            for(Territory territory : territories){
-                if (!territory.getOwner().equals(player.getId())) {
-                    hasWon = false;
-                    break;
-                }
+            if (player.isDead()) {
+                continue;
             }
-            if (hasWon) return player.getId();
+
+            block: {
+                for(Territory territory : territories){
+                    if (territory.getOwner().equals(player.getId())) {
+                        break block;
+                    }
+                }
+                player.setDead(true);
+            }
         }
 
-        return null;
+        Player alivePlayer = null;
+        for (Player player : players.values()) {
+            if (!player.isDead()) {
+                if (alivePlayer != null) {
+                    // More than one player is still alive
+                    return null;
+                }
+                alivePlayer = player;
+            }
+        }
+
+        return alivePlayer == null ? null : alivePlayer.getId();
 
     }
 }
