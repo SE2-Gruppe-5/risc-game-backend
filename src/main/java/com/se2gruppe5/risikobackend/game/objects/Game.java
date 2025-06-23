@@ -152,4 +152,21 @@ public class Game {
         }
 
     }
+
+    public UUID checkWon() {
+
+        for(Player player : players.values()){
+            boolean hasWon = true;
+            for(Territory territory : territories){
+                if (!territory.getOwner().equals(player.getId())) {
+                    hasWon = false;
+                    break;
+                }
+            }
+            if (hasWon) return player.getId();
+        }
+
+        return null;
+
+    }
 }

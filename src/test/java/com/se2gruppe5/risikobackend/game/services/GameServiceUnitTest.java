@@ -77,7 +77,7 @@ class GameServiceUnitTest {
 
         ArrayList<Territory> territoryList = new ArrayList<>();
         territoryList.add(t);
-        
+
         when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
         when(mockGame.getTerritories()).thenReturn(territoryList);
         assertEquals(territoryList, gameService.getTerritoryList(gameUUID));
@@ -97,7 +97,7 @@ class GameServiceUnitTest {
 
     @Test
     void phaseAndPlayerCalledTest() {
-        
+
         int phaseInt = 123;
         when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
         when(mockGame.getPhaseIndex()).thenReturn(phaseInt);
@@ -117,5 +117,12 @@ class GameServiceUnitTest {
         when(gameRepository.getGame(gameUUID)).thenReturn(null);
         assertThrows(IllegalArgumentException.class, () -> gameService.nextPhase(gameUUID));
         assertThrows(IllegalArgumentException.class, () -> gameService.getPhase(gameUUID));
+    }
+
+    @Test
+    void testCheckWon(){
+        when(gameRepository.getGame(gameUUID)).thenReturn(mockGame);
+        when(mockGame.checkWon()).thenReturn(null);
+        assertEquals(null, gameService.checkWon(gameUUID));
     }
 }
