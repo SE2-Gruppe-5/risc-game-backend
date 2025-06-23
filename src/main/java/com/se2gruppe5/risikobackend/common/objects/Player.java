@@ -26,4 +26,5 @@ public class Player {
     private int color;
     private List<Card> cards;
     private boolean isCurrentTurn = false;
+    private boolean isDead = false;
 }

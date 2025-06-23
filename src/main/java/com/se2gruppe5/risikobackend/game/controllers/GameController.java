@@ -5,7 +5,6 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.util.sanitychecks.TerritoryTakeoverSanityCheck;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
-import com.se2gruppe5.risikobackend.game.messages.LeaveGameMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
@@ -77,18 +76,14 @@ public class GameController {
                 new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
     }
 
-    @PostMapping("/{id}/abandon/{playerId}")
+    @PostMapping("/{id}/kill/{playerId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void abandon(@PathVariable("id") UUID gameUUID,
+    public void killPlayer(@PathVariable("id") UUID gameUUID,
                         @PathVariable("playerId") UUID playerUUID) {
         Game game = gameService.getGame(gameUUID);
-        Player player = game.getPlayers().remove(playerUUID);
-        if (player == null) {
-            throw new IllegalArgumentException("Player not found in game");
-        }
+        Player player = gameService.getPlayer(gameUUID, playerUUID);
+        player.setDead(true);
 
-        sseBroadcastService.send(playerUUID, new LeaveGameMessage(playerUUID)); // Need to send this extra because we already removed the player from the game
-        sseBroadcastService.broadcast(game, new LeaveGameMessage(playerUUID));
         sseBroadcastService.broadcast(game, new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
     }
 

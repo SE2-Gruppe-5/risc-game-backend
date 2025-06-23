@@ -3,7 +3,6 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
-import com.se2gruppe5.risikobackend.game.messages.LeaveGameMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -14,9 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -124,26 +121,13 @@ class GameControllerUnitTest {
 
 
     @Test
-    void testAbandonGameInvalidPlayer() {
-        when(dummyGame.getPlayers()).thenReturn(new ConcurrentHashMap<>());
+    void testAbandonGame() {
+        when(gameService.getPlayer(gameId, playerId)).thenReturn(new Player(playerId, "TestPlayer", 0));
+        when(sseBroadcastService.hasSink(playerId)).thenReturn(true);
 
-        assertThrows(IllegalArgumentException.class, () -> gameController.abandon(gameId, playerId));
+        assertDoesNotThrow(() -> gameController.killPlayer(gameId, playerId));
         verify(gameService).getGame(eq(gameId));
-        verify(dummyGame).getPlayers();
-    }
-
-
-    @Test
-    void testAbandonGameValidPlayer() {
-        ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
-        players.put(playerId, new Player(playerId, "TestPlayer", 1));
-        when(dummyGame.getPlayers()).thenReturn(players);
-
-        assertDoesNotThrow(() -> gameController.abandon(gameId, playerId));
-        verify(gameService).getGame(eq(gameId));
-        verify(dummyGame).getPlayers();
-        verify(sseBroadcastService).send(eq(playerId), eq(new LeaveGameMessage(playerId)));
-        verify(sseBroadcastService).broadcast(eq(dummyGame), eq(new LeaveGameMessage(playerId)));
+        verify(gameService).getPlayer(eq(gameId), eq(playerId));
         verify(sseBroadcastService).broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
     }
 }
