@@ -22,8 +22,8 @@ public class Player {
         this.cards = cards;
     }
     private final UUID id;
-    private final String name;
-    private final int color;
-    private final List<Card> cards;
+    private String name;
+    private int color;
+    private List<Card> cards;
     private boolean isCurrentTurn = false;
 }

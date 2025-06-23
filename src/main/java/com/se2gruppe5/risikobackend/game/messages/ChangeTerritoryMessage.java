@@ -4,9 +4,9 @@ import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.sse.Message;
 import com.se2gruppe5.risikobackend.sse.MessageType;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public record ChangeTerritoryMessage(ArrayList<Territory> territories) implements Message {
+public record ChangeTerritoryMessage(List<Territory> territories) implements Message {
     @Override
     public MessageType getType() {
         return MessageType.UPDATE_TERRITORIES;
