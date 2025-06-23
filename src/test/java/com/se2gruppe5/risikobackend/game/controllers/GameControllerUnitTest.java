@@ -3,6 +3,7 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
+import com.se2gruppe5.risikobackend.game.messages.CheatAccusationMessage;
 import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
@@ -140,5 +141,12 @@ class GameControllerUnitTest {
 
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(PlayerWonMessage.class));
+    }
+
+    @Test
+    void testCheatingAccusation() {
+        gameController.getCheatingInfo(gameId, playerId);
+        verify(gameService).getGame(gameId);
+        verify(sseBroadcastService).broadcast(eq(dummyGame), eq(new CheatAccusationMessage(playerId)));
     }
 }
