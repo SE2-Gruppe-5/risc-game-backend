@@ -92,4 +92,17 @@ class GameUnitTest {
         assertDoesNotThrow(() -> game.distributeStartingTroops(5));
         game.getTerritories().forEach(t -> assertTrue(t.getStat() >= 1));
     }
+
+    @Test
+    void  testGameWon(){
+        customTerritories.add(new Territory(1, player1Id, 11, Continent.EMBEDDED_CONTROLLER));
+        customTerritories.add(new Territory(2, player1Id, 22, Continent.ESSENTIALS));
+        assertEquals(player1Id, game.checkWon());
+    }
+    @Test
+    void  testGameWonReturnsNull(){
+        customTerritories.add(new Territory(1, player1Id, 11, Continent.EMBEDDED_CONTROLLER));
+        customTerritories.add(new Territory(2, player2Id, 22, Continent.ESSENTIALS));
+        assertEquals(null, game.checkWon());
+    }
 }
