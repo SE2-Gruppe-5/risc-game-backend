@@ -9,6 +9,7 @@ import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
 
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
+import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
 
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
@@ -74,6 +75,22 @@ public class GameController {
                 new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
         sseBroadcastService.broadcast(gameService.getGame(gameUUID),
                 new UpdatePhaseMessage(gameService.getPhase(gameUUID)));
+    }
+
+    @DeleteMapping("/{id}/player/{playerId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void killPlayer(@PathVariable("id") UUID gameUUID,
+                           @PathVariable("playerId") UUID playerUUID) {
+        Game game = gameService.getGame(gameUUID);
+        Player player = gameService.getPlayer(gameUUID, playerUUID);
+        player.setDead(true);
+
+        sseBroadcastService.broadcast(game, new UpdatePlayersMessage(gameService.getPlayers(gameUUID)));
+
+        UUID winnerID = game.checkWon();
+        if(winnerID != null) {
+            sseBroadcastService.broadcast(gameService.getGame(gameUUID), new PlayerWonMessage((winnerID)));
+        }
     }
 
 

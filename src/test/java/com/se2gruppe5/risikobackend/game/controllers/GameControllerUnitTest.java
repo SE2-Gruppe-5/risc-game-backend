@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -117,6 +118,18 @@ class GameControllerUnitTest {
 
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(ChangeTerritoryMessage.class));
+    }
+
+
+    @Test
+    void testAbandonGame() {
+        when(gameService.getPlayer(gameId, playerId)).thenReturn(new Player(playerId, "TestPlayer", 0));
+        when(sseBroadcastService.hasSink(playerId)).thenReturn(true);
+
+        assertDoesNotThrow(() -> gameController.killPlayer(gameId, playerId));
+        verify(gameService).getGame(eq(gameId));
+        verify(gameService).getPlayer(eq(gameId), eq(playerId));
+        verify(sseBroadcastService).broadcast(eq(dummyGame), any(UpdatePlayersMessage.class));
     }
 
     @Test
