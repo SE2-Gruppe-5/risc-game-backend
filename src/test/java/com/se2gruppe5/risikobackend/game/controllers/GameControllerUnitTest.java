@@ -129,4 +129,11 @@ class GameControllerUnitTest {
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(PlayerWonMessage.class));
     }
+
+    @Test
+    void testCheatingAccusation() {
+        gameController.getCheatingInfo(gameId, playerId);
+        verify(gameService).getGame(gameId);
+        verify(sseBroadcastService).broadcast(eq(dummyGame), eq(new CheatAccusationMessage(playerId)));
+    }
 }
