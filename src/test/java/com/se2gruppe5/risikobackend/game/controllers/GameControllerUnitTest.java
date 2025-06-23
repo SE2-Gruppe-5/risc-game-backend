@@ -124,14 +124,17 @@ class GameControllerUnitTest {
 
 
     @Test
-    void testAbandonGame() {
-        when(gameService.getGame(gameId)).thenReturn(dummyGame);
+    void testAbandonGameInvalidPlayer() {
         when(dummyGame.getPlayers()).thenReturn(new ConcurrentHashMap<>());
 
         assertThrows(IllegalArgumentException.class, () -> gameController.abandon(gameId, playerId));
         verify(gameService).getGame(eq(gameId));
         verify(dummyGame).getPlayers();
+    }
 
+
+    @Test
+    void testAbandonGameValidPlayer() {
         ConcurrentHashMap<UUID, Player> players = new ConcurrentHashMap<>();
         players.put(playerId, new Player(playerId, "TestPlayer", 1));
         when(dummyGame.getPlayers()).thenReturn(players);
