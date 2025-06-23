@@ -51,12 +51,24 @@ public class Game {
 
     private int playerIndex = -1;
 
+    public List<Player> getAlivePlayers() {
+        return playerTurnOrder.stream()
+                .filter(p -> !p.isDead())
+                .toList();
+    }
+
     public void nextPlayer() {
-        setAllPlayersCurrentTurnFalse();
-        playerIndex++;
-        if (playerIndex >= playerTurnOrder.size()) {
-            playerIndex = 0;
+        if (getAlivePlayers().size() < 2) {
+            requiresPlayerChangeFlag = false;
+            return; //prevent deadlock
         }
+        setAllPlayersCurrentTurnFalse();
+        do {
+            playerIndex++;
+            if (playerIndex >= playerTurnOrder.size()) {
+                playerIndex = 0;
+            }
+        } while (playerTurnOrder.get(playerIndex).isDead());
         playerTurnOrder.get(playerIndex).setCurrentTurn(true);
         requiresPlayerChangeFlag = false;
     }
