@@ -9,7 +9,6 @@ import com.se2gruppe5.risikobackend.common.util.ResourceFileLoader;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.repositories.GameRepository;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

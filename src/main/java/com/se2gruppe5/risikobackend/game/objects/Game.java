@@ -4,7 +4,6 @@ import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.troopterritoryDistribution.AssignTerritories;
 import com.se2gruppe5.risikobackend.troopterritoryDistribution.StartTroops;
-
 import lombok.Getter;
 
 import java.util.ArrayList;

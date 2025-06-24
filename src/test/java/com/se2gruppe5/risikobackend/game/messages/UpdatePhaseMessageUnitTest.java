@@ -4,7 +4,7 @@ import com.se2gruppe5.risikobackend.sse.MessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpdatePhaseMessageUnitTest {
     private UpdatePhaseMessage msg;

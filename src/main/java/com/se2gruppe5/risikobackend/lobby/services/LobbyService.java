@@ -1,5 +1,7 @@
 package com.se2gruppe5.risikobackend.lobby.services;
 
+import com.se2gruppe5.risikobackend.common.objects.Player;
+import com.se2gruppe5.risikobackend.common.util.IdUtil;
 import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
 import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
@@ -9,9 +11,7 @@ import com.se2gruppe5.risikobackend.lobby.messages.JoinLobbyMessage;
 import com.se2gruppe5.risikobackend.lobby.messages.LeaveLobbyMessage;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.lobby.repositories.LobbyRepository;
-import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
-import com.se2gruppe5.risikobackend.common.util.IdUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

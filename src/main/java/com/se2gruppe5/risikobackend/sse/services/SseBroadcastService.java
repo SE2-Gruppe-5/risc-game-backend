@@ -2,7 +2,6 @@ package com.se2gruppe5.risikobackend.sse.services;
 
 import com.google.gson.Gson;
 import com.se2gruppe5.risikobackend.common.util.IdUtil;
-import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.sse.Message;
