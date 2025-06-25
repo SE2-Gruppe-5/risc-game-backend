@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AttackTerritoryMessageUnitTest {
+class AttackTerritoryMessageUnitTest {
     AttackTerritoryMessage msg;
     Territory t1 = new Territory(1, UUID.randomUUID(), 1, Continent.CPU);
     Territory t2 = new Territory(2, UUID.randomUUID(), 1, Continent.RAM);
