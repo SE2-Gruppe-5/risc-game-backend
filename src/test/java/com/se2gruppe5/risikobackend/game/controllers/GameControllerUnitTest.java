@@ -1,5 +1,6 @@
 package com.se2gruppe5.risikobackend.game.controllers;
 
+import com.se2gruppe5.risikobackend.common.objects.Continent;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.game.messages.*;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -137,6 +139,32 @@ class GameControllerUnitTest {
 
         verify(sseBroadcastService, times(1))
                 .broadcast(eq(dummyGame), any(PlayerWonMessage.class));
+    }
+
+    @Test
+    void testAttackTerritoryCorrectPlayerNotified() {
+        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
+
+        UUID playerId1 = UUID.randomUUID();
+        UUID playerId2 = UUID.randomUUID();
+        Territory t1 = new Territory(1, playerId1, 2, Continent.DCON);
+        Territory t2 = new Territory(2, playerId2, 2, Continent.CMOS);
+        when(gameService.getTerritory(any(), eq(1))).thenReturn(t1);
+        when(gameService.getTerritory(any(), eq(2))).thenReturn(t2);
+
+        gameController.attackTerritory(UUID.randomUUID(), t1.getId(), t2.getId(), 5);
+        verify(sseBroadcastService, times(1))
+                .send(eq(playerId2), any(AttackTerritoryMessage.class));
+    }
+
+    @Test
+    void testReportDiceStatus() {
+        when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
+
+        UUID playerId = UUID.randomUUID();
+        gameController.reportDiceStatus(UUID.randomUUID(), playerId, List.of(1));
+        verify(sseBroadcastService, times(1))
+                .send(eq(playerId), any(ReportDiceStatusMessage.class));
     }
 
     @Test
