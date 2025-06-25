@@ -5,7 +5,8 @@ import com.se2gruppe5.risikobackend.sse.MessageType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 

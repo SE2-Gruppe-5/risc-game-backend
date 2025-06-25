@@ -4,25 +4,15 @@ package com.se2gruppe5.risikobackend.game.controllers;
 import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.common.objects.Territory;
 import com.se2gruppe5.risikobackend.common.util.sanitychecks.TerritoryTakeoverSanityCheck;
-import com.se2gruppe5.risikobackend.game.messages.ChangeTerritoryMessage;
-import com.se2gruppe5.risikobackend.game.messages.CheatAccusationMessage;
-import com.se2gruppe5.risikobackend.game.messages.PlayerWonMessage;
-import com.se2gruppe5.risikobackend.game.messages.UpdatePhaseMessage;
-
-import com.se2gruppe5.risikobackend.game.messages.UpdatePlayersMessage;
+import com.se2gruppe5.risikobackend.game.messages.*;
 import com.se2gruppe5.risikobackend.game.objects.Game;
 import com.se2gruppe5.risikobackend.game.services.GameService;
-
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/game")

@@ -10,7 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LobbyControllerUnitTest {
     private LobbyController lobbyController;

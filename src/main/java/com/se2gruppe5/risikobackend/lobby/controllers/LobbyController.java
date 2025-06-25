@@ -1,8 +1,8 @@
 package com.se2gruppe5.risikobackend.lobby.controllers;
 
+import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.lobby.objects.Lobby;
 import com.se2gruppe5.risikobackend.lobby.services.LobbyService;
-import com.se2gruppe5.risikobackend.common.objects.Player;
 import com.se2gruppe5.risikobackend.sse.services.SseBroadcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

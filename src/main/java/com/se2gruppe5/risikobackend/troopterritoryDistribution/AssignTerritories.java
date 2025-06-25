@@ -1,12 +1,7 @@
 package com.se2gruppe5.risikobackend.troopterritoryDistribution;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 public class AssignTerritories {
     private final Random random = new SecureRandom();
