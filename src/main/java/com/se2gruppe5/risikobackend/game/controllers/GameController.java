@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -105,6 +106,29 @@ public class GameController {
         }
     }
 
+    @PostMapping("/{gameId}/attack")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void attackTerritory(@PathVariable("gameId") UUID gameUUID,
+                                @RequestParam("from") int fromTerritory,
+                                @RequestParam("target") int targetTerritory,
+                                @RequestParam("troops") int troops) {
+        Territory from = gameService.getTerritory(gameUUID, fromTerritory);
+        Territory target = gameService.getTerritory(gameUUID, targetTerritory);
+        UUID owner = target.getOwner();
+
+        sseBroadcastService.send(owner,
+                new AttackTerritoryMessage(from, target, troops));
+    }
+
+    @PostMapping("/{gameId}/dice")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void reportDiceStatus(@PathVariable("gameId") @SuppressWarnings("unused") UUID gameUUID,
+                                @RequestParam("recipient") UUID playerUUID,
+                                @RequestParam("results") List<Integer> results) {
+
+        sseBroadcastService.send(playerUUID,
+                new ReportDiceStatusMessage(results));
+    }
 
     @PostMapping("/{id}/cheating")
     @ResponseStatus(HttpStatus.CREATED)
