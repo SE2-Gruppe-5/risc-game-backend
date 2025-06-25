@@ -161,7 +161,6 @@ class GameControllerUnitTest {
     void testReportDiceStatus() {
         when(sseBroadcastService.hasSink(gameId)).thenReturn(true);
 
-        UUID playerId = UUID.randomUUID();
         gameController.reportDiceStatus(UUID.randomUUID(), playerId, List.of(1));
         verify(sseBroadcastService, times(1))
                 .send(eq(playerId), any(ReportDiceStatusMessage.class));
